@@ -72,64 +72,64 @@ class direct_php_builder
 /**
 	* @var mixed $chmod_dirs chmod to set when creating a new directory
 */
-	/*#ifndef(PHP4) */protected /* #*//*#ifdef(PHP4):var :#*/$chmod_dirs;
+	/*#ifndef(PHP4) */protected/* #*//*#ifdef(PHP4):var:#*/ $chmod_dirs;
 /**
 	* @var mixed $chmod_files chmod to set when creating a new file
 */
-	/*#ifndef(PHP4) */protected /* #*//*#ifdef(PHP4):var :#*/$chmod_files;
+	/*#ifndef(PHP4) */protected/* #*//*#ifdef(PHP4):var:#*/ $chmod_files;
 /**
 	* @var array $debug Debug message container 
 */
-	/*#ifndef(PHP4) */public /* #*//*#ifdef(PHP4):var :#*/$debug;
+	/*#ifndef(PHP4) */public/* #*//*#ifdef(PHP4):var:#*/ $debug;
 /**
 	* @var boolean $debugging True if we should fill the debug message
 	*      container 
 */
-	/*#ifndef(PHP4) */protected /* #*//*#ifdef(PHP4):var :#*/$debugging;
+	/*#ifndef(PHP4) */protected/* #*//*#ifdef(PHP4):var:#*/ $debugging;
 /**
 	* @var array $dir_array Directories to be scanned
 */
-	/*#ifndef(PHP4) */protected /* #*//*#ifdef(PHP4):var :#*/$dir_array;
+	/*#ifndef(PHP4) */protected/* #*//*#ifdef(PHP4):var:#*/ $dir_array;
 /**
 	* @var array $dir_exclude_array Directories to be ignored while scanning
 */
-	/*#ifndef(PHP4) */protected /* #*//*#ifdef(PHP4):var :#*/$dir_exclude_array;
+	/*#ifndef(PHP4) */protected/* #*//*#ifdef(PHP4):var:#*/ $dir_exclude_array;
 /**
 	* @var array $file_array Files to be parsed
 */
-	/*#ifndef(PHP4) */protected /* #*//*#ifdef(PHP4):var :#*/$file_array;
+	/*#ifndef(PHP4) */protected/* #*//*#ifdef(PHP4):var:#*/ $file_array;
 /**
 	* @var array $file_exclude_array Files to be ignored while scanning
 */
-	/*#ifndef(PHP4) */protected /* #*//*#ifdef(PHP4):var :#*/$file_exclude_array;
+	/*#ifndef(PHP4) */protected/* #*//*#ifdef(PHP4):var:#*/ $file_exclude_array;
 /**
 	* @var array $filetype_array Filetype extensions to be parsed
 */
-	/*#ifndef(PHP4) */protected /* #*//*#ifdef(PHP4):var :#*/$filetype_array;
+	/*#ifndef(PHP4) */protected/* #*//*#ifdef(PHP4):var:#*/ $filetype_array;
 /**
 	* @var array $filetype_ascii_array Filetype extensions to be parsed
 */
-	/*#ifndef(PHP4) */protected /* #*//*#ifdef(PHP4):var :#*/$filetype_ascii_array;
+	/*#ifndef(PHP4) */protected/* #*//*#ifdef(PHP4):var:#*/ $filetype_ascii_array;
 /**
 	* @var string $output_path Path to generate the output files
 */
-	/*#ifndef(PHP4) */protected /* #*//*#ifdef(PHP4):var :#*/$output_path;
+	/*#ifndef(PHP4) */protected/* #*//*#ifdef(PHP4):var:#*/ $output_path;
 /**
 	* @var string $output_strip_prefix Prefix to be stripped from ouput pathes
 */
-	/*#ifndef(PHP4) */protected /* #*//*#ifdef(PHP4):var :#*/$output_strip_prefix;
+	/*#ifndef(PHP4) */protected/* #*//*#ifdef(PHP4):var:#*/ $output_strip_prefix;
 /**
 	* @var integer $time Current UNIX timestamp
 */
-	/*#ifndef(PHP4) */protected /* #*//*#ifdef(PHP4):var :#*/$time;
+	/*#ifndef(PHP4) */protected/* #*//*#ifdef(PHP4):var:#*/ $time;
 /**
 	* @var integer $timeout_count Retries before timing out
 */
-	/*#ifndef(PHP4) */protected /* #*//*#ifdef(PHP4):var :#*/$timeout_count;
+	/*#ifndef(PHP4) */protected/* #*//*#ifdef(PHP4):var:#*/ $timeout_count;
 /**
 	* @var mixed $umask umask to set before creating a new file
 */
-	/*#ifndef(PHP4) */protected /* #*//*#ifdef(PHP4):var :#*/$umask;
+	/*#ifndef(PHP4) */protected/* #*//*#ifdef(PHP4):var:#*/ $umask;
 
 /* -------------------------------------------------------------------------
 Construct the class using old and new behavior
@@ -219,7 +219,7 @@ Construct the class using old and new behavior
 	*
 	* @param  array $f_condition_array Condition array
 	* @return boolean True if condition is met
-	* @since  v0.1.00
+	* @since  v0.1.01
 */
 	/*#ifndef(PHP4) */protected /* #*/function condition_parse ($f_condition_array)
 	{
@@ -228,24 +228,37 @@ Construct the class using old and new behavior
 
 		if (count ($f_condition_array) == 3)
 		{
+			$f_value = $this->get_variable ($f_condition_array[2]);
+
 			switch ($f_condition_array[1])
 			{
 			case "ifdef":
 			{
-				$f_return = defined ($f_condition_array[2]);
+				if ($f_value != NULL) { $f_return = true; }
 				break 1;
 			}
 			case "ifndef":
 			{
-				if (defined ($f_condition_array[2])) { $f_return = false; }
-				else { $f_return = true; }
-
+				if ($f_value == NULL) { $f_return = true; }
 				break 1;
 			}
 			}
 		}
 
 		return $f_return;
+	}
+
+	//f// direct_php_builder->add_filetype_ascii ($f_extension)
+/**
+	* Adds an extension to the list of ASCII file types.
+	*
+	* @param  string $f_extension File type extension to add
+	* @since  v0.1.00
+*/
+	/*#ifndef(PHP4) */public /* #*/function add_filetype_ascii ($f_extension)
+	{
+		if ($this->debugging) { $this->debug[] = "phpBuilder/#echo(__FILEPATH__)# -phpBuilder->add_filetype_ascii ($f_extension)- (#echo(__LINE__)#)"; }
+		$this->filetype_ascii_array[] = $f_extension;
 	}
 
 	//f// direct_php_builder->data_parse ($f_data,$f_file_path,$f_file_name)
@@ -275,8 +288,10 @@ Construct the class using old and new behavior
 			{
 				if (!isset ($f_matched_array[$f_result]))
 				{
-					if (defined ($f_result_array[1][$f_match_counter])) { $f_data = str_replace ($f_result,(constant ($f_result_array[1][$f_match_counter])),$f_data); }
-					else { $f_data = str_replace ($f_result,$f_result_array[1][$f_match_counter],$f_data); }
+					$f_value = $this->get_variable ($f_result_array[1][$f_match_counter]);
+
+					if ($f_value == NULL) { $f_data = str_replace ($f_result,$f_result_array[1][$f_match_counter],$f_data); }
+					else { $f_data = str_replace ($f_result,$f_value,$f_data); }
 
 					$f_matched_array[$f_result] = $f_result_array[1][$f_match_counter];
 				}
@@ -383,8 +398,10 @@ Construct the class using old and new behavior
 							case "__LINE__": { break 1; }
 							default:
 							{
-								if (defined ($f_command_array[2])) { $f_return .= constant ($f_command_array[2]); }
-								else { $f_return .= $f_command_array[2]; }
+								$f_value = $this->get_variable ($f_command_array[2]);
+
+								if ($f_value == NULL) { $f_return .= $f_command_array[2]; }
+								else { $f_return .= $f_value; }
 							}
 							}
 
@@ -539,7 +556,7 @@ Construct the class using old and new behavior
 
 		$f_file_array = pathinfo ($f_file_path);
 
-		if ((isset ($f_file_array['dirname']))&&($this->dir_create ($f_file_array['dirname'])))
+		if ((!isset ($f_file_array['dirname']))||($this->dir_create ($f_file_array['dirname'])))
 		{
 			$f_file_object = new direct_file ($this->umask,$this->chmod_files,$this->time,$this->timeout_count,$this-debugging);
 
@@ -551,6 +568,20 @@ Construct the class using old and new behavior
 		}
 
 		return $f_return;
+	}
+
+	//f// direct_php_builder->get_variable ($f_name)
+/**
+	* Gets the variable content with the given name.
+	*
+	* @param  string $f_name Variable name
+	* @return mixed Variable content; NULL if undefined
+	* @since  v0.1.01
+*/
+	/*#ifndef(PHP4) */protected /* #*/function get_variable ($f_name)
+	{
+		if ($this->debugging) { $this->debug[] = "phpBuilder/#echo(__FILEPATH__)# -phpBuilder->get_variable ($f_name)- (#echo(__LINE__)#)"; }
+		return constant ($f_name);
 	}
 
 	//f// direct_php_builder->make_all ()
@@ -702,7 +733,7 @@ Create a list of files - we need to scan directories recursively ...
 						{
 							if ((!in_array ($f_content,$this->dir_exclude_array))&&(!in_array ($f_content_estripped,$this->dir_exclude_array))) { $this->dir_array[] = $f_content_extended; }
 						}
-						elseif (is_file ($f_content))
+						elseif (is_file ($f_content_extended))
 						{
 							$f_content_array = pathinfo ($f_content);
 							$f_content_id = md5 ($f_content_estripped);
