@@ -219,7 +219,7 @@ Construct the class using old and new behavior
 	*
 	* @param  array $f_condition_array Condition array
 	* @return boolean True if condition is met
-	* @since  v0.1.01
+	* @since  v0.1.00
 */
 	/*#ifndef(PHP4) */protected /* #*/function condition_parse ($f_condition_array)
 	{
@@ -253,7 +253,7 @@ Construct the class using old and new behavior
 	* Adds an extension to the list of ASCII file types.
 	*
 	* @param  string $f_extension File type extension to add
-	* @since  v0.1.00
+	* @since  v0.1.01
 */
 	/*#ifndef(PHP4) */public /* #*/function add_filetype_ascii ($f_extension)
 	{
