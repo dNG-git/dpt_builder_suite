@@ -345,25 +345,32 @@ Construct the class using old and new behavior
 				{
 					if ($f_sub)
 					{
+						$f_command_false_positive = true;
 						$f_data_sub_array = explode ($f_zone_tag,$f_data_array[$f_data_pointer],2);
 
-						if (count ($f_data_sub_array) == 2)
+						while (($f_command_false_positive)&&(count ($f_data_sub_array) == 2))
 						{
 							$f_data_sub_length = strlen ($f_data_sub_array[1]);
 
 							if (($f_data_sub_length > 1)&&(substr ($f_data_sub_array[1],0,2) == "*/"))
 							{
+								$f_command_false_positive = false;
 								if ($f_zone_valid) { $f_return .= str_replace ("*\/","*/",$f_data_sub_array[0]); }
 								$f_return .= substr ($f_data_sub_array[1],2);
 							}
 							elseif (($f_data_sub_length > 3)&&(substr ($f_data_sub_array[1],0,4) == "\\n*/"))
 							{
+								$f_command_false_positive = false;
 								if ($f_zone_valid) { $f_return .= str_replace ("*\/","*/",$f_data_sub_array[0]); }
 								$f_return .= preg_replace ("#^(\r\n|\r|\n)#","",(substr ($f_data_sub_array[1],4)));
 							}
-							else { $f_command_false_positive = true; }
+							else
+							{
+								if ($f_zone_valid) { $f_return .= (str_replace ("*\/","*/",$f_data_sub_array[0])).$f_zone_tag; }
+								$f_data_array[$f_data_pointer] = $f_data_sub_array[1];
+								$f_data_sub_array = explode ($f_zone_tag,$f_data_array[$f_data_pointer],2);
+							}
 						}
-						else { $f_command_false_positive = true; }
 					}
 					else { $f_return .= $f_data_array[$f_data_pointer]; }
 				}
