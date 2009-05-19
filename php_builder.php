@@ -319,20 +319,31 @@ Construct the class using old and new behavior
 	* @param  string $f_zone_tag Zone end tag
 	* @uses   direct_php_builder::condition_parse()
 	* @uses   direct_php_builder::data_parse_walker()
-	* @return string Parsed content part
+	* @return mixed Parsed content part
 	* @since  v0.1.00
 */
 	/*#ifndef(PHP4) */protected /* #*/function data_parse_walker ($f_data,$f_zone_valid = false,$f_zone_tag = "")
 	{
 		if ($this->debugging) { $this->debug[] = "phpBuilder/#echo(__FILEPATH__)# -phpBuilder->data_parse_walker (+f_data,+f_zone_valid,$f_zone_tag)- (#echo(__LINE__)#)"; }
-		$f_return = "";
 
-		if ($f_zone_tag) { $f_sub = true; }
-		else { $f_sub = false; }
+		if ($f_zone_tag)
+		{
+			$f_return = array ("","");
+			$f_sub = true;
+		}
+		else
+		{
+			$f_return = "";
+			$f_sub = false;
+			$f_zone_valid = true;
+		}
 
 		$f_command_array = array ();
 		$f_command_false_positive = false;
-		$f_data_array = preg_split ("/(\/\*#\w+\(\w+\))/",$f_data,2,PREG_SPLIT_DELIM_CAPTURE);
+
+		if ($f_sub) { $f_data_array = array ($f_data); }
+		else { $f_data_array = preg_split ("/(\/\*#\w+\(\w+\))/",$f_data,2,PREG_SPLIT_DELIM_CAPTURE); }
+
 		$f_data_pointer = 0;
 
 		while (isset ($f_data_array[$f_data_pointer]))
@@ -355,18 +366,18 @@ Construct the class using old and new behavior
 							if (($f_data_sub_length > 1)&&(substr ($f_data_sub_array[1],0,2) == "*/"))
 							{
 								$f_command_false_positive = false;
-								if ($f_zone_valid) { $f_return .= str_replace ("*\/","*/",$f_data_sub_array[0]); }
-								$f_return .= substr ($f_data_sub_array[1],2);
+								if ($f_zone_valid) { $f_return[0] .= str_replace ("*\/","*/",$f_data_sub_array[0]); }
+								$f_return[1] .= substr ($f_data_sub_array[1],2);
 							}
 							elseif (($f_data_sub_length > 3)&&(substr ($f_data_sub_array[1],0,4) == "\\n*/"))
 							{
 								$f_command_false_positive = false;
-								if ($f_zone_valid) { $f_return .= str_replace ("*\/","*/",$f_data_sub_array[0]); }
-								$f_return .= preg_replace ("#^(\r\n|\r|\n)#","",(substr ($f_data_sub_array[1],4)));
+								if ($f_zone_valid) { $f_return[0] .= str_replace ("*\/","*/",$f_data_sub_array[0]); }
+								$f_return[1] .= preg_replace ("#^(\r\n|\r|\n)#","",(substr ($f_data_sub_array[1],4)));
 							}
 							else
 							{
-								if ($f_zone_valid) { $f_return .= (str_replace ("*\/","*/",$f_data_sub_array[0])).$f_zone_tag; }
+								if ($f_zone_valid) { $f_return[0] .= (str_replace ("*\/","*/",$f_data_sub_array[0])).$f_zone_tag; }
 								$f_data_array[$f_data_pointer] = $f_data_sub_array[1];
 								$f_data_sub_array = explode ($f_zone_tag,$f_data_array[$f_data_pointer],2);
 							}
@@ -374,16 +385,18 @@ Construct the class using old and new behavior
 					}
 					else { $f_return .= $f_data_array[$f_data_pointer]; }
 				}
-				else
+				elseif ($f_zone_valid)
 				{
+					$f_return_array = NULL;
+
 					if (preg_match ("#^\:(\r\n|\r|\n)(.*?)$#s",$f_data_array[$f_data_pointer],$f_result_array))
 					{
-						if (($f_command_array[1] == "ifdef")||($f_command_array[1] == "ifndef")) { $f_return .= $this->data_parse_walker ($f_result_array[2],($this->condition_parse ($f_command_array)),":#"); }
+						if (($f_command_array[1] == "ifdef")||($f_command_array[1] == "ifndef")) { $f_return_array = $this->data_parse_walker ($f_result_array[2],($this->condition_parse ($f_command_array)),":#"); }
 						else { $f_command_false_positive = true; }
 					}
 					elseif ($f_data_array[$f_data_pointer][0] == ":")
 					{
-						if (($f_command_array[1] == "ifdef")||($f_command_array[1] == "ifndef")) { $f_return .= $this->data_parse_walker (substr ($f_data_array[$f_data_pointer],1),($this->condition_parse ($f_command_array)),":#"); }
+						if (($f_command_array[1] == "ifdef")||($f_command_array[1] == "ifndef")) { $f_return_array = $this->data_parse_walker (substr ($f_data_array[$f_data_pointer],1),($this->condition_parse ($f_command_array)),":#"); }
 						else { $f_command_false_positive = true; }
 					}
 					elseif (substr ($f_data_array[$f_data_pointer],0,3) == "#*/")
@@ -418,23 +431,34 @@ Construct the class using old and new behavior
 					}
 					elseif (preg_match ("/^[ ]\*\/(\r\n|\r|\n)(.*?)$/s",$f_data_array[$f_data_pointer],$f_result_array))
 					{
-						if (($f_command_array[1] == "ifdef")||($f_command_array[1] == "ifndef")) { $f_return .= $this->data_parse_walker ($f_result_array[2],($this->condition_parse ($f_command_array)),"/* #"); }
+						if (($f_command_array[1] == "ifdef")||($f_command_array[1] == "ifndef")) { $f_return_array = $this->data_parse_walker ($f_result_array[2],($this->condition_parse ($f_command_array)),"/* #"); }
 						else { $f_command_false_positive = true; }
 					}
 					elseif (substr ($f_data_array[$f_data_pointer],0,3) == " */")
 					{
-						if (($f_command_array[1] == "ifdef")||($f_command_array[1] == "ifndef")) { $f_return .= $this->data_parse_walker (substr ($f_data_array[$f_data_pointer],3),($this->condition_parse ($f_command_array)),"/* #"); }
+						if (($f_command_array[1] == "ifdef")||($f_command_array[1] == "ifndef")) { $f_return_array = $this->data_parse_walker (substr ($f_data_array[$f_data_pointer],3),($this->condition_parse ($f_command_array)),"/* #"); }
 						else { $f_command_false_positive = true; }
 					}
 					else { $f_command_false_positive = true; }
-					
+
 					if ($f_command_false_positive) { $f_return .= $f_command_array[0]; }
+					elseif (isset ($f_return_array))
+					{
+						$f_return .= $f_return_array[0];
+						$f_data_array = preg_split ("/(\/\*#\w+\(\w+\))/",$f_return_array[1],2,PREG_SPLIT_DELIM_CAPTURE);
+
+						if (count ($f_data_array) > 1) { $f_data_pointer = -1; }
+						else { $f_return .= $f_return_array[1]; }
+					}
+
 					$f_command_array = array ();
 				}
 
 				if ($f_command_false_positive)
 				{
-					$f_return .= $f_data_array[$f_data_pointer];
+					if ($f_sub) { $f_return[0] .= $f_data_array[$f_data_pointer]; }
+					else { $f_return .= $f_data_array[$f_data_pointer]; }
+
 					$f_command_false_positive = false;
 				}
 			}
