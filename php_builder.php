@@ -15,7 +15,6 @@ for a particular purpose.
 ----------------------------------------------------------------------------
 http://www.direct-netware.de/redirect.php?licenses;w3c
 ----------------------------------------------------------------------------
-$Id: php_builder.php,v 1.1 2009/05/11 20:27:09 s4u Exp $
 #echo(phpBuilderVersion)#
 phpBuilder/#echo(__FILEPATH__)#
 ----------------------------------------------------------------------------
