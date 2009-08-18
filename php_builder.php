@@ -48,8 +48,7 @@ all development packets)
 Testing for required classes
 ------------------------------------------------------------------------- */
 
-$g_continue_check = true;
-if (defined ("CLASS_direct_php_builder")) { $g_continue_check = false; }
+$g_continue_check = ((defined ("CLASS_direct_php_builder")) ? false : true);
 if (!defined ("CLASS_direct_file")) { $g_continue_check = false; }
 
 if ($g_continue_check)
@@ -168,9 +167,7 @@ Construct the class using old and new behavior
 
 		$this->output_strip_prefix = "";
 
-		if ($f_time < 0) { $this->time = time (); }
-		else { $this->time = $f_time; }
-
+		$this->time = (($f_time < 0) ? time () : $f_time);
 		$this->timeout_count = $f_timeout_count;
 		$this->umask = $f_umask;
 
@@ -288,10 +285,7 @@ Construct the class using old and new behavior
 				if (!isset ($f_matched_array[$f_result]))
 				{
 					$f_value = $this->get_variable ($f_result_array[1][$f_match_counter]);
-
-					if ($f_value == NULL) { $f_data = str_replace ($f_result,$f_result_array[1][$f_match_counter],$f_data); }
-					else { $f_data = str_replace ($f_result,$f_value,$f_data); }
-
+					$f_data = (($f_value == NULL) ? str_replace ($f_result,$f_result_array[1][$f_match_counter],$f_data) : str_replace ($f_result,$f_value,$f_data));
 					$f_matched_array[$f_result] = $f_result_array[1][$f_match_counter];
 				}
 
@@ -339,10 +333,7 @@ Construct the class using old and new behavior
 
 		$f_command_array = array ();
 		$f_command_false_positive = false;
-
-		if ($f_sub) { $f_data_array = array ($f_data); }
-		else { $f_data_array = preg_split ("/(\/\*#\w+\(\w+\))/",$f_data,2,PREG_SPLIT_DELIM_CAPTURE); }
-
+		$f_data_array = ($f_sub ? array ($f_data) : preg_split ("/(\/\*#\w+\(\w+\))/",$f_data,2,PREG_SPLIT_DELIM_CAPTURE));
 		$f_data_pointer = 0;
 
 		while (isset ($f_data_array[$f_data_pointer]))
@@ -418,9 +409,7 @@ Construct the class using old and new behavior
 							default:
 							{
 								$f_value = $this->get_variable ($f_command_array[2]);
-
-								if ($f_value == NULL) { $f_return .= $f_command_array[2]; }
-								else { $f_return .= $f_value; }
+								$f_return .= (($f_value == NULL) ? $f_command_array[2] : $f_value);
 							}
 							}
 
@@ -492,13 +481,10 @@ Construct the class using old and new behavior
 		else
 		{
 			$f_continue_check = true;
-			$f_return = false;
-
-			if ($f_timeout < 0) { $f_timeout_time = ($this->time + $this->timeout_count); }
-			else { $f_timeout_time = ($this->time + $f_timeout); }
-
 			$f_dir_array = explode ("/",$f_dir_path);
 			$f_dir_count = count ($f_dir_array);
+			$f_return = false;
+			$f_timeout_time = (($f_timeout < 0) ? ($this->time + $this->timeout_count) : ($this->time + $f_timeout));
 
 			if ($f_dir_count > 1)
 			{
@@ -510,10 +496,7 @@ Construct the class using old and new behavior
 			if (($f_continue_check)&&($f_timeout_time > (time ())))
 			{
 				if ($this->umask) { umask (intval ($this->umask,8)); }
-
-				if (isset ($this->chmod_dirs)) { $f_chmod = intval ($this->chmod_dirs,8); }
-				else { $f_chmod = 0750; }
-
+				$f_chmod = ((isset ($this->chmod_dirs)) ? intval ($this->chmod_dirs,8) : 0750);
 				if (@mkdir ($f_dir_path,$f_chmod)) { $f_return = is_writable ($f_dir_path); }
 			}
 		}
@@ -754,9 +737,7 @@ Create a list of files - we need to scan directories recursively ...
 				{
 					if ($f_content[0] != ".")
 					{
-						if (substr ($this->dir_array[$f_dir_counter],-1,1) == "/") { $f_content_extended = $this->dir_array[$f_dir_counter].$f_content; }
-						else { $f_content_extended = $this->dir_array[$f_dir_counter]."/".$f_content; }
-
+						$f_content_extended = ((substr ($this->dir_array[$f_dir_counter],-1,1) == "/") ? $this->dir_array[$f_dir_counter].$f_content : $this->dir_array[$f_dir_counter]."/".$f_content);
 						$f_content_estripped = preg_replace ("#^$f_strip_prefix#","",$f_content_extended);
 
 						if (is_dir ($f_content_extended))
