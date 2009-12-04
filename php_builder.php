@@ -76,12 +76,12 @@ class direct_php_builder
 */
 	/*#ifndef(PHP4) */protected/* #*//*#ifdef(PHP4):var:#*/ $chmod_files;
 /**
-	* @var array $debug Debug message container 
+	* @var array $debug Debug message container
 */
 	/*#ifndef(PHP4) */public/* #*//*#ifdef(PHP4):var:#*/ $debug;
 /**
 	* @var boolean $debugging True if we should fill the debug message
-	*      container 
+	*      container
 */
 	/*#ifndef(PHP4) */protected/* #*//*#ifdef(PHP4):var:#*/ $debugging;
 /**
@@ -113,7 +113,7 @@ class direct_php_builder
 */
 	/*#ifndef(PHP4) */protected/* #*//*#ifdef(PHP4):var:#*/ $output_path;
 /**
-	* @var string $output_strip_prefix Prefix to be stripped from ouput pathes
+	* @var string $output_strip_prefix Prefix to be stripped from output pathes
 */
 	/*#ifndef(PHP4) */protected/* #*//*#ifdef(PHP4):var:#*/ $output_strip_prefix;
 /**
@@ -160,20 +160,16 @@ Construct the class using old and new behavior
 		$this->chmod_files = $f_chmod_files;
 		$this->dir_exclude_array = array ();
 		$this->file_exclude_array = array ();
+		$this->filetype_array = explode (",",$f_filetype);
 		$this->filetype_ascii_array = array ("txt","js","php","xml");
 
 		if ((strlen ($f_output_path))&&(substr ($f_output_path,-1,1) != "/")) { $f_output_path .= "/"; }
 		$this->output_path = $f_output_path;
 
 		$this->output_strip_prefix = "";
-
 		$this->time = (($f_time < 0) ? time () : $f_time);
 		$this->timeout_count = $f_timeout_count;
 		$this->umask = $f_umask;
-
-		$this->filetype_array = array ();
-		$f_data_array = explode (",",$f_filetype);
-		foreach ($f_data_array as $f_data) { $this->filetype_array[] = $f_data; }
 
 		$this->dir_array = array ();
 		$this->file_array = array ();
@@ -271,7 +267,6 @@ Construct the class using old and new behavior
 	/*#ifndef(PHP4) */protected /* #*/function data_parse ($f_data,$f_file_path,$f_file_name)
 	{
 		if ($this->debugging) { $this->debug[] = "phpBuilder/#echo(__FILEPATH__)# -phpBuilder->data_parse (+f_data)- (#echo(__LINE__)#)"; }
-		$f_return = false;
 
 		$f_data = str_replace (array ("#echo(__FILE__)#","#echo(__FILEPATH__)#"),(array ($f_file_name,$f_file_path)),($this->data_parse_walker ($f_data)));
 
@@ -393,24 +388,10 @@ Construct the class using old and new behavior
 					{
 						if ($f_command_array[1] == "echo")
 						{
-							switch ($f_command_array[2])
-							{
-							case "__FILE__":
-							{
-								$f_return .= $f_file_name;
-								break 1;
-							}
-							case "__FILEPATH__":
-							{
-								$f_return .= $f_file_path;
-								break 1;
-							}
-							case "__LINE__": { break 1; }
-							default:
+							if ($f_command_array[2] != "__LINE__")
 							{
 								$f_value = $this->get_variable ($f_command_array[2]);
 								$f_return .= (($f_value == NULL) ? $f_command_array[2] : $f_value);
-							}
 							}
 
 							$f_return .= substr ($f_data_array[$f_data_pointer],3);
@@ -520,7 +501,7 @@ Construct the class using old and new behavior
 		$f_return = false;
 
 		$f_file_array = pathinfo ($f_file_path);
-		$f_file_object = new direct_file ($this->umask,$this->chmod_files,$this->time,$this->timeout_count,$this-debugging);
+		$f_file_object = new direct_file ($this->umask,$this->chmod_files,$this->time,$this->timeout_count,$this->debugging);
 		$f_file_text_mode = false;
 
 		if ((isset ($f_file_array['extension']))&&(in_array ($f_file_array['extension'],$this->filetype_ascii_array))) { $f_file_text_mode = true; }
@@ -531,7 +512,7 @@ Construct the class using old and new behavior
 			$f_file_content = $f_file_object->read ();
 			$f_file_object->close ();
 		}
-		else { $f_file_content =  NULL; }
+		else { $f_file_content = NULL; }
 
 		$f_file_path = preg_replace ("#^".(preg_quote ($this->output_strip_prefix))."#","",$f_file_path);
 
@@ -571,7 +552,7 @@ Construct the class using old and new behavior
 
 		if ((!isset ($f_file_array['dirname']))||($this->dir_create ($f_file_array['dirname'])))
 		{
-			$f_file_object = new direct_file ($this->umask,$this->chmod_files,$this->time,$this->timeout_count,$this-debugging);
+			$f_file_object = new direct_file ($this->umask,$this->chmod_files,$this->time,$this->timeout_count,$this->debugging);
 
 			if ($f_file_object->open ($f_file_path,false,$f_file_mode))
 			{
@@ -632,8 +613,9 @@ Construct the class using old and new behavior
 /**
 	* Add "exclude" definitions for directories and files.
 	*
-	* @param  string $f_exclude String (delimiter is ",") with exclude names or pathes
-	* @since  v0.1.00
+	* @param string $f_exclude String (delimiter is ",") with exclude names or
+	*        pathes
+	* @since v0.1.00
 */
 	/*#ifndef(PHP4) */public /* #*/function set_exclude ($f_exclude)
 	{
@@ -643,10 +625,10 @@ Construct the class using old and new behavior
 		{
 			$f_exclude_array = explode (",",$f_exclude);
 
-			foreach ($f_exclude_array as $f_exclude_array)
+			foreach ($f_exclude_array as $f_exclude)
 			{
-				$this->dir_exclude_array[] = $f_exclude_array;
-				$this->file_exclude_array[] = $f_exclude_array;
+				$this->dir_exclude_array[] = $f_exclude;
+				$this->file_exclude_array[] = $f_exclude;
 			}
 		}
 		else { trigger_error ("phpBuilder/#echo(__FILEPATH__)# -phpBuilder->set_exclude ()- (#echo(__LINE__)#) reports: Given parameter is not a string",E_USER_NOTICE); }
@@ -656,9 +638,9 @@ Construct the class using old and new behavior
 /**
 	* Add "exclude" definitions for directories.
 	*
-	* @param  string $f_exclude String (delimiter is ",") with exclude names or
-	*         pathes
-	* @since  v0.1.00
+	* @param string $f_exclude String (delimiter is ",") with exclude names or
+	*        pathes
+	* @since v0.1.00
 */
 	/*#ifndef(PHP4) */public /* #*/function set_exclude_dirs ($f_exclude)
 	{
@@ -667,7 +649,7 @@ Construct the class using old and new behavior
 		if (is_string ($f_exclude))
 		{
 			$f_exclude_array = explode (",",$f_exclude);
-			foreach ($f_exclude_array as $f_exclude_array) { $this->dir_exclude_array[] = $f_exclude_array; }
+			foreach ($f_exclude_array as $f_exclude) { $this->dir_exclude_array[] = $f_exclude; }
 		}
 		else { trigger_error ("phpBuilder/#echo(__FILEPATH__)# -phpBuilder->set_exclude_dirs ()- (#echo(__LINE__)#) reports: Given parameter is not a string",E_USER_NOTICE); }
 	}
@@ -676,9 +658,9 @@ Construct the class using old and new behavior
 /**
 	* Add "exclude" definitions for files.
 	*
-	* @param  string $f_exclude String (delimiter is ",") with exclude names or
-	*         pathes
-	* @since  v0.1.00
+	* @param string $f_exclude String (delimiter is ",") with exclude names or
+	*        pathes
+	* @since v0.1.00
 */
 	/*#ifndef(PHP4) */public /* #*/function set_exclude_files ($f_exclude)
 	{
@@ -687,7 +669,7 @@ Construct the class using old and new behavior
 		if (is_string ($f_exclude))
 		{
 			$f_exclude_array = explode (",",$f_exclude);
-			foreach ($f_exclude_array as $f_exclude_array) { $this->file_exclude_array[] = $f_exclude_array; }
+			foreach ($f_exclude_array as $f_exclude) { $this->file_exclude_array[] = $f_exclude; }
 		}
 		else { trigger_error ("phpBuilder/#echo(__FILEPATH__)# -phpBuilder->set_exclude_files ()- (#echo(__LINE__)#) reports: Given parameter is not a string",E_USER_NOTICE); }
 	}
@@ -696,8 +678,8 @@ Construct the class using old and new behavior
 /**
 	* Define a prefix to be stripped from output pathes.
 	*
-	* @param  string $f_strip_prefix Prefix definition
-	* @since  v0.1.00
+	* @param string $f_strip_prefix Prefix definition
+	* @since v0.1.00
 */
 	/*#ifndef(PHP4) */public /* #*/function set_strip_prefix ($f_strip_prefix)
 	{
