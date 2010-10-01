@@ -1,2 +1,7 @@
 _extras
 .*
+*.mdproj
+*.mdw
+*.pidb
+*.sln
+*.userprefs

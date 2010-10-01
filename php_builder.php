@@ -398,7 +398,7 @@ Construct the class using old and new behavior
 						}
 						else { $f_command_false_positive = true; }
 					}
-					elseif (preg_match ("/^[ ]\*\/(\r\n|\r|\n)(.*?)$/s",$f_data_array[$f_data_pointer],$f_result_array))
+					elseif (preg_match ("/^\\x20\*\/(\r\n|\r|\n)(.*?)$/s",$f_data_array[$f_data_pointer],$f_result_array))
 					{
 						if (($f_command_array[1] == "ifdef")||($f_command_array[1] == "ifndef")) { $f_return_array = $this->data_parse_walker ($f_result_array[2],($this->condition_parse ($f_command_array)),"/* #"); }
 						else { $f_command_false_positive = true; }
