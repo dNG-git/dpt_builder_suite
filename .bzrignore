@@ -1,7 +1,4 @@
 _extras
 .*
-*.mdproj
-*.mdw
-*.pidb
-*.sln
-*.userprefs
+ext_core_php_builder.*
+nbproject

@@ -253,22 +253,22 @@ Construct the class using old and new behavior
 		$this->filetype_ascii_array[] = $f_extension;
 	}
 
-	//f// direct_php_builder->data_parse ($f_data,$f_file_path,$f_file_name)
+	//f// direct_php_builder->data_parse ($f_data,$f_file_pathname,$f_file_name)
 /**
 	* Parse the given content and return a line based array.
 	*
 	* @param  string $f_data Data to be parsed
-	* @param  string $f_file_path File path
+	* @param  string $f_file_pathname File path
 	* @param  string $f_file_name File name
 	* @uses   direct_php_builder::data_parse_walker()
 	* @return mixed Line based array; False on error
 	* @since  v0.1.00
 */
-	/*#ifndef(PHP4) */protected /* #*/function data_parse ($f_data,$f_file_path,$f_file_name)
+	/*#ifndef(PHP4) */protected /* #*/function data_parse ($f_data,$f_file_pathname,$f_file_name)
 	{
 		if ($this->debugging) { $this->debug[] = "phpBuilder/#echo(__FILEPATH__)# -phpBuilder->data_parse (+f_data)- (#echo(__LINE__)#)"; }
 
-		$f_data = str_replace (array ("#echo(__FILE__)#","#echo(__FILEPATH__)#"),(array ($f_file_name,$f_file_path)),($this->data_parse_walker ($f_data)));
+		$f_data = str_replace (array ("#echo(__FILE__)#","#echo(__FILEPATH__)#"),(array ($f_file_name,$f_file_pathname)),($this->data_parse_walker ($f_data)));
 
 		if (preg_match_all ("/#echo\(((?!_)\w+)\)#/",$f_data,$f_result_array,PREG_PATTERN_ORDER))
 		{
@@ -485,76 +485,76 @@ Construct the class using old and new behavior
 		return $f_return;
 	}
 
-	//f// direct_php_builder->file_parse ($f_file_path)
+	//f// direct_php_builder->file_parse ($f_file_pathname)
 /**
 	* Handle the given file and call the content parse method.
 	*
-	* @param  string $f_file_path Path to the requested file
+	* @param  string $f_file_pathname Path to the requested file
 	* @uses   direct_php_builder::data_parse()
 	* @uses   direct_php_builder::file_write()
 	* @return boolean True on success
 	* @since  v0.1.00
 */
-	/*#ifndef(PHP4) */protected /* #*/function file_parse ($f_file_path)
+	/*#ifndef(PHP4) */protected /* #*/function file_parse ($f_file_pathname)
 	{
-		if ($this->debugging) { $this->debug[] = "phpBuilder/#echo(__FILEPATH__)# -phpBuilder->file_parse ($f_file_path)- (#echo(__LINE__)#)"; }
+		if ($this->debugging) { $this->debug[] = "phpBuilder/#echo(__FILEPATH__)# -phpBuilder->file_parse ($f_file_pathname)- (#echo(__LINE__)#)"; }
 		$f_return = false;
 
-		$f_file_array = pathinfo ($f_file_path);
+		$f_file_array = pathinfo ($f_file_pathname);
 		$f_file_object = new direct_file ($this->umask,$this->chmod_files,$this->time,$this->timeout_count,$this->debugging);
 		$f_file_text_mode = false;
 
 		if ((isset ($f_file_array['extension']))&&(in_array ($f_file_array['extension'],$this->filetype_ascii_array))) { $f_file_text_mode = true; }
 		elseif (isset ($f_file_array['basename'])) { $f_file_text_mode = in_array ($f_file_array['basename'],$this->filetype_ascii_array); }
 
-		if ((($f_file_text_mode)&&($f_file_object->open ($f_file_path,true,"r")))||($f_file_object->open ($f_file_path,true,"rb")))
+		if ((($f_file_text_mode)&&($f_file_object->open ($f_file_pathname,true,"r")))||($f_file_object->open ($f_file_pathname,true,"rb")))
 		{
 			$f_file_content = $f_file_object->read ();
 			$f_file_object->close ();
 		}
 		else { $f_file_content = NULL; }
 
-		$f_file_path = preg_replace ("#^".(preg_quote ($this->output_strip_prefix))."#","",$f_file_path);
+		$f_file_pathname = preg_replace ("#^".(preg_quote ($this->output_strip_prefix))."#","",$f_file_pathname);
 
 		if (($f_file_text_mode)&&(is_string ($f_file_content)))
 		{
-			$f_file_array = $this->data_parse ($f_file_content,$f_file_path,$f_file_array['basename']);
+			$f_file_array = $this->data_parse ($f_file_content,$f_file_pathname,$f_file_array['basename']);
 
 			if (strpos ($f_file_content,"\r\n") !== false) { $f_file_content = "\r\n"; }
 			elseif (strpos ($f_file_content,"\r") !== false) { $f_file_content = "\r"; }
 			else { $f_file_content = "\n"; }
 
-			if (is_array ($f_file_array)) { $f_return = $this->file_write (implode ($f_file_content,$f_file_array),$this->output_path.$f_file_path,"w+"); }
+			if (is_array ($f_file_array)) { $f_return = $this->file_write (implode ($f_file_content,$f_file_array),$this->output_path.$f_file_pathname,"w+"); }
 		}
-		else { $f_return = $this->file_write ($f_file_content,$this->output_path.$f_file_path); }
+		else { $f_return = $this->file_write ($f_file_content,$this->output_path.$f_file_pathname); }
 
 		return $f_return;
 	}
 
-	//f// direct_php_builder->file_write ($f_file_content,$f_file_path,$f_file_mode = "w+b")
+	//f// direct_php_builder->file_write ($f_file_content,$f_file_pathname,$f_file_mode = "w+b")
 /**
 	* Write the given file to the defined location. Create subdirectories if
 	* needed.
 	*
 	* @param  string $f_file_content Parsed content
-	* @param  string $f_file_path Path to the output file
+	* @param  string $f_file_pathname Path to the output file
 	* @param  string $f_file_mode Filemode to use
 	* @uses   direct_php_builder::dir_create()
 	* @return boolean True on success
 	* @since  v0.1.00
 */
-	/*#ifndef(PHP4) */protected /* #*/function file_write ($f_file_content,$f_file_path,$f_file_mode = "w+b")
+	/*#ifndef(PHP4) */protected /* #*/function file_write ($f_file_content,$f_file_pathname,$f_file_mode = "w+b")
 	{
-		if ($this->debugging) { $this->debug[] = "phpBuilder/#echo(__FILEPATH__)# -phpBuilder->file_write (+f_file_content,$f_file_path,$f_file_mode)- (#echo(__LINE__)#)"; }
+		if ($this->debugging) { $this->debug[] = "phpBuilder/#echo(__FILEPATH__)# -phpBuilder->file_write (+f_file_content,$f_file_pathname,$f_file_mode)- (#echo(__LINE__)#)"; }
 		$f_return = false;
 
-		$f_file_array = pathinfo ($f_file_path);
+		$f_file_array = pathinfo ($f_file_pathname);
 
 		if ((!isset ($f_file_array['dirname']))||($this->dir_create ($f_file_array['dirname'])))
 		{
 			$f_file_object = new direct_file ($this->umask,$this->chmod_files,$this->time,$this->timeout_count,$this->debugging);
 
-			if ($f_file_object->open ($f_file_path,false,$f_file_mode))
+			if ($f_file_object->open ($f_file_pathname,false,$f_file_mode))
 			{
 				$f_return = $f_file_object->write ($f_file_content);
 				$f_file_object->close ();
