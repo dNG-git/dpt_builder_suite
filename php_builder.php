@@ -53,7 +53,6 @@ if (!defined ("CLASS_direct_file")) { $g_continue_check = false; }
 
 if ($g_continue_check)
 {
-//c// direct_php_builder
 /**
 * Provides a PHP "make" environment object.
 *
@@ -133,7 +132,6 @@ class direct_php_builder
 Construct the class using old and new behavior
 ------------------------------------------------------------------------- */
 
-	//f// direct_php_builder->__construct () and direct_php_builder->direct_php_builder ()
 /**
 	* Constructor (PHP5+) __construct (direct_php_builder)
 	*
@@ -194,7 +192,6 @@ Construct the class using old and new behavior
 *\/
 	function direct_php_builder ($f_include,$f_output_path,$f_filetype,$f_umask = NULL,$f_chmod = NULL,$f_time = -1,$f_timeout_count = 5,$f_debug = false) { $this->__construct ($f_include,$f_output_path,$f_filetype,$f_umask,$f_chmod,$f_time,$f_timeout_count,$f_debug); }
 :#\n*/
-	//f// direct_php_builder->__destruct ()
 /**
 	* Destructor (PHP5+) __destruct (direct_php_builder)
 	*
@@ -205,7 +202,6 @@ Construct the class using old and new behavior
 		// Nothing to do for me
 	}
 
-	//f// direct_php_builder->condition_parse ($f_condition_array)
 /**
 	* Parse the given condition and returns the corresponding result.
 	*
@@ -240,7 +236,6 @@ Construct the class using old and new behavior
 		return $f_return;
 	}
 
-	//f// direct_php_builder->add_filetype_ascii ($f_extension)
 /**
 	* Adds an extension to the list of ASCII file types.
 	*
@@ -253,7 +248,6 @@ Construct the class using old and new behavior
 		$this->filetype_ascii_array[] = $f_extension;
 	}
 
-	//f// direct_php_builder->data_parse ($f_data,$f_file_pathname,$f_file_name)
 /**
 	* Parse the given content and return a line based array.
 	*
@@ -298,7 +292,6 @@ Construct the class using old and new behavior
 		return $f_return;
 	}
 
-	//f// direct_php_builder->data_parse_walker ($f_data,$f_zone_valid = false,$f_zone_tag = "")
 /**
 	* Parse the given content part recursively and returns the result.
 	*
@@ -439,7 +432,6 @@ Construct the class using old and new behavior
 		return $f_return;
 	}
 
-	//f// direct_php_builder->dir_create ($f_dir_path,$f_timeout = -1)
 /**
 	* Creates a directory (or returns the status of is_writable if it exists).
 	* Use slashes - even on Microsoft(R) Windows(R) machines.
@@ -485,7 +477,6 @@ Construct the class using old and new behavior
 		return $f_return;
 	}
 
-	//f// direct_php_builder->file_parse ($f_file_pathname)
 /**
 	* Handle the given file and call the content parse method.
 	*
@@ -531,7 +522,6 @@ Construct the class using old and new behavior
 		return $f_return;
 	}
 
-	//f// direct_php_builder->file_write ($f_file_content,$f_file_pathname,$f_file_mode = "w+b")
 /**
 	* Write the given file to the defined location. Create subdirectories if
 	* needed.
@@ -564,7 +554,6 @@ Construct the class using old and new behavior
 		return $f_return;
 	}
 
-	//f// direct_php_builder->get_variable ($f_name)
 /**
 	* Gets the variable content with the given name.
 	*
@@ -578,7 +567,6 @@ Construct the class using old and new behavior
 		return constant ($f_name);
 	}
 
-	//f// direct_php_builder->make_all ()
 /**
 	* Parse and rewrite all directories and files given as include definitions.
 	*
@@ -609,7 +597,6 @@ Construct the class using old and new behavior
 		return $f_return;
 	}
 
-	//f// direct_php_builder->set_exclude ($f_exclude)
 /**
 	* Add "exclude" definitions for directories and files.
 	*
@@ -634,7 +621,6 @@ Construct the class using old and new behavior
 		else { trigger_error ("phpBuilder/#echo(__FILEPATH__)# -phpBuilder->set_exclude ()- (#echo(__LINE__)#) reports: Given parameter is not a string",E_USER_NOTICE); }
 	}
 
-	//f// direct_php_builder->set_exclude_dirs ($f_exclude)
 /**
 	* Add "exclude" definitions for directories.
 	*
@@ -654,7 +640,6 @@ Construct the class using old and new behavior
 		else { trigger_error ("phpBuilder/#echo(__FILEPATH__)# -phpBuilder->set_exclude_dirs ()- (#echo(__LINE__)#) reports: Given parameter is not a string",E_USER_NOTICE); }
 	}
 
-	//f// direct_php_builder->set_exclude_files ($f_exclude)
 /**
 	* Add "exclude" definitions for files.
 	*
@@ -674,7 +659,6 @@ Construct the class using old and new behavior
 		else { trigger_error ("phpBuilder/#echo(__FILEPATH__)# -phpBuilder->set_exclude_files ()- (#echo(__LINE__)#) reports: Given parameter is not a string",E_USER_NOTICE); }
 	}
 
-	//f// direct_php_builder->set_strip_prefix ($f_strip_prefix)
 /**
 	* Define a prefix to be stripped from output pathes.
 	*
@@ -689,7 +673,6 @@ Construct the class using old and new behavior
 		else { trigger_error ("phpBuilder/#echo(__FILEPATH__)# -phpBuilder->set_strip_prefix ()- (#echo(__LINE__)#) reports: Given parameter is not a string",E_USER_NOTICE); }
 	}
 
-	//f// direct_php_builder->workdir_scan ()
 /**
 	* Scan given directories for files to be parsed.
 	*
