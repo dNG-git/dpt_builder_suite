@@ -42,6 +42,9 @@ import os,re,sys
 try: import hashlib
 except ImportError: import md5 as hashlib
 
+try: import cPickle as pickle
+except ImportError: import pickle
+
 from file import direct_file
 
 try: _unicode_object = { "type": unicode,"str": unicode.encode,"unicode": str.decode }
@@ -50,7 +53,7 @@ except: _unicode_object = { "type": bytes,"str": bytes.decode,"unicode": str.enc
 class direct_builder_skel (object):
 #
 	"""
-Provides a Python "make" environment object.
+Provides a Python "make" environment skeleton.
 
 @author     direct Netware Group
 @copyright  (C) direct Netware Group - All rights reserved
@@ -130,9 +133,13 @@ DEFINE values
 	"""
 Tags to be scanned for
 	"""
+	parser_pickle = { }
+	"""
+md5 strings of parsed files
+	"""
 	parser_tag = None
 	"""
-Tags to be scanned for
+Tag identifier
 	"""
 	time = -1
 	"""
@@ -143,6 +150,10 @@ Current UNIX timestamp
 Retries before timing out
 	"""
 	umask = None
+	"""
+umask to set before creating a new file
+	"""
+	workdir_rescan = True
 	"""
 umask to set before creating a new file
 	"""
@@ -179,59 +190,16 @@ Constructor __init__ (direct_py_builder)
 		else: self.chmod_dirs = int (default_chmod_dirs,8)
 
 		self.chmod_files = default_chmod_files
-		self.dir_exclude_list = [ ]
+		self.dir_list = [ ]
 		self.error_callback = None
-		self.file_exclude_list = [ ]
-		self.filetype_list = filetype.split (",")
+		self.file_dict = { }
 		self.filetype_ascii_list = [ "txt","js","php","py","xml" ]
-
-		if ((len (output_path)) and (not output_path.endswith ("/")) and (not output_path.endswith ("\\"))): output_path += path.sep
-		self.output_path = output_path
-
-		self.output_strip_prefix = "";
-
-		if (type (parameters) == dict): self.parameters = parameters
-		else: self.parameters = { }
-
-		if (current_time < 0): self.time = time ()
-		else: self.time = current_time
-
+		self.time = current_time
 		self.timeout_count = timeout_count
 		self.umask = default_umask
+		self.workdir_rescan = True
 
-		self.dir_list = [ ]
-		self.file_dict = { }
-		f_data_list = include.split (",")
-
-		for f_data in f_data_list:
-		#
-			if (path.isdir (f_data)): self.dir_list.append (f_data)
-			elif (path.isfile (f_data)): self.file_dict[hashlib.md5(f_data).hexdigest ()] = f_data
-		#
-	#
-
-	def condition_parse (self,condition_list):
-	#
-		"""
-Parse the given condition and returns the corresponding result.
-
-@param  condition_list Condition array
-@return (boolean) True if condition is met
-@since  v0.1.00
-		"""
-
-		if (self.debug != None): self.debug.append ("builderSkel/#echo(__FILEPATH__)# -builderSkel.condition_parse (+condition_list)- (#echo(__LINE__)#)")
-		f_return = False
-
-		if (len (condition_list) == 2):
-		#
-			f_value = self.get_variable (condition_list[1])
-
-			if ((condition_list[0] == "ifdef") and (f_value != None)): f_return = True
-			elif ((condition_list[0] == "ifndef") and (f_value == None)): f_return = True
-		#
-
-		return f_return
+		self.set_new_target (parameters,include,output_path,filetype)
 	#
 
 	def add_filetype_ascii (self,extension):
@@ -252,12 +220,12 @@ Adds an extension to the list of ASCII file types.
 	def data_parse (self,data,file_pathname,file_name):
 	#
 		"""
-Parse the given content and return a line based array.
+Parse the given content.
 
 @param  data Data to be parsed
 @param  file_pathname File path
 @param  file_name File name
-@return (mixed) Line based array; False on error
+@return (str) Filtered data
 @since  v0.1.00
 		"""
 
@@ -305,6 +273,19 @@ Parse the given content and return a line based array.
 		return f_return
 	#
 
+	def data_remove_dev_comments (self,data):
+	#
+		"""
+Remove all development comments from the content.
+
+@param  data Data to be parsed
+@return (str) Filtered data
+@since  v0.1.00
+		"""
+
+		return data
+	#
+
 	def dir_create (self,dir_path,timeout = -1):
 	#
 		"""
@@ -335,8 +316,11 @@ Use slashes - even on Microsoft(R) Windows(R) machines.
 			f_dir_count = len (f_dir_list)
 			f_return = False
 
-			if (timeout < 0): f_timeout_time = (self.time + self.timeout_count)
-			else: f_timeout_time = (self.time + timeout)
+			if (self.time < 0): f_time = time ()
+			else: f_time = self.time
+
+			if (timeout < 0): f_timeout_time = (f_time + self.timeout_count)
+			else: f_timeout_time = (f_time + timeout)
 
 			if (f_dir_count > 1):
 			#
@@ -381,12 +365,15 @@ Handle the given file and call the content parse method.
 			self.debug.append ("builderSkel/#echo(__FILEPATH__)# -builderSkel.file_parse ({0})- (#echo(__LINE__)#)".format (file_pathname))
 		#
 
-		f_return = False
+		f_return = True
+
+		if (self.time < 0): f_time = time ()
+		else: f_time = self.time
 
 		( f_file_basename,f_file_ext ) = path.splitext (file_pathname)
 		f_file_basename = path.basename (file_pathname)
 		f_file_ext = f_file_ext[1:]
-		f_file_object = direct_file (self.umask,self.chmod_files,self.time,self.timeout_count,f_debug)
+		f_file_object = direct_file (self.umask,self.chmod_files,f_time,self.timeout_count,f_debug)
 		f_file_text_mode = False
 
 		if ((len (f_file_ext) > 0) and (f_file_ext in self.filetype_ascii_list)): f_file_text_mode = True
@@ -401,18 +388,38 @@ Handle the given file and call the content parse method.
 
 		f_file_pathname = re.sub ("^{0}".format (re.escape (self.output_strip_prefix)),"",file_pathname)
 
-		if (f_file_content == None): f_return = self.file_write ("",(self.output_path + f_file_pathname))
-		elif (f_file_text_mode):
+		if (f_file_pathname in self.parser_pickle):
 		#
-			f_file_list = self.data_parse (f_file_content,f_file_pathname,f_file_basename)
+			if (((f_file_text_mode) and (f_file_object.open ((self.output_path + f_file_pathname),True,"r"))) or (f_file_object.open ((self.output_path + f_file_pathname),True,"rb"))):
+			#
+				f_file_old_content_md5 = hashlib.md5(f_file_object.read ()).hexdigest ()
+				f_file_object.close ()
+			#
+			else: f_file_old_content_md5 = None
 
-			if (f_file_content.find ("\r\n") > -1): f_file_content = "\r\n"
-			elif (f_file_content.find ("\r") > -1): f_file_content = "\r"
-			else: f_file_content = "\n"
-
-			if (type (f_file_list) == list): f_return = self.file_write (f_file_content.join (f_file_list),(self.output_path + f_file_pathname),"w+")
+			if ((f_file_old_content_md5 != None) and (f_file_old_content_md5 != self.parser_pickle[f_file_pathname])):
+			#
+				f_return = False
+				sys.stdout.write ("has been changed ... ")
+			#
 		#
-		else: f_return = self.file_write (f_file_content,(self.output_path + f_file_pathname))
+
+		if (f_return):
+		#
+			if (f_file_content == None):
+			#
+				f_file_content = ""
+				f_return = self.file_write ("",(self.output_path + f_file_pathname))
+			#
+			elif (f_file_text_mode):
+			#
+				f_file_content = self.data_parse (f_file_content,f_file_pathname,f_file_basename)
+				f_return = self.file_write (f_file_content,(self.output_path + f_file_pathname),"w+")
+			#
+			else: f_return = self.file_write (f_file_content,(self.output_path + f_file_pathname))
+
+			if (f_return): self.parser_pickle[f_file_pathname] = hashlib.md5(f_file_content).hexdigest ()
+		#
 
 		return f_return
 	#
@@ -444,9 +451,12 @@ needed.
 		f_dir_path = path.dirname (file_pathname)
 		f_return = False
 
+		if (self.time < 0): f_time = time ()
+		else: f_time = self.time
+
 		if ((len (f_dir_path) < 1) or (self.dir_create (f_dir_path))):
 		#
-			f_file_object = direct_file (self.umask,self.chmod_files,self.time,self.timeout_count,f_debug)
+			f_file_object = direct_file (self.umask,self.chmod_files,f_time,self.timeout_count,f_debug)
 
 			if (f_file_object.open (file_pathname,False,file_mode)):
 			#
@@ -489,7 +499,11 @@ Parse and rewrite all directories and files given as include definitions.
 
 		f_return = False
 
-		if ((len (self.dir_list) > 0) and (len (self.filetype_list) > 0)): self.workdir_scan ()
+		if ((self.workdir_rescan) and (len (self.dir_list) > 0) and (len (self.filetype_list) > 0)):
+		#
+			self.workdir_scan ()
+			self.workdir_rescan = False
+		#
 
 		if (len (self.file_dict) < 1): self.trigger_error ("builderSkel/#echo(__FILEPATH__)# -builderSkel.make_all ()- (#echo(__LINE__)#) reports: No valid files found for parsing",self.E_ERROR)
 		else:
@@ -499,11 +513,20 @@ Parse and rewrite all directories and files given as include definitions.
 				f_file = self.file_dict[f_file_id]
 				if (type (f_file) == _unicode_object['type']): f_file = _unicode_object['str'] (f_file,"utf-8")
 
-				sys.stdout.write (">> Parsing {0} ... ".format (f_file))
+				sys.stdout.write (">>> Processing {0} ... ".format (f_file))
 
 				if (self.file_parse (f_file)): sys.stdout.write ("done\n")
 				else: sys.stdout.write ("failed\n")
 			#
+		#
+
+		if (len (self.parser_pickle) > 0):
+		#
+			sys.stdout.write (">> Writing make.py.pickle\n")
+
+			f_file = open ("{0}/make.py.pickle".format (self.output_path),"wb")
+			pickle.dump (self.parser_pickle,f_file,pickle.HIGHEST_PROTOCOL)
+			f_file.close ()
 		#
 
 		return f_return
@@ -512,12 +535,12 @@ Parse and rewrite all directories and files given as include definitions.
 	def parser (self,parser_tag,data,data_position = 0,nested_tag_end_position = None):
 	#
 		"""
-Parse the given content and return a line based array.
+Parser for "make" tags.
 
 @param  data Data to be parsed
-@param  file_pathname File path
-@param  file_name File name
-@return (mixed) Line based array; False on error
+@param  data_position Current parser position
+@param  nested_tag_end_position End position for nested tags 
+@return (mixed) Converted data; None for nested parsing results without a match
 @since  v0.1.00
 		"""
 
@@ -581,12 +604,14 @@ Parse the given content and return a line based array.
 	def parser_change (self,tag_definition,data,tag_position,data_position,tag_end_position):
 	#
 		"""
-Parse the given content and return a line based array.
+Change data according to the matched tag.
 
+@param  tag_definition Matched tag definition
 @param  data Data to be parsed
-@param  file_pathname File path
-@param  file_name File name
-@return (mixed) Line based array; False on error
+@param  tag_position Tag starting position
+@param  data_position Data starting position
+@param  tag_end_position Starting position of the closing tag
+@return (str) Converted data
 @since  v0.1.00
 		"""
 
@@ -596,12 +621,10 @@ Parse the given content and return a line based array.
 	def parser_check (self,data):
 	#
 		"""
-Parse the given content and return a line based array.
+Check if a possible tag match is a false positive.
 
-@param  data Data to be parsed
-@param  file_pathname File path
-@param  file_name File name
-@return (mixed) Line based array; False on error
+@param  data Data starting with the possible tag
+@return (mixed) Matched tag definition; None if false positive
 @since  v0.1.00
 		"""
 
@@ -610,6 +633,16 @@ Parse the given content and return a line based array.
 
 	def parser_tag_end_find_position (self,data,data_position,tag_end_list):
 	#
+		"""
+Find the starting position of the closing tag.
+
+@param  data data String that contains convertable data
+@param  data_position Current parser position
+@param  tag_end_list List of possible closing tags to be searched for
+@return (int) Position; -1 if not found
+@since  v0.1.00
+		"""
+
 		if (self.debug != None): self.debug.append ("pyBuilder/#echo(__FILEPATH__)# -pyBuilder.parser_tag_end_find_position (data,data_position,tag_end_list)- (#echo(__LINE__)#)")
 		f_return = None
 
@@ -637,6 +670,16 @@ Parse the given content and return a line based array.
 
 	def parser_tag_find_end_position (self,data,data_position,tag_end):
 	#
+		"""
+Find the starting position of the enclosing content.
+
+@param  data data String that contains convertable data
+@param  data_position Current parser position
+@param  tag_end Tag end definition
+@return (int) Position; -1 if not found
+@since  v0.1.00
+		"""
+
 		if (self.debug != None): self.debug.append ("pyBuilder/#echo(__FILEPATH__)# -pyBuilder.parser_tag_find_end_position (data,data_position,tag_end)- (#echo(__LINE__)#)")
 		f_return = None
 
@@ -728,6 +771,77 @@ Add "exclude" definitions for files.
 		else: self.trigger_error ("builderSkel/#echo(__FILEPATH__)# -builderSkel.set_exclude_files ()- (#echo(__LINE__)#) reports: Given parameter is not a string",self.E_NOTICE)
 	#
 
+	def set_new_target (self,parameters,include,output_path,filetype):
+	#
+		"""
+Sets a new target for processing.
+
+@param parameters DEFINE statements
+@param include String (delimiter is ",") with directory or file names to
+       be included.
+@param output_path Output path
+@param filetype String (delimiter is ",") with extensions of files to be
+       parsed.
+@since v0.1.00
+		"""
+
+		if (self.debug != None): self.debug.append ("builderSkel/#echo(__FILEPATH__)# -builderSkel->set_new_target (parameters,include,output_path,filetype)- (#echo(__LINE__)#)")
+
+		self.dir_exclude_list = [ ]
+		self.file_exclude_list = [ ]
+		self.filetype_list = filetype.split (",")
+
+		if ((len (output_path)) and (not output_path.endswith ("/")) and (not output_path.endswith ("\\"))): output_path += path.sep
+		self.output_path = output_path
+		sys.stdout.write ("> New output target {0}\n".format (output_path))
+
+		if (os.access (path.normpath ("{0}/make.py.pickle".format (output_path)),os.W_OK)):
+		#
+			sys.stdout.write (">> Reading make.py.pickle\n")
+
+			f_file = open ("{0}/make.py.pickle".format (output_path),"rb")
+			self.parser_pickle = pickle.load (f_file)
+			f_file.close ()
+		#
+		else: self.parser_pickle = { }
+
+		if (type (self.parser_pickle) != dict): self.parser_pickle = { }
+		self.output_strip_prefix = "";
+
+		if (type (parameters) == dict): self.parameters = parameters
+		else: self.parameters = { }
+
+		f_data_list = include.split (",")
+
+		for f_data in f_data_list:
+		#
+			if (path.isdir (f_data)):
+			#
+				if ((self.workdir_rescan == False) and (f_data not in self.dir_list)):
+				#
+					self.dir_list = [ ]
+					self.file_dict = { }
+					self.workdir_rescan = True
+				#
+
+				self.dir_list.append (f_data)
+			#
+			elif (path.isfile (f_data)):
+			#
+				f_file_id = hashlib.md5(f_data).hexdigest ()
+
+				if ((self.workdir_rescan == False) and (f_file_id not in self.file_dict)):
+				#
+					self.dir_list = [ ]
+					self.file_dict = { }
+					self.workdir_rescan = True
+				#
+
+				self.file_dict[f_file_id] = f_data
+			#
+		#
+	#
+
 	def set_trigger (self,py_function = None):
 	#
 		"""
@@ -789,12 +903,12 @@ Create a list of files - we need to scan directories recursively ...
 ----------------------------------------------------------------------------
 		"""
 
-		sys.stdout.write ("> Ready to build file index\n")
+		sys.stdout.write (">> Ready to build file index\n")
 		f_dir_counter = 0
 
 		while (len (self.dir_list) > f_dir_counter):
 		#
-			sys.stdout.write (">> Scanning {0} ... ".format (self.dir_list[f_dir_counter]))
+			sys.stdout.write (">>> Scanning {0} ... ".format (self.dir_list[f_dir_counter]))
 			f_dir_path_os = path.normpath (self.dir_list[f_dir_counter])
 
 			if ((path.isdir (f_dir_path_os)) and (os.access (f_dir_path_os,os.R_OK))):

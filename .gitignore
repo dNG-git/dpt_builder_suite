@@ -1,0 +1,5 @@
+_extras
+.*
+ext_core_builder_skel.*
+makefile.py
+nbproject
