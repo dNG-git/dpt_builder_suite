@@ -56,7 +56,7 @@ Provides a Python "make" environment object.
 	def data_parse (self,data,file_pathname,file_name):
 	#
 		"""
-Parse the given content and return a line based array.
+Parse the given content.
 
 @param  data Data to be parsed
 @param  file_pathname File path
@@ -65,23 +65,44 @@ Parse the given content and return a line based array.
 @since  v0.1.00
 		"""
 
-		data = direct_builder_skel.data_parse (self,data,file_pathname,file_name)
-		return re.split ("\n",(self.parser ('"""#',data)))
+		if (self.debug != None): self.debug.append ("pyBuilder/#echo(__FILEPATH__)# -pyBuilder.data_parse (data)- (#echo(__LINE__)#)")
+		data = self.parser ('"""#',(direct_builder_skel.data_parse (self,data,file_pathname,file_name)))
+
+		if (self.get_variable ("dev_comments") == None): return self.data_remove_dev_comments (data)
+		else: return data
+	#
+
+	def data_remove_dev_comments (self,data):
+	#
+		"""
+Remove all development comments from the content.
+
+@param  data Data to be parsed
+@return (str) Filtered data
+@since  v0.1.00
+		"""
+
+		if (self.debug != None): self.debug.append ("pyBuilder/#echo(__FILEPATH__)# -pyBuilder.data_remove_dev_comments (data)- (#echo(__LINE__)#)")
+		return re.sub ('(\n[ \t]*"""\n---.+?---\n[ \t]*"""\n)|("""\w//.+?//\w"""\n)',"",data,0,re.S)
 	#
 
 	def parser_change (self,tag_definition,data,tag_position,data_position,tag_end_position):
 	#
 		"""
-Parse the given content and return a line based array.
+Change data according to the matched tag.
 
+@param  tag_definition Matched tag definition
 @param  data Data to be parsed
-@param  file_pathname File path
-@param  file_name File name
-@return (mixed) Line based array; False on error
+@param  tag_position Tag starting position
+@param  data_position Data starting position
+@param  tag_end_position Starting position of the closing tag
+@return (str) Converted data
 @since  v0.1.00
 		"""
 
+		if (self.debug != None): self.debug.append ("pyBuilder/#echo(__FILEPATH__)# -pyBuilder.parser_change (tag_definition,data,{0:d},{1:d},{2:d})- (#echo(__LINE__)#)".format (tag_position,data_position,tag_end_position))
 		f_return = data[:tag_position]
+
 		f_data_closed = data[self.parser_tag_find_end_position (data,tag_end_position,"*/"):]
 
 		if (tag_definition[0] == '"""#ifdef'):
@@ -89,7 +110,7 @@ Parse the given content and return a line based array.
 			f_variable = re.match('^"""#ifdef\((\w+)\)',data[tag_position:data_position]).group (1)
 			f_tag_end = data[tag_end_position:self.parser_tag_find_end_position (data,tag_end_position,'"""')]
 
-			if (self.get_variable (f_variable) == None):
+			if (self.get_variable (f_variable) != None):
 			#
 				if (data[data_position:(data_position + 1)] == "\n"): f_return += data[(data_position + 1):tag_end_position].replace ('"\\"','"""')
 				else: f_return += data[data_position:tag_end_position].replace ('"\\"','"""')
@@ -120,15 +141,14 @@ Parse the given content and return a line based array.
 	def parser_check (self,data):
 	#
 		"""
-Parse the given content and return a line based array.
+Check if a possible tag match is a false positive.
 
-@param  data Data to be parsed
-@param  file_pathname File path
-@param  file_name File name
-@return (mixed) Line based array; False on error
+@param  data Data starting with the possible tag
+@return (mixed) Matched tag definition; None if false positive
 @since  v0.1.00
 		"""
 
+		if (self.debug != None): self.debug.append ("pyBuilder/#echo(__FILEPATH__)# -pyBuilder.parser_check (data)- (#echo(__LINE__)#)")
 		f_return = None
 
 		if (data[:9] == '"""#ifdef'):
