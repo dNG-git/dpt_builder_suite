@@ -13,8 +13,8 @@ This is the main JavaScript "make" worker class file.
 @package    ext_core
 @subpackage jsBuilder
 @since      v0.1.00
-@license    http://www.direct-netware.de/redirect.php?licenses;w3c
-            W3C (R) Software License
+@license    http://www.direct-netware.de/redirect.php?licenses;mpl2
+            Mozilla Public License, v. 2.0
 """
 """n// NOTE
 ----------------------------------------------------------------------------
@@ -24,11 +24,11 @@ Build JavaScript code for different release targets
 (C) direct Netware Group - All rights reserved
 http://www.direct-netware.de/redirect.php?jsBuilder
 
-This work is distributed under the W3C (R) Software License, but without any
-warranty; without even the implied warranty of merchantability or fitness
-for a particular purpose.
+This Source Code Form is subject to the terms of the Mozilla Public License,
+v. 2.0. If a copy of the MPL was not distributed with this file, You can
+obtain one at http://mozilla.org/MPL/2.0/.
 ----------------------------------------------------------------------------
-http://www.direct-netware.de/redirect.php?licenses;w3c
+http://www.direct-netware.de/redirect.php?licenses;mpl2
 ----------------------------------------------------------------------------
 #echo(jsBuilderVersion)#
 jsBuilder/#echo(__FILEPATH__)#
@@ -50,8 +50,8 @@ Provides a Javascript "make" environment object.
 @package    ext_core
 @subpackage jsBuilder
 @since      v1.0.0
-@license    http://www.direct-netware.de/redirect.php?licenses;w3c
-            W3C (R) Software License
+@license    http://www.direct-netware.de/redirect.php?licenses;mpl2
+            Mozilla Public License, v. 2.0
 	"""
 
 	def data_parse (self,data,file_pathname,file_name):
