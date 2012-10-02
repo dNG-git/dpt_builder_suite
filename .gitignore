@@ -1,5 +1,7 @@
 _extras
+__py*
 .*
+*.pyc
 ext_core_js_builder.*
 makefile.*
 nbproject

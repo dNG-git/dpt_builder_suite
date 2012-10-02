@@ -3,18 +3,6 @@
 
 """
 This is the main JavaScript "make" worker class file.
-
-@internal   We are using epydoc (JavaDoc style) to automate the
-            documentation process for creating the Developer's Manual.
-            Use the following line to ensure 76 character sizes:
-----------------------------------------------------------------------------
-@author     direct Netware Group
-@copyright  (C) direct Netware Group - All rights reserved
-@package    ext_core
-@subpackage jsBuilder
-@since      v0.1.00
-@license    http://www.direct-netware.de/redirect.php?licenses;mpl2
-            Mozilla Public License, v. 2.0
 """
 """n// NOTE
 ----------------------------------------------------------------------------
@@ -45,13 +33,13 @@ class direct_js_builder (direct_builder_skel):
 	"""
 Provides a Javascript "make" environment object.
 
-@author     direct Netware Group
-@copyright  (C) direct Netware Group - All rights reserved
-@package    ext_core
-@subpackage jsBuilder
-@since      v1.0.0
-@license    http://www.direct-netware.de/redirect.php?licenses;mpl2
-            Mozilla Public License, v. 2.0
+:author:     direct Netware Group
+:copyright:  direct Netware Group - All rights reserved
+:package:    ext_core
+:subpackage: jsBuilder
+:since:      v1.0.0
+:license:    http://www.direct-netware.de/redirect.php?licenses;mpl2
+             Mozilla Public License, v. 2.0
 	"""
 
 	def data_parse (self,data,file_pathname,file_name):
@@ -59,11 +47,12 @@ Provides a Javascript "make" environment object.
 		"""
 Parse the given content.
 
-@param  data Data to be parsed
-@param  file_pathname File path
-@param  file_name File name
-@return (mixed) Line based array; False on error
-@since  v0.1.00
+:param data: Data to be parsed
+:param file_pathname: File path
+:param file_name: File name
+
+:return: (mixed) Line based array; False on error
+:since:  v0.1.00
 		"""
 
 		if (self.debug != None): self.debug.append ("jsBuilder/#echo(__FILEPATH__)# -jsBuilder.data_parse (data)- (#echo(__LINE__)#)")
@@ -79,11 +68,12 @@ Parse the given content.
 Write the given file to the defined location. Create subdirectories if
 needed.
 
-@param  file_content Parsed content
-@param  file_pathname Path to the output file
-@param  file_mode Filemode to use
-@return (boolean) True on success
-@since  v0.1.00
+:param file_content: Parsed content
+:param file_pathname: Path to the output file
+:param file_mode: Filemode to use
+
+:return: (boolean) True on success
+:since:  v0.1.00
 		"""
 
 		if ((self.get_variable ("debug") == None) and (self.get_variable ("js_min_filenames") != None)):
