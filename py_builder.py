@@ -3,18 +3,6 @@
 
 """
 This is the main Python "make" worker class file.
-
-@internal   We are using epydoc (JavaDoc style) to automate the
-            documentation process for creating the Developer's Manual.
-            Use the following line to ensure 76 character sizes:
-----------------------------------------------------------------------------
-@author     direct Netware Group
-@copyright  (C) direct Netware Group - All rights reserved
-@package    ext_core
-@subpackage pyBuilder
-@since      v0.1.00
-@license    http://www.direct-netware.de/redirect.php?licenses;mpl2
-            Mozilla Public License, v. 2.0
 """
 """n// NOTE
 ----------------------------------------------------------------------------
@@ -44,13 +32,13 @@ class direct_py_builder (direct_builder_skel):
 	"""
 Provides a Python "make" environment object.
 
-@author     direct Netware Group
-@copyright  (C) direct Netware Group - All rights reserved
-@package    ext_core
-@subpackage pyBuilder
-@since      v1.0.0
-@license    http://www.direct-netware.de/redirect.php?licenses;mpl2
-            Mozilla Public License, v. 2.0
+:author:     direct Netware Group
+:copyright:  direct Netware Group - All rights reserved
+:package:    ext_core
+:subpackage: pyBuilder
+:since:      v0.1.00
+:license:    http://www.direct-netware.de/redirect.php?licenses;mpl2
+             Mozilla Public License, v. 2.0
 	"""
 
 	def data_parse (self,data,file_pathname,file_name):
@@ -58,11 +46,12 @@ Provides a Python "make" environment object.
 		"""
 Parse the given content.
 
-@param  data Data to be parsed
-@param  file_pathname File path
-@param  file_name File name
-@return (mixed) Line based array; False on error
-@since  v0.1.00
+:param data: Data to be parsed
+:param file_pathname: File path
+:param file_name: File name
+
+:return: (mixed) Line based array; False on error
+:since:  v0.1.00
 		"""
 
 		if (self.debug != None): self.debug.append ("pyBuilder/#echo(__FILEPATH__)# -pyBuilder.data_parse (data)- (#echo(__LINE__)#)")
@@ -77,9 +66,10 @@ Parse the given content.
 		"""
 Remove all development comments from the content.
 
-@param  data Data to be parsed
-@return (str) Filtered data
-@since  v0.1.00
+:param data: Data to be parsed
+
+:return: (str) Filtered data
+:since:  v0.1.00
 		"""
 
 		if (self.debug != None): self.debug.append ("pyBuilder/#echo(__FILEPATH__)# -pyBuilder.data_remove_dev_comments (data)- (#echo(__LINE__)#)")
@@ -91,13 +81,14 @@ Remove all development comments from the content.
 		"""
 Change data according to the matched tag.
 
-@param  tag_definition Matched tag definition
-@param  data Data to be parsed
-@param  tag_position Tag starting position
-@param  data_position Data starting position
-@param  tag_end_position Starting position of the closing tag
-@return (str) Converted data
-@since  v0.1.00
+:param tag_definition: Matched tag definition
+:param data: Data to be parsed
+:param tag_position: Tag starting position
+:param data_position: Data starting position
+:param tag_end_position: Starting position of the closing tag
+
+:return: (str) Converted data
+:since:  v0.1.00
 		"""
 
 		if (self.debug != None): self.debug.append ("pyBuilder/#echo(__FILEPATH__)# -pyBuilder.parser_change (tag_definition,data,{0:d},{1:d},{2:d})- (#echo(__LINE__)#)".format (tag_position,data_position,tag_end_position))
@@ -143,9 +134,10 @@ Change data according to the matched tag.
 		"""
 Check if a possible tag match is a false positive.
 
-@param  data Data starting with the possible tag
-@return (mixed) Matched tag definition; None if false positive
-@since  v0.1.00
+:param data: Data starting with the possible tag
+
+:return: (mixed) Matched tag definition; None if false positive
+:since:  v0.1.00
 		"""
 
 		if (self.debug != None): self.debug.append ("pyBuilder/#echo(__FILEPATH__)# -pyBuilder.parser_check (data)- (#echo(__LINE__)#)")
