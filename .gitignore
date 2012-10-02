@@ -1,5 +1,7 @@
 _extras
+__py*
 .*
+*.pyc
 ext_core_builder_skel.*
 makefile.*
 nbproject

@@ -2,19 +2,8 @@
 ##j## BOF
 
 """
-This is the skeleton Python "make" worker class file.
-
-@internal   We are using epydoc (JavaDoc style) to automate the
-            documentation process for creating the Developer's Manual.
-            Use the following line to ensure 76 character sizes:
-----------------------------------------------------------------------------
-@author     direct Netware Group
-@copyright  (C) direct Netware Group - All rights reserved
-@package    ext_core
-@subpackage builderSkel
-@since      v0.1.00
-@license    http://www.direct-netware.de/redirect.php?licenses;mpl2
-            Mozilla Public License, v. 2.0
+The builder skeleton combines common methods to interate directories and
+parse files.
 """
 """n// NOTE
 ----------------------------------------------------------------------------
@@ -55,13 +44,13 @@ class direct_builder_skel (object):
 	"""
 Provides a Python "make" environment skeleton.
 
-@author     direct Netware Group
-@copyright  (C) direct Netware Group - All rights reserved
-@package    ext_core
-@subpackage builderSkel
-@since      v1.0.0
-@license    http://www.direct-netware.de/redirect.php?licenses;mpl2
-            Mozilla Public License, v. 2.0
+:author:     direct Netware Group
+:copyright:  direct Netware Group - All rights reserved
+:package:    ext_core
+:subpackage: builderSkel
+:since:      v0.1.00
+:license:    http://www.direct-netware.de/redirect.php?licenses;mpl2
+             Mozilla Public License, v. 2.0
 	"""
 
 	E_NOTICE = 1
@@ -169,18 +158,19 @@ Construct the class
 		"""
 Constructor __init__ (direct_py_builder)
 
-@param parameters DEFINE statements
-@param include String (delimiter is ",") with directory or file names to
-       be included.
-@param output_path Output path
-@param filetype String (delimiter is ",") with extensions of files to be
-       parsed.
-@param default_umask umask to set before creating new directories or files
-@param default_chmod_files chmod to set when creating a new file
-@param default_chmod_dirs chmod to set when creating a new directory
-@param current_time Current UNIX timestamp
-@param timeout_count Retries before timing out
-@since v0.1.00
+:param parameters: DEFINE statements
+:param include: String (delimiter is ",") with directory or file names to
+                be included.
+:param output_path: Output path
+:param filetype: String (delimiter is ",") with extensions of files to be
+                 parsed.
+:param default_umask umask: to set before creating new directories or files
+:param default_chmod_files: chmod to set when creating a new file
+:param default_chmod_dirs: chmod to set when creating a new directory
+:param current_time: Current UNIX timestamp
+:param timeout_count: Retries before timing out
+
+:since: v0.1.00
 		"""
 
 		if (debug): self.debug = [ "builderSkel/#echo(__FILEPATH__)# -builderSkel->__init__ (direct_py_builder)- (#echo(__LINE__)#)" ]
@@ -207,7 +197,7 @@ Constructor __init__ (direct_py_builder)
 		"""
 Adds an extension to the list of ASCII file types.
 
-@param extension File type extension to add
+:param extension: File type extension to add
 		"""
 
 		global _unicode_object
@@ -222,11 +212,12 @@ Adds an extension to the list of ASCII file types.
 		"""
 Parse the given content.
 
-@param  data Data to be parsed
-@param  file_pathname File path
-@param  file_name File name
-@return (str) Filtered data
-@since  v0.1.00
+:param data: Data to be parsed
+:param file_pathname: File path
+:param file_name: File name
+
+:return: (str) Filtered data
+:since:  v0.1.00
 		"""
 
 		global _unicode_object
@@ -278,9 +269,10 @@ Parse the given content.
 		"""
 Remove all development comments from the content.
 
-@param  data Data to be parsed
-@return (str) Filtered data
-@since  v0.1.00
+:param data: Data to be parsed
+
+:return: (str) Filtered data
+:since:  v0.1.00
 		"""
 
 		return data
@@ -292,10 +284,11 @@ Remove all development comments from the content.
 Creates a directory (or returns the status of is_writable if it exists).
 Use slashes - even on Microsoft(R) Windows(R) machines.
 
-@param  dir_path Path to the new directory.
-@param  timeout Timeout to use
-@return (boolean) True on success
-@since  v0.1.00
+:param dir_path: Path to the new directory.
+:param timeout: Timeout to use
+
+:return: (boolean) True on success
+:since:  v0.1.00
 		"""
 
 		global _unicode_object
@@ -350,9 +343,10 @@ Use slashes - even on Microsoft(R) Windows(R) machines.
 		"""
 Handle the given file and call the content parse method.
 
-@param  file_pathname Path to the requested file
-@return (boolean) True on success
-@since  v0.1.00
+:param file_pathname: Path to the requested file
+
+:return: (boolean) True on success
+:since:  v0.1.00
 		"""
 
 		global _unicode_object
@@ -430,11 +424,12 @@ Handle the given file and call the content parse method.
 Write the given file to the defined location. Create subdirectories if
 needed.
 
-@param  file_content Parsed content
-@param  file_pathname Path to the output file
-@param  file_mode Filemode to use
-@return (boolean) True on success
-@since  v0.1.00
+:param file_content: Parsed content
+:param file_pathname: Path to the output file
+:param file_mode: Filemode to use
+
+:return: (boolean) True on success
+:since:  v0.1.00
 		"""
 
 		global _unicode_object
@@ -473,9 +468,10 @@ needed.
 		"""
 Gets the variable content with the given name.
 
-@param  name Variable name
-@return (mixed) Variable content; None if undefined
-@since  v0.1.00
+:param name: Variable name
+
+:return: (mixed) Variable content; None if undefined
+:since:  v0.1.00
 		"""
 
 		global _unicode_object
@@ -490,8 +486,8 @@ Gets the variable content with the given name.
 		"""
 Parse and rewrite all directories and files given as include definitions.
 
-@return (boolean) True on success
-@since  v0.1.00
+:return: (boolean) True on success
+:since:  v0.1.00
 		"""
 
 		global _unicode_object
@@ -537,11 +533,12 @@ Parse and rewrite all directories and files given as include definitions.
 		"""
 Parser for "make" tags.
 
-@param  data Data to be parsed
-@param  data_position Current parser position
-@param  nested_tag_end_position End position for nested tags 
-@return (mixed) Converted data; None for nested parsing results without a match
-@since  v0.1.00
+:param data: Data to be parsed
+:param data_position: Current parser position
+:param nested_tag_end_position: End position for nested tags 
+
+:return: (mixed) Converted data; None for nested parsing results without a match
+:since:  v0.1.00
 		"""
 
 		global _unicode_object
@@ -606,13 +603,14 @@ Parser for "make" tags.
 		"""
 Change data according to the matched tag.
 
-@param  tag_definition Matched tag definition
-@param  data Data to be parsed
-@param  tag_position Tag starting position
-@param  data_position Data starting position
-@param  tag_end_position Starting position of the closing tag
-@return (str) Converted data
-@since  v0.1.00
+:param tag_definition: Matched tag definition
+:param data: Data to be parsed
+:param tag_position: Tag starting position
+:param data_position: Data starting position
+:param tag_end_position: Starting position of the closing tag
+
+:return: (str) Converted data
+:since:  v0.1.00
 		"""
 
 		raise RuntimeError ("Not implemented")
@@ -623,9 +621,10 @@ Change data according to the matched tag.
 		"""
 Check if a possible tag match is a false positive.
 
-@param  data Data starting with the possible tag
-@return (mixed) Matched tag definition; None if false positive
-@since  v0.1.00
+:param data: Data starting with the possible tag
+
+:return: (mixed) Matched tag definition; None if false positive
+:since:  v0.1.00
 		"""
 
 		return None
@@ -636,11 +635,12 @@ Check if a possible tag match is a false positive.
 		"""
 Find the starting position of the closing tag.
 
-@param  data data String that contains convertable data
-@param  data_position Current parser position
-@param  tag_end_list List of possible closing tags to be searched for
-@return (int) Position; -1 if not found
-@since  v0.1.00
+:param data: String that contains convertable data
+:param data_position: Current parser position
+:param tag_end_list: List of possible closing tags to be searched for
+
+:return: (int) Position; -1 if not found
+:since:  v0.1.00
 		"""
 
 		if (self.debug != None): self.debug.append ("pyBuilder/#echo(__FILEPATH__)# -pyBuilder.parser_tag_end_find_position (data,data_position,tag_end_list)- (#echo(__LINE__)#)")
@@ -673,11 +673,12 @@ Find the starting position of the closing tag.
 		"""
 Find the starting position of the enclosing content.
 
-@param  data data String that contains convertable data
-@param  data_position Current parser position
-@param  tag_end Tag end definition
-@return (int) Position; -1 if not found
-@since  v0.1.00
+:param data: String that contains convertable data
+:param data_position: Current parser position
+:param tag_end: Tag end definition
+
+:return: (int) Position; -1 if not found
+:since:  v0.1.00
 		"""
 
 		if (self.debug != None): self.debug.append ("pyBuilder/#echo(__FILEPATH__)# -pyBuilder.parser_tag_find_end_position (data,data_position,tag_end)- (#echo(__LINE__)#)")
@@ -705,8 +706,9 @@ Find the starting position of the enclosing content.
 		"""
 Add "exclude" definitions for directories and files.
 
-@param exclude String (delimiter is ",") with exclude names or pathes
-@since v0.1.00
+:param exclude: String (delimiter is ",") with exclude names or pathes
+
+:since: v0.1.00
 		"""
 
 		global _unicode_object
@@ -732,8 +734,9 @@ Add "exclude" definitions for directories and files.
 		"""
 Add "exclude" definitions for directories.
 
-@param exclude String (delimiter is ",") with exclude names or pathes
-@since v0.1.00
+:param exclude: String (delimiter is ",") with exclude names or pathes
+
+:since: v0.1.00
 		"""
 
 		global _unicode_object
@@ -754,8 +757,9 @@ Add "exclude" definitions for directories.
 		"""
 Add "exclude" definitions for files.
 
-@param  exclude String (delimiter is ",") with exclude names or pathes
-@since  v0.1.00
+:param exclude: String (delimiter is ",") with exclude names or pathes
+
+:since: v0.1.00
 		"""
 
 		global _unicode_object
@@ -776,13 +780,14 @@ Add "exclude" definitions for files.
 		"""
 Sets a new target for processing.
 
-@param parameters DEFINE statements
-@param include String (delimiter is ",") with directory or file names to
-       be included.
-@param output_path Output path
-@param filetype String (delimiter is ",") with extensions of files to be
-       parsed.
-@since v0.1.00
+:param parameters: DEFINE statements
+:param include: String (delimiter is ",") with directory or file names to
+                be included.
+:param output_path: Output path
+:param filetype: String (delimiter is ",") with extensions of files to be
+                 parsed.
+
+:since: v0.1.00
 		"""
 
 		if (self.debug != None): self.debug.append ("builderSkel/#echo(__FILEPATH__)# -builderSkel->set_new_target (parameters,include,output_path,filetype)- (#echo(__LINE__)#)")
@@ -847,8 +852,9 @@ Sets a new target for processing.
 		"""
 Set a given function to be called for each exception or error.
 
-@param py_function Python function to be called
-@since v0.1.00
+:param py_function: Python function to be called
+
+:since: v0.1.00
 		"""
 
 		self.error_callback = py_function
@@ -859,8 +865,9 @@ Set a given function to be called for each exception or error.
 		"""
 Define a prefix to be stripped from output pathes.
 
-@param string $strip_prefix Prefix definition
-@since v0.1.00
+:param strip_prefix: Prefix definition
+
+:since: v0.1.00
 		"""
 
 		global _unicode_object
@@ -877,9 +884,10 @@ Define a prefix to be stripped from output pathes.
 		"""
 Calls a user-defined function for each exception or error.
 
-@param message Error message
-@param message_type Error type
-@since v0.1.00
+:param message: Error message
+:param message_type: Error type
+
+:since: v0.1.00
 		"""
 
 		if (message_type == None): message_type = self.E_NOTICE
@@ -891,7 +899,7 @@ Calls a user-defined function for each exception or error.
 		"""
 Scan given directories for files to be parsed.
 
-@since v0.1.00
+:since: v0.1.00
 		"""
 
 		if (self.debug != None): self.debug.append ("builderSkel/#echo(__FILEPATH__)# -builderSkel.workdir_scan ()- (#echo(__LINE__)#)")
