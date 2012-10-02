@@ -1,5 +1,5 @@
-xml_reader
-==========
+builder_skel
+============
 
 .. automodule:: builder_skel
     :members:
