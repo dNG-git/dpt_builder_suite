@@ -55,7 +55,7 @@ Parse the given content.
 :since:  v0.1.00
 		"""
 
-		if (self.debug != None): self.debug.append ("jsBuilder/#echo(__FILEPATH__)# -jsBuilder.data_parse (data)- (#echo(__LINE__)#)")
+		if (self.event_handler != None): self.event_handler.debug ("#echo(__FILEPATH__)# -jsBuilder.data_parse (data)- (#echo(__LINE__)#)")
 
 		if (self.get_variable ("debug") == None): data = minify (data,True)
 		if (self.get_variable ("js_header") != None): data = "// {0}\n{1}".format (self.get_variable ("js_header"),data)
