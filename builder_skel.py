@@ -53,19 +53,6 @@ Provides a Python "make" environment skeleton.
              Mozilla Public License, v. 2.0
 	"""
 
-	E_NOTICE = 1
-	"""
-Error notice: It is save to ignore it
-	"""
-	E_WARNING = 2
-	"""
-Warning type: Could create trouble if ignored
-	"""
-	E_ERROR = 4
-	"""
-Error type: An error occured and was handled
-	"""
-
 	chmod_dirs = None
 	"""
 chmod to set when creating a new directory
@@ -73,10 +60,6 @@ chmod to set when creating a new directory
 	chmod_files = None
 	"""
 chmod to set when creating a new file
-	"""
-	debug = None
-	"""
-Debug message container
 	"""
 	dir_list = [ ]
 	"""
@@ -86,9 +69,10 @@ Directories to be scanned
 	"""
 Directories to be ignored while scanning
 	"""
-	error_callback = None
+	event_handler = None
 	"""
-Function to be called for logging exceptions and other errors
+The EventHandler is called whenever debug messages should be logged or errors
+happened.
 	"""
 	file_dict = { }
 	"""
@@ -153,7 +137,7 @@ Construct the class
 ----------------------------------------------------------------------------
 	"""
 
-	def __init__ (self,parameters,include,output_path,filetype,default_umask = None,default_chmod_files = None,default_chmod_dirs = None,current_time = -1,timeout_count = 5,debug = False):
+	def __init__ (self,parameters,include,output_path,filetype,default_umask = None,default_chmod_files = None,default_chmod_dirs = None,current_time = -1,timeout_count = 5,event_handler = None):
 	#
 		"""
 Constructor __init__ (direct_py_builder)
@@ -169,19 +153,19 @@ Constructor __init__ (direct_py_builder)
 :param default_chmod_dirs: chmod to set when creating a new directory
 :param current_time: Current UNIX timestamp
 :param timeout_count: Retries before timing out
+:param event_handler: EventHandler to use
 
 :since: v0.1.00
 		"""
 
-		if (debug): self.debug = [ "builderSkel/#echo(__FILEPATH__)# -builderSkel->__init__ (direct_py_builder)- (#echo(__LINE__)#)" ]
-		else: self.debug = None
+		if (event_handler != None): event_handler.debug ("#echo(__FILEPATH__)# -builderSkel->__init__ (direct_py_builder)- (#echo(__LINE__)#)")
 
 		if (default_chmod_dirs == None): self.chmod_dirs = 0o750
 		else: self.chmod_dirs = int (default_chmod_dirs,8)
 
 		self.chmod_files = default_chmod_files
 		self.dir_list = [ ]
-		self.error_callback = None
+		self.event_handler = event_handler
 		self.file_dict = { }
 		self.filetype_ascii_list = [ "txt","js","php","py","xml" ]
 		self.time = current_time
@@ -203,7 +187,7 @@ Adds an extension to the list of ASCII file types.
 		global _unicode_object
 		if (type (extension) == _unicode_object['type']): extension = _unicode_object['str'] (extension,"utf-8")
 
-		if (self.debug != None): self.debug.append ("builderSkel/#echo(__FILEPATH__)# -builderSkel.add_filetype_ascii ({0})- (#echo(__LINE__)#)".format (extension))
+		if (self.event_handler != None): self.event_handler.debug ("#echo(__FILEPATH__)# -builderSkel.add_filetype_ascii ({0})- (#echo(__LINE__)#)".format (extension))
 		self.filetype_ascii_list.append (extension)
 	#
 
@@ -221,47 +205,47 @@ Parse the given content.
 		"""
 
 		global _unicode_object
-		if (self.debug != None): self.debug.append ("builderSkel/#echo(__FILEPATH__)# -builderSkel.data_parse (data)- (#echo(__LINE__)#)")
+		if (self.event_handler != None): self.event_handler.debug ("#echo(__FILEPATH__)# -builderSkel.data_parse (data)- (#echo(__LINE__)#)")
 
-		f_return = data.replace ("#" + "echo(__FILE__)#",file_name)
-		f_return = f_return.replace ("#" + "echo(__FILEPATH__)#",file_pathname)
+		var_return = data.replace ("#" + "echo(__FILE__)#",file_name)
+		var_return = var_return.replace ("#" + "echo(__FILEPATH__)#",file_pathname)
 
-		if (f_return.find ("#" + "echo(__LINE__)#") > -1):
+		if (var_return.find ("#" + "echo(__LINE__)#") > -1):
 		#
-			data = re.split ("\r\n|\r|\n",f_return)
-			f_line = 0
+			data = re.split ("\r\n|\r|\n",var_return)
+			line = 0
 
-			for f_result in data:
+			for result in data:
 			#
-				data[f_line] = f_result.replace ("#" + "echo(__LINE__)#",(str (f_line + 1)))
-				f_line += 1
+				data[line] = result.replace ("#" + "echo(__LINE__)#",(str (line + 1)))
+				line += 1
 			#
 
-			f_return = "\n".join (data)
+			var_return = "\n".join (data)
 		#
 
-		f_result_list = re.findall ("#" + "echo\(((?!_)\w+)\)#",f_return)
+		result_list = re.findall ("#" + "echo\(((?!_)\w+)\)#",var_return)
 
-		if (len (f_result_list)):
+		if (len (result_list)):
 		#
-			f_matched_list = [ ]
+			matched_list = [ ]
 
-			for f_result in f_result_list:
+			for result in result_list:
 			#
-				if (f_result not in f_matched_list):
+				if (result not in matched_list):
 				#
-					if (type (f_result) == _unicode_object['type']): f_result = _unicode_object['str'] (f_result,"utf-8")
-					f_value = self.get_variable (f_result)
+					if (type (result) == _unicode_object['type']): result = _unicode_object['str'] (result,"utf-8")
+					value = self.get_variable (result)
 
-					if (f_value == None): f_return = f_return.replace ("#" + "echo({0})#".format (f_result),f_result)
-					else: f_return = f_return.replace ("#" + "echo({0})#".format (f_result),f_value)
+					if (value == None): var_return = var_return.replace ("#" + "echo({0})#".format (result),result)
+					else: var_return = var_return.replace ("#" + "echo({0})#".format (result),value)
 
-					f_matched_list.append (f_result)
+					matched_list.append (result)
 				#
 			#
 		#
 
-		return f_return
+		return var_return
 	#
 
 	def data_remove_dev_comments (self,data):
@@ -294,48 +278,48 @@ Use slashes - even on Microsoft(R) Windows(R) machines.
 		global _unicode_object
 		if (type (dir_path) == _unicode_object['type']): dir_path = _unicode_object['str'] (dir_path,"utf-8")
 
-		if (self.debug != None): self.debug.append ("builderSkel/#echo(__FILEPATH__)# -builderSkel.dir_create ({0},{1:d})- (#echo(__LINE__)#)" % ( dir_path,timeout ))
+		if (self.event_handler != None): self.event_handler.debug ("#echo(__FILEPATH__)# -builderSkel.dir_create ({0},{1:d})- (#echo(__LINE__)#)" % ( dir_path,timeout ))
 
-		f_dir_path = re.sub ("\/$","",dir_path)
-		f_dir_path_os = path.normpath (f_dir_path)
+		dir_path = re.sub ("\/$","",dir_path)
+		dir_path_os = path.normpath (dir_path)
 
-		if ((len (f_dir_path) == 0) or (f_dir_path == ".")): f_return = False
-		elif ((path.isdir (f_dir_path_os)) and (os.access (f_dir_path_os,os.W_OK))): f_return = True
-		elif (path.exists (f_dir_path_os)): f_return = False
+		if ((len (dir_path) == 0) or (dir_path == ".")): var_return = False
+		elif ((path.isdir (dir_path_os)) and (os.access (dir_path_os,os.W_OK))): var_return = True
+		elif (path.exists (dir_path_os)): var_return = False
 		else:
 		#
-			f_continue_check = True
-			f_dir_list = f_dir_path.split ("/")
-			f_dir_count = len (f_dir_list)
-			f_return = False
+			continue_check = True
+			dir_list = dir_path.split ("/")
+			dir_count = len (dir_list)
+			var_return = False
 
-			if (self.time < 0): f_time = time ()
-			else: f_time = self.time
+			if (self.time < 0): var_time = time ()
+			else: var_time = self.time
 
-			if (timeout < 0): f_timeout_time = (f_time + self.timeout_count)
-			else: f_timeout_time = (f_time + timeout)
+			if (timeout < 0): timeout_time = (var_time + self.timeout_count)
+			else: timeout_time = (var_time + timeout)
 
-			if (f_dir_count > 1):
+			if (dir_count > 1):
 			#
-				f_dir_list.pop ()
-				f_dir_basepath = "/".join (f_dir_list)
-				f_continue_check = self.dir_create (f_dir_basepath)
+				dir_list.pop ()
+				dir_basepath = "/".join (dir_list)
+				continue_check = self.dir_create (dir_basepath)
 			#
 
-			if ((f_continue_check) and (f_timeout_time > (time ()))):
+			if ((continue_check) and (timeout_time > (time ()))):
 			#
 				if (self.umask != None): os.umask (int (self.umask,8))
 
 				try:
 				#
-					os.mkdir (f_dir_path_os,self.chmod_dirs)
-					f_return = os.access (f_dir_path_os,os.W_OK)
+					os.mkdir (dir_path_os,self.chmod_dirs)
+					var_return = os.access (dir_path_os,os.W_OK)
 				#
 				except: pass
 			#
 		#
 
-		return f_return
+		return var_return
 	#
 
 	def file_parse (self,file_pathname):
@@ -352,70 +336,69 @@ Handle the given file and call the content parse method.
 		global _unicode_object
 		if (type (file_pathname) == _unicode_object['type']): file_pathname = _unicode_object['str'] (file_pathname,"utf-8")
 
-		if (self.debug == None): f_debug = False
-		else:
+		if (self.event_handler != None): self.event_handler.debug ("#echo(__FILEPATH__)# -builderSkel.file_parse ({0})- (#echo(__LINE__)#)".format (file_pathname))
+
+		var_return = True
+
+		if (self.time < 0): var_time = time ()
+		else: var_time = self.time
+
+		( file_basename,file_ext ) = path.splitext (file_pathname)
+		file_basename = path.basename (file_pathname)
+		file_ext = file_ext[1:]
+		file_object = direct_file (self.umask,self.chmod_files,var_time,self.timeout_count,self.event_handler)
+		file_text_mode = False
+
+		if ((len (file_ext) > 0) and (file_ext in self.filetype_ascii_list)): file_text_mode = True
+		elif (len (file_basename) > 0): file_text_mode = (file_basename in self.filetype_ascii_list)
+
+		if (((file_text_mode) and (file_object.open (file_pathname,True,"r"))) or (file_object.open (file_pathname,True,"rb"))):
 		#
-			f_debug= True
-			self.debug.append ("builderSkel/#echo(__FILEPATH__)# -builderSkel.file_parse ({0})- (#echo(__LINE__)#)".format (file_pathname))
+			file_content = file_object.read ()
+			file_object.close ()
 		#
+		else: file_content = None
 
-		f_return = True
+		file_pathname = re.sub ("^{0}".format (re.escape (self.output_strip_prefix)),"",file_pathname)
 
-		if (self.time < 0): f_time = time ()
-		else: f_time = self.time
-
-		( f_file_basename,f_file_ext ) = path.splitext (file_pathname)
-		f_file_basename = path.basename (file_pathname)
-		f_file_ext = f_file_ext[1:]
-		f_file_object = direct_file (self.umask,self.chmod_files,f_time,self.timeout_count,f_debug)
-		f_file_text_mode = False
-
-		if ((len (f_file_ext) > 0) and (f_file_ext in self.filetype_ascii_list)): f_file_text_mode = True
-		elif (len (f_file_basename) > 0): f_file_text_mode = (f_file_basename in self.filetype_ascii_list)
-
-		if (((f_file_text_mode) and (f_file_object.open (file_pathname,True,"r"))) or (f_file_object.open (file_pathname,True,"rb"))):
+		if (file_pathname in self.parser_pickle):
 		#
-			f_file_content = f_file_object.read ()
-			f_file_object.close ()
-		#
-		else: f_file_content = None
-
-		f_file_pathname = re.sub ("^{0}".format (re.escape (self.output_strip_prefix)),"",file_pathname)
-
-		if (f_file_pathname in self.parser_pickle):
-		#
-			if (((f_file_text_mode) and (f_file_object.open ((self.output_path + f_file_pathname),True,"r"))) or (f_file_object.open ((self.output_path + f_file_pathname),True,"rb"))):
+			if (((file_text_mode) and (file_object.open ((self.output_path + file_pathname),True,"r"))) or (file_object.open ((self.output_path + file_pathname),True,"rb"))):
 			#
-				f_file_old_content_md5 = hashlib.md5(f_file_object.read ()).hexdigest ()
-				f_file_object.close ()
-			#
-			else: f_file_old_content_md5 = None
+				file_old_content = file_object.read ()
+				file_object.close ()
 
-			if ((f_file_old_content_md5 != None) and (f_file_old_content_md5 != self.parser_pickle[f_file_pathname])):
+				if (type (file_old_content) != _unicode_object['type']): file_old_content = _unicode_object['unicode'] (file_old_content,"utf-8")
+				file_old_content_md5 = hashlib.md5(file_old_content).hexdigest ()
 			#
-				f_return = False
+			else: file_old_content_md5 = None
+
+			if ((file_old_content_md5 != None) and (file_old_content_md5 != self.parser_pickle[file_pathname])):
+			#
+				var_return = False
 				sys.stdout.write ("has been changed ... ")
 			#
 		#
 
-		if (f_return):
+		if (var_return):
 		#
-			if (f_file_content == None):
+			if (file_content == None):
 			#
-				f_file_content = ""
-				f_return = self.file_write ("",(self.output_path + f_file_pathname))
+				file_content = ""
+				var_return = self.file_write ("",(self.output_path + file_pathname))
 			#
-			elif (f_file_text_mode):
+			elif (file_text_mode):
 			#
-				f_file_content = self.data_parse (f_file_content,f_file_pathname,f_file_basename)
-				f_return = self.file_write (f_file_content,(self.output_path + f_file_pathname),"w+")
+				file_content = self.data_parse (file_content,file_pathname,file_basename)
+				var_return = self.file_write (file_content,(self.output_path + file_pathname),"w+")
 			#
-			else: f_return = self.file_write (f_file_content,(self.output_path + f_file_pathname))
+			else: var_return = self.file_write (file_content,(self.output_path + file_pathname))
 
-			if (f_return): self.parser_pickle[f_file_pathname] = hashlib.md5(f_file_content).hexdigest ()
+			if (type (file_content) != _unicode_object['type']): file_content = _unicode_object['unicode'] (file_content,"utf-8")
+			if (var_return): self.parser_pickle[file_pathname] = hashlib.md5(file_content).hexdigest ()
 		#
 
-		return f_return
+		return var_return
 	#
 
 	def file_write (self,file_content,file_pathname,file_mode = "w+b"):
@@ -436,31 +419,26 @@ needed.
 		if (type (file_pathname) == _unicode_object['type']): file_pathname = _unicode_object['str'] (file_pathname,"utf-8")
 		if (type (file_mode) == _unicode_object['type']): file_mode = _unicode_object['str'] (file_mode,"utf-8")
 
-		if (self.debug == None): f_debug = False
-		else:
+		if (self.event_handler != None): self.event_handler.debug ("#echo(__FILEPATH__)# -builderSkel.file_write (file_content,{0},{1})- (#echo(__LINE__)#)".format (file_pathname,file_mode))
+
+		dir_path = path.dirname (file_pathname)
+		var_return = False
+
+		if (self.time < 0): var_time = time ()
+		else: var_time = self.time
+
+		if ((len (dir_path) < 1) or (self.dir_create (dir_path))):
 		#
-			f_debug= True
-			self.debug.append ("builderSkel/#echo(__FILEPATH__)# -builderSkel.file_write (file_content,{0},{1})- (#echo(__LINE__)#)".format (file_pathname,file_mode))
-		#
+			file_object = direct_file (self.umask,self.chmod_files,var_time,self.timeout_count,self.event_handler)
 
-		f_dir_path = path.dirname (file_pathname)
-		f_return = False
-
-		if (self.time < 0): f_time = time ()
-		else: f_time = self.time
-
-		if ((len (f_dir_path) < 1) or (self.dir_create (f_dir_path))):
-		#
-			f_file_object = direct_file (self.umask,self.chmod_files,f_time,self.timeout_count,f_debug)
-
-			if (f_file_object.open (file_pathname,False,file_mode)):
+			if (file_object.open (file_pathname,False,file_mode)):
 			#
-				f_return = f_file_object.write (file_content)
-				f_file_object.close ()
+				var_return = file_object.write (file_content)
+				file_object.close ()
 			#
 		#
 
-		return f_return
+		return var_return
 	#
 
 	def get_variable (self,name):
@@ -477,7 +455,7 @@ Gets the variable content with the given name.
 		global _unicode_object
 		if (type (name) == _unicode_object['type']): name = _unicode_object['str'] (name,"utf-8")
 
-		if (self.debug != None): self.debug.append ("builderSkel/#echo(__FILEPATH__)# -builderSkel.get_variable ({0})- (#echo(__LINE__)#)".format (name))
+		if (self.event_handler != None): self.event_handler.debug ("#echo(__FILEPATH__)# -builderSkel.get_variable ({0})- (#echo(__LINE__)#)".format (name))
 		return self.parameters.get (name,None)
 	#
 
@@ -491,9 +469,9 @@ Parse and rewrite all directories and files given as include definitions.
 		"""
 
 		global _unicode_object
-		if (self.debug != None): self.debug.append ("builderSkel/#echo(__FILEPATH__)# -builderSkel.make_all ()- (#echo(__LINE__)#)")
+		if (self.event_handler != None): self.event_handler.debug ("#echo(__FILEPATH__)# -builderSkel.make_all ()- (#echo(__LINE__)#)")
 
-		f_return = False
+		var_return = False
 
 		if ((self.workdir_rescan) and (len (self.dir_list) > 0) and (len (self.filetype_list) > 0)):
 		#
@@ -501,17 +479,20 @@ Parse and rewrite all directories and files given as include definitions.
 			self.workdir_rescan = False
 		#
 
-		if (len (self.file_dict) < 1): self.trigger_error ("builderSkel/#echo(__FILEPATH__)# -builderSkel.make_all ()- (#echo(__LINE__)#) reports: No valid files found for parsing",self.E_ERROR)
+		if (len (self.file_dict) < 1):
+		#
+			if (self.event_handler != None): self.event_handler.error ("#echo(__FILEPATH__)# -builderSkel.make_all ()- (#echo(__LINE__)#) reports: No valid files found for parsing")
+		#
 		else:
 		#
-			for f_file_id in self.file_dict:
+			for file_id in self.file_dict:
 			#
-				f_file = self.file_dict[f_file_id]
-				if (type (f_file) == _unicode_object['type']): f_file = _unicode_object['str'] (f_file,"utf-8")
+				var_file = self.file_dict[file_id]
+				if (type (var_file) == _unicode_object['type']): var_file = _unicode_object['str'] (var_file,"utf-8")
 
-				sys.stdout.write (">>> Processing {0} ... ".format (f_file))
+				sys.stdout.write (">>> Processing {0} ... ".format (var_file))
 
-				if (self.file_parse (f_file)): sys.stdout.write ("done\n")
+				if (self.file_parse (var_file)): sys.stdout.write ("done\n")
 				else: sys.stdout.write ("failed\n")
 			#
 		#
@@ -520,12 +501,12 @@ Parse and rewrite all directories and files given as include definitions.
 		#
 			sys.stdout.write (">> Writing make.py.pickle\n")
 
-			f_file = open ("{0}/make.py.pickle".format (self.output_path),"wb")
-			pickle.dump (self.parser_pickle,f_file,pickle.HIGHEST_PROTOCOL)
-			f_file.close ()
+			var_file = open ("{0}/make.py.pickle".format (self.output_path),"wb")
+			pickle.dump (self.parser_pickle,var_file,pickle.HIGHEST_PROTOCOL)
+			var_file.close ()
 		#
 
-		return f_return
+		return var_return
 	#
 
 	def parser (self,parser_tag,data,data_position = 0,nested_tag_end_position = None):
@@ -542,59 +523,59 @@ Parser for "make" tags.
 		"""
 
 		global _unicode_object
-		if (self.debug != None): self.debug.append ("pyBuilder/#echo(__FILEPATH__)# -pyBuilder.data_parse (data)- (#echo(__LINE__)#)")
+		if (self.event_handler != None): self.event_handler.debug ("#echo(__FILEPATH__)# -builderSkel.data_parse (data)- (#echo(__LINE__)#)")
 
 		if (nested_tag_end_position == None):
 		#
 			data_position = data.find (parser_tag,data_position)
-			f_nested_check = False
+			nested_check = False
 		#
 		else:
 		#
 			data_position = data.find (parser_tag,data_position)
 			if (data_position >= nested_tag_end_position): data_position = -1
 
-			f_nested_check = True
-			f_tag_end_position = -1
+			nested_check = True
+			tag_end_position = -1
 		#
 
 		while (data_position > -1):
 		#
-			f_tag_definition = self.parser_check (data[data_position:])
+			tag_definition = self.parser_check (data[data_position:])
 
-			if (f_tag_definition == None): data_position += len (parser_tag)
+			if (tag_definition == None): data_position += len (parser_tag)
 			else:
 			#
-				f_tag_length = len (f_tag_definition[0])
-				f_tag_start_end_position = self.parser_tag_find_end_position (data,(data_position + f_tag_length),f_tag_definition[1])
-				f_tag_end_position = -1
+				tag_length = len (tag_definition[0])
+				tag_start_end_position = self.parser_tag_find_end_position (data,(data_position + tag_length),tag_definition[1])
+				tag_end_position = -1
 
-				if (f_tag_start_end_position > -1):
+				if (tag_start_end_position > -1):
 				#
-					f_tag_end_position = self.parser_tag_end_find_position (data,f_tag_start_end_position,f_tag_definition[2])
+					tag_end_position = self.parser_tag_end_find_position (data,tag_start_end_position,tag_definition[2])
 
-					if (f_tag_end_position < 0): f_nested_data = None
-					else: f_nested_data = self.parser (parser_tag,data,(data_position + 1),f_tag_end_position)
+					if (tag_end_position < 0): nested_data = None
+					else: nested_data = self.parser (parser_tag,data,(data_position + 1),tag_end_position)
 
-					while (f_nested_data != None):
+					while (nested_data != None):
 					#
-						data = f_nested_data
-						f_tag_start_end_position = self.parser_tag_find_end_position (data,(data_position + 1),f_tag_definition[1])
-						if (f_tag_start_end_position > -1): f_tag_end_position = self.parser_tag_end_find_position (data,f_tag_start_end_position,f_tag_definition[2])
+						data = nested_data
+						tag_start_end_position = self.parser_tag_find_end_position (data,(data_position + 1),tag_definition[1])
+						if (tag_start_end_position > -1): tag_end_position = self.parser_tag_end_find_position (data,tag_start_end_position,tag_definition[2])
 
-						f_nested_data = self.parser (parser_tag,data,(data_position + 1),f_tag_end_position)
+						nested_data = self.parser (parser_tag,data,(data_position + 1),tag_end_position)
 					#
 				#
 
-				if (f_tag_end_position > -1): data = self.parser_change (f_tag_definition,data,data_position,f_tag_start_end_position,f_tag_end_position)
-				else: data_position += f_tag_length
+				if (tag_end_position > -1): data = self.parser_change (tag_definition,data,data_position,tag_start_end_position,tag_end_position)
+				else: data_position += tag_length
 			#
 
-			if (f_nested_check): data_position = -1
+			if (nested_check): data_position = -1
 			else: data_position = data.find (parser_tag,data_position)
 		#
 
-		if ((f_nested_check) and (f_tag_end_position < 0)): data = None
+		if ((nested_check) and (tag_end_position < 0)): data = None
 		return data
 	#
 
@@ -643,29 +624,29 @@ Find the starting position of the closing tag.
 :since:  v0.1.00
 		"""
 
-		if (self.debug != None): self.debug.append ("pyBuilder/#echo(__FILEPATH__)# -pyBuilder.parser_tag_end_find_position (data,data_position,tag_end_list)- (#echo(__LINE__)#)")
-		f_return = None
+		if (self.event_handler != None): self.event_handler.debug ("#echo(__FILEPATH__)# -builderSkel.parser_tag_end_find_position (data,data_position,tag_end_list)- (#echo(__LINE__)#)")
+		var_return = None
 
-		f_continue_check = True
-		f_result = -1
+		continue_check = True
+		result = -1
 
-		while (((f_return == None) or (f_return > -1)) and (f_continue_check)):
+		while (((var_return == None) or (var_return > -1)) and (continue_check)):
 		#
-			for f_tag_end in tag_end_list:
+			for tag_end in tag_end_list:
 			#
-				f_result = data.find (f_tag_end,data_position)
-				if ((f_result > -1) and ((f_return == None) or (f_result < f_return))): f_return = f_result
+				result = data.find (tag_end,data_position)
+				if ((result > -1) and ((var_return == None) or (result < var_return))): var_return = result
 			#
 
-			if (f_return == None): f_return = -1
-			elif (f_return > -1):
+			if (var_return == None): var_return = -1
+			elif (var_return > -1):
 			#
-				data_position = f_return
-				if (data[(f_return - 1):f_return] != "\\"): f_continue_check = False
+				data_position = var_return
+				if (data[(var_return - 1):var_return] != "\\"): continue_check = False
 			#
 		#
 
-		return f_return
+		return var_return
 	#
 
 	def parser_tag_find_end_position (self,data,data_position,tag_end):
@@ -681,24 +662,38 @@ Find the starting position of the enclosing content.
 :since:  v0.1.00
 		"""
 
-		if (self.debug != None): self.debug.append ("pyBuilder/#echo(__FILEPATH__)# -pyBuilder.parser_tag_find_end_position (data,data_position,tag_end)- (#echo(__LINE__)#)")
-		f_return = None
+		if (self.event_handler != None): self.event_handler.debug ("#echo(__FILEPATH__)# -builderSkel.parser_tag_find_end_position (data,data_position,tag_end)- (#echo(__LINE__)#)")
+		var_return = None
 
-		f_continue_check = True
+		continue_check = True
 
-		while (((f_return == None) or (f_return > -1)) and (f_continue_check)):
+		while (((var_return == None) or (var_return > -1)) and (continue_check)):
 		#
-			f_return = data.find (tag_end,data_position)
+			var_return = data.find (tag_end,data_position)
 
-			if (f_return > -1):
+			if (var_return > -1):
 			#
-				data_position = f_return
-				if (data[(f_return - 1):f_return] != "\\"): f_continue_check = False
+				data_position = var_return
+				if (data[(var_return - 1):var_return] != "\\"): continue_check = False
 			#
 		#
 
-		if (f_return > -1): f_return += len (tag_end)
-		return f_return
+		if (var_return > -1): var_return += len (tag_end)
+		return var_return
+	#
+
+	def set_event_handler (self,event_handler = None):
+	#
+		"""
+Sets the EventHandler.
+
+:param event_handler: EventHandler to use
+
+:since: v0.1.00
+		"""
+
+		if (event_handler != None): event_handler.debug ("#echo(__FILEPATH__)# -builderSkel.set_event_handler (+event_handler)- (#echo(__LINE__)#)")
+		self.event_handler = event_handler
 	#
 
 	def set_exclude (self,exclude):
@@ -714,19 +709,19 @@ Add "exclude" definitions for directories and files.
 		global _unicode_object
 		if (type (exclude) == _unicode_object['type']): exclude = _unicode_object['str'] (exclude,"utf-8")
 
-		if (self.debug != None): self.debug.append ("builderSkel/#echo(__FILEPATH__)# -builderSkel.set_exclude ({0})- (#echo(__LINE__)#)".format (exclude))
+		if (self.event_handler != None): self.event_handler.debug ("#echo(__FILEPATH__)# -builderSkel.set_exclude ({0})- (#echo(__LINE__)#)".format (exclude))
 
 		if (type (exclude) == str):
 		#
-			f_exclude_list = exclude.split (",")
+			exclude_list = exclude.split (",")
 
-			for f_exclude in f_exclude_list:
+			for exclude in exclude_list:
 			#
-				self.dir_exclude_list.append (f_exclude)
-				self.file_exclude_list.append (f_exclude)
+				self.dir_exclude_list.append (exclude)
+				self.file_exclude_list.append (exclude)
 			#
 		#
-		else: self.trigger_error ("builderSkel/#echo(__FILEPATH__)# -builderSkel.set_exclude ()- (#echo(__LINE__)#) reports: Given parameter is not a string",self.E_NOTICE)
+		elif (self.event_handler != None): self.event_handler.warn ("#echo(__FILEPATH__)# -builderSkel.set_exclude ()- (#echo(__LINE__)#) reports: Given parameter is not a string")
 	#
 
 	def set_exclude_dirs (self,exclude):
@@ -742,14 +737,14 @@ Add "exclude" definitions for directories.
 		global _unicode_object
 		if (type (exclude) == _unicode_object['type']): exclude = _unicode_object['str'] (exclude,"utf-8")
 
-		if (self.debug != None): self.debug.append ("builderSkel/#echo(__FILEPATH__)# -builderSkel.set_exclude_dirs ({0})- (#echo(__LINE__)#)".format (exclude))
+		if (self.event_handler != None): self.event_handler.debug ("#echo(__FILEPATH__)# -builderSkel.set_exclude_dirs ({0})- (#echo(__LINE__)#)".format (exclude))
 
 		if (type (exclude) == str):
 		#
-			f_exclude_list = exclude.split (",")
-			for f_exclude in f_exclude_list: self.dir_exclude_list.append (f_exclude)
+			exclude_list = exclude.split (",")
+			for exclude in exclude_list: self.dir_exclude_list.append (exclude)
 		#
-		else: self.trigger_error ("builderSkel/#echo(__FILEPATH__)# -builderSkel.set_exclude_dirs ()- (#echo(__LINE__)#) reports: Given parameter is not a string",self.E_NOTICE)
+		elif (self.event_handler != None): self.event_handler.warn ("#echo(__FILEPATH__)# -builderSkel.set_exclude_dirs ()- (#echo(__LINE__)#) reports: Given parameter is not a string")
 	#
 
 	def set_exclude_files (self,exclude):
@@ -765,14 +760,14 @@ Add "exclude" definitions for files.
 		global _unicode_object
 		if (type (exclude) == _unicode_object['type']): exclude = _unicode_object['str'] (exclude,"utf-8")
 
-		if (self.debug != None): self.debug.append ("builderSkel/#echo(__FILEPATH__)# -builderSkel.set_exclude_files ({0})- (#echo(__LINE__)#)".format (exclude))
+		if (self.event_handler != None): self.event_handler.debug ("#echo(__FILEPATH__)# -builderSkel.set_exclude_files ({0})- (#echo(__LINE__)#)".format (exclude))
 
 		if (type (exclude) == str):
 		#
-			f_exclude_list = exclude.split (",")
-			for f_exclude in f_exclude_list: self.file_exclude_list.append (f_exclude)
+			exclude_list = exclude.split (",")
+			for exclude in exclude_list: self.file_exclude_list.append (exclude)
 		#
-		else: self.trigger_error ("builderSkel/#echo(__FILEPATH__)# -builderSkel.set_exclude_files ()- (#echo(__LINE__)#) reports: Given parameter is not a string",self.E_NOTICE)
+		elif (self.event_handler != None): self.event_handler.warn ("builderSkel/#echo(__FILEPATH__)# -builderSkel.set_exclude_files ()- (#echo(__LINE__)#) reports: Given parameter is not a string")
 	#
 
 	def set_new_target (self,parameters,include,output_path,filetype):
@@ -790,7 +785,7 @@ Sets a new target for processing.
 :since: v0.1.00
 		"""
 
-		if (self.debug != None): self.debug.append ("builderSkel/#echo(__FILEPATH__)# -builderSkel->set_new_target (parameters,include,output_path,filetype)- (#echo(__LINE__)#)")
+		if (self.event_handler != None): self.event_handler.debug ("#echo(__FILEPATH__)# -builderSkel->set_new_target (parameters,include,output_path,filetype)- (#echo(__LINE__)#)")
 
 		self.dir_exclude_list = [ ]
 		self.file_exclude_list = [ ]
@@ -804,9 +799,9 @@ Sets a new target for processing.
 		#
 			sys.stdout.write (">> Reading make.py.pickle\n")
 
-			f_file = open ("{0}/make.py.pickle".format (output_path),"rb")
-			self.parser_pickle = pickle.load (f_file)
-			f_file.close ()
+			var_file = open ("{0}/make.py.pickle".format (output_path),"rb")
+			self.parser_pickle = pickle.load (var_file)
+			var_file.close ()
 		#
 		else: self.parser_pickle = { }
 
@@ -816,48 +811,36 @@ Sets a new target for processing.
 		if (type (parameters) == dict): self.parameters = parameters
 		else: self.parameters = { }
 
-		f_data_list = include.split (",")
+		data_list = include.split (",")
 
-		for f_data in f_data_list:
+		for data in data_list:
 		#
-			if (path.isdir (f_data)):
+			if (path.isdir (data)):
 			#
-				if ((self.workdir_rescan == False) and (f_data not in self.dir_list)):
+				if ((self.workdir_rescan == False) and (data not in self.dir_list)):
 				#
 					self.dir_list = [ ]
 					self.file_dict = { }
 					self.workdir_rescan = True
 				#
 
-				self.dir_list.append (f_data)
+				self.dir_list.append (data)
 			#
-			elif (path.isfile (f_data)):
+			elif (path.isfile (data)):
 			#
-				f_file_id = hashlib.md5(f_data).hexdigest ()
+				if (type (data) != _unicode_object['type']): data = _unicode_object['unicode'] (data,"utf-8")
+				file_id = hashlib.md5(data).hexdigest ()
 
-				if ((self.workdir_rescan == False) and (f_file_id not in self.file_dict)):
+				if ((self.workdir_rescan == False) and (file_id not in self.file_dict)):
 				#
 					self.dir_list = [ ]
 					self.file_dict = { }
 					self.workdir_rescan = True
 				#
 
-				self.file_dict[f_file_id] = f_data
+				self.file_dict[file_id] = data
 			#
 		#
-	#
-
-	def set_trigger (self,py_function = None):
-	#
-		"""
-Set a given function to be called for each exception or error.
-
-:param py_function: Python function to be called
-
-:since: v0.1.00
-		"""
-
-		self.error_callback = py_function
 	#
 
 	def set_strip_prefix (self,strip_prefix):
@@ -873,25 +856,10 @@ Define a prefix to be stripped from output pathes.
 		global _unicode_object
 		if (type (strip_prefix) == _unicode_object['type']): strip_prefix = _unicode_object['str'] (strip_prefix,"utf-8")
 
-		if (self.debug != None): self.debug.append ("builderSkel/#echo(__FILEPATH__)# -builderSkel.set_strip_prefix ({0})- (#echo(__LINE__)#)".format (strip_prefix))
+		if (self.event_handler != None): self.event_handler.debug ("#echo(__FILEPATH__)# -builderSkel.set_strip_prefix ({0})- (#echo(__LINE__)#)".format (strip_prefix))
 
 		if (type (strip_prefix) == str): self.output_strip_prefix = strip_prefix
-		else: self.trigger_error ("builderSkel/#echo(__FILEPATH__)# -builderSkel.set_strip_prefix ()- (#echo(__LINE__)#) reports: Given parameter is not a string",self.E_NOTICE)
-	#
-
-	def trigger_error (self,message,message_type = None):
-	#
-		"""
-Calls a user-defined function for each exception or error.
-
-:param message: Error message
-:param message_type: Error type
-
-:since: v0.1.00
-		"""
-
-		if (message_type == None): message_type = self.E_NOTICE
-		if (self.error_callback != None): self.error_callback (message,message_type)
+		elif (self.event_handler != None): self.event_handler.warn ("builderSkel/#echo(__FILEPATH__)# -builderSkel.set_strip_prefix ()- (#echo(__LINE__)#) reports: Given parameter is not a string")
 	#
 
 	def workdir_scan (self):
@@ -902,9 +870,9 @@ Scan given directories for files to be parsed.
 :since: v0.1.00
 		"""
 
-		if (self.debug != None): self.debug.append ("builderSkel/#echo(__FILEPATH__)# -builderSkel.workdir_scan ()- (#echo(__LINE__)#)")
+		if (self.event_handler != None): self.event_handler.debug ("#echo(__FILEPATH__)# -builderSkel.workdir_scan ()- (#echo(__LINE__)#)")
 
-		f_re_content_estripped = re.compile ("^{0}".format (re.escape (self.output_strip_prefix)))
+		re_content_estripped = re.compile ("^{0}".format (re.escape (self.output_strip_prefix)))
 		"""
 ----------------------------------------------------------------------------
 Create a list of files - we need to scan directories recursively ...
@@ -912,54 +880,42 @@ Create a list of files - we need to scan directories recursively ...
 		"""
 
 		sys.stdout.write (">> Ready to build file index\n")
-		f_dir_counter = 0
+		dir_counter = 0
 
-		while (len (self.dir_list) > f_dir_counter):
+		while (len (self.dir_list) > dir_counter):
 		#
-			sys.stdout.write (">>> Scanning {0} ... ".format (self.dir_list[f_dir_counter]))
-			f_dir_path_os = path.normpath (self.dir_list[f_dir_counter])
+			sys.stdout.write (">>> Scanning {0} ... ".format (self.dir_list[dir_counter]))
+			dir_path_os = path.normpath (self.dir_list[dir_counter])
 
-			if ((path.isdir (f_dir_path_os)) and (os.access (f_dir_path_os,os.R_OK))):
+			if ((path.isdir (dir_path_os)) and (os.access (dir_path_os,os.R_OK))):
 			#
-				f_content_list = os.listdir (f_dir_path_os)
+				content_list = os.listdir (dir_path_os)
 
-				for f_content in f_content_list:
+				for content in content_list:
 				#
-					if (f_content[0] != "."):
+					if (content[0] != "."):
 					#
-						if (self.dir_list[f_dir_counter].endswith ("/")): f_content_extended = self.dir_list[f_dir_counter] + f_content
-						else: f_content_extended = "{0}/{1}".format (self.dir_list[f_dir_counter],f_content)
+						if (self.dir_list[dir_counter].endswith ("/")): content_extended = self.dir_list[dir_counter] + content
+						else: content_extended = "{0}/{1}".format (self.dir_list[dir_counter],content)
 
-						f_content_extended_os = path.normpath (f_content_extended)
-						f_content_estripped = f_re_content_estripped.sub ("",f_content_extended)
-						if (type (f_content_estripped) == _unicode_object['type']): f_content_estripped = _unicode_object['str'] (f_content_estripped,"utf-8")
+						content_extended_os = path.normpath (content_extended)
+						content_estripped = re_content_estripped.sub ("",content_extended)
+						if (type (content_estripped) == _unicode_object['type']): content_estripped = _unicode_object['str'] (content_estripped,"utf-8")
 
-						if (path.isdir (f_content_extended_os)):
+						if (path.isdir (content_extended_os)):
 						#
-							if ((f_content not in self.dir_exclude_list) and (f_content_estripped not in self.dir_exclude_list)): self.dir_list.append (f_content_extended)
+							if ((content not in self.dir_exclude_list) and (content_estripped not in self.dir_exclude_list)): self.dir_list.append (content_extended)
 						#
-						elif (path.isfile (f_content_extended_os)):
+						elif (path.isfile (content_extended_os)):
 						#
-							( f_content_basename,f_content_ext ) = path.splitext (f_content)
-							f_content_ext = f_content_ext[1:]
-							f_content_id = f_content_estripped
+							( content_basename,content_ext ) = path.splitext (content)
+							content_ext = content_ext[1:]
+							content_id = content_estripped
 
-							try:
-							#
-								if (bytes == _unicode_object['type']):
-								#
-									if (type (f_content_id) == str): f_content_id = _unicode_object['unicode'] (f_content_id,"utf-8")
-								#
-								elif (type (f_content_id) == _unicode_object['type']): f_content_id = _unicode_object['str'] (f_content_id,"utf-8")
-							#
-							except:
-							#
-								if (type (f_content_id) == _unicode_object['type']): f_content_id = _unicode_object['str'] (f_content_id,"utf-8")
-							#
+							if (type (content_id) != _unicode_object['type']): content_id = _unicode_object['unicode'] (content_id,"utf-8")
+							content_id = hashlib.md5(content_id).hexdigest ()
 
-							f_content_id = hashlib.md5(f_content_id).hexdigest ()
-
-							if ((len (f_content_ext) > 0) and (f_content_ext in self.filetype_list) and (f_content not in self.file_exclude_list) and (f_content_estripped not in self.file_exclude_list)): self.file_dict[f_content_id] = f_content_extended
+							if ((len (content_ext) > 0) and (content_ext in self.filetype_list) and (content not in self.file_exclude_list) and (content_estripped not in self.file_exclude_list)): self.file_dict[content_id] = content_extended
 						#
 					#
 				#
@@ -968,7 +924,7 @@ Create a list of files - we need to scan directories recursively ...
 			#
 			else: sys.stdout.write ("failed\n")
 
-			f_dir_counter += 1
+			dir_counter += 1
 		#
 	#
 #
