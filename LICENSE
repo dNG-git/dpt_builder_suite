@@ -3,7 +3,7 @@ pyBuilder
 Build Python code for different release targets
 ----------------------------------------------------------------------------
 (C) direct Netware Group - All rights reserved
-http://www.direct-netware.de/redirect.php?pyBuilder
+http://www.direct-netware.de/redirect.php?py;builder
 
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can
@@ -12,7 +12,7 @@ obtain one at http://mozilla.org/MPL/2.0/.
 http://www.direct-netware.de/redirect.php?licenses;mpl2
 ----------------------------------------------------------------------------
 The following license agreement is valid for all files and subdirectories of
-ext/core/py_builder (git)
+py/builder (git)
 ----------------------------------------------------------------------------
 
 Mozilla Public License

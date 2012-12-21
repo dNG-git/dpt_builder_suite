@@ -3,7 +3,7 @@ pyBuilder
 Build Python code for different release targets
 ----------------------------------------------------------------------------
 The following agreement is valid for all files and subdirectories of
-ext/core/py_builder (git)
+py/builder (git)
 ----------------------------------------------------------------------------
 
 Fiduciary Licence Agreement
