@@ -72,6 +72,8 @@ Constructor __init__ (direct_make)
 		self.option_parser.add_option("--define", action = "store", type = "string", dest = "define")
 		self.option_parser.add_option("--filetype", action = "store", type = "string", dest = "filetype")
 		self.option_parser.add_option("--include", action = "store", type = "string", dest = "include")
+		self.option_parser.add_option("--output_dirs_chmod", action = "store", type = "string", dest = "output_dirs_chmod")
+		self.option_parser.add_option("--output_files_chmod", action = "store", type = "string", dest = "output_files_chmod")
 		self.option_parser.add_option("--output_path", action = "store", type = "string", dest = "output_path")
 		self.option_parser.add_option("--exclude", action = "store", type = "string", dest = "exclude")
 		self.option_parser.add_option("--exclude_dirs", action = "store", type = "string", dest = "exclude_dirs")
@@ -137,7 +139,7 @@ Executes registered callbacks for the active application.
 					#
 				#
 
-				if (py_builder == None): py_builder = direct_py_builder(target, options.include, target['make_output_path'], options.filetype)
+				if (py_builder == None): py_builder = direct_py_builder(target, options.include, target['make_output_path'], options.filetype, default_chmod_files = options.output_files_chmod, default_chmod_dirs = options.output_dirs_chmod)
 				else: py_builder.set_new_target(target, options.include, target['make_output_path'], options.filetype)
 
 				if (options.exclude != None): py_builder.set_exclude(options.exclude)
