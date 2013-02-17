@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+jsBuilder
+Build JavaScript code for different release targets
+
+(C) direct Netware Group - All rights reserved
+http://www.direct-netware.de/redirect.php?js;builder
+
+This Source Code Form is subject to the terms of the Mozilla Public License,
+v. 2.0. If a copy of the MPL was not distributed with this file, You can
+obtain one at http://mozilla.org/MPL/2.0/.
+
+http://www.direct-netware.de/redirect.php?licenses;mpl2
+// -->
+<project name="jsBuilder" default="compile.jsBuilder">
+	<dirname property="jsBuilder.basedir" file="${ant.file}" />
+	<property file="${jsBuilder.basedir}/_extras/build.properties" />
+
+	<target name="compile.jsBuilder" description="Compile module ${ant.project.name}">
+		<exec executable="python">
+			<arg file="${pyBuilder.filePathName}" />
+			<arg value="--filetype=${pyBuilder.fileTypes}" />
+			<arg value="--include=${jsBuilder.basedir}/" />
+			<arg value="--output_path=${pyBuilder.target}" />
+			<arg value="--strip_prefix=${jsBuilder.basedir}/" />
+			<arg value="--exclude_dirs=_developer,_extras" />
+			<arg value="--exclude_files=makefile.py" />
+		</exec>
+	</target>
+
+	<target name="cleanup.jsBuilder.target" description="Clean target directory of ${ant.project.name}">
+		<delete includeEmptyDirs="true"><fileset dir="${pyBuilder.target}" /></delete>
+	</target>
+</project>

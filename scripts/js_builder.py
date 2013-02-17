@@ -10,7 +10,7 @@ jsBuilder
 Build JavaScript code for different release targets
 ----------------------------------------------------------------------------
 (C) direct Netware Group - All rights reserved
-http://www.direct-netware.de/redirect.php?jsBuilder
+http://www.direct-netware.de/redirect.php?js;builder
 
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can
@@ -19,7 +19,7 @@ obtain one at http://mozilla.org/MPL/2.0/.
 http://www.direct-netware.de/redirect.php?licenses;mpl2
 ----------------------------------------------------------------------------
 #echo(jsBuilderVersion)#
-jsBuilder/#echo(__FILEPATH__)#
+#echo(__FILEPATH__)#
 ----------------------------------------------------------------------------
 NOTE_END //n"""
 
@@ -28,7 +28,7 @@ from slimit.minifier import minify
 
 from builder_skel import direct_builder_skel
 
-class direct_js_builder (direct_builder_skel):
+class direct_js_builder(direct_builder_skel):
 #
 	"""
 Provides a Javascript "make" environment object.
@@ -42,7 +42,7 @@ Provides a Javascript "make" environment object.
              Mozilla Public License, v. 2.0
 	"""
 
-	def data_parse (self,data,file_pathname,file_name):
+	def data_parse(self, data, file_pathname, file_name):
 	#
 		"""
 Parse the given content.
@@ -55,14 +55,14 @@ Parse the given content.
 :since:  v0.1.00
 		"""
 
-		if (self.event_handler != None): self.event_handler.debug ("#echo(__FILEPATH__)# -jsBuilder.data_parse (data)- (#echo(__LINE__)#)")
+		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -jsBuilder.data_parse(data)- (#echo(__LINE__)#)")
 
-		if (self.get_variable ("debug") == None): data = minify (data,True)
-		if (self.get_variable ("js_header") != None): data = "// {0}\n{1}".format (self.get_variable ("js_header"),data)
-		return direct_builder_skel.data_parse (self,data,file_pathname,file_name)
+		if (self.get_variable("debug") == None): data = minify(data, True)
+		if (self.get_variable("js_header") != None): data = "// {0}\n{1}".format(self.get_variable("js_header"), data)
+		return direct_builder_skel.data_parse(self, data, file_pathname, file_name)
 	#
 
-	def file_write (self,file_content,file_pathname,file_mode = "w+b"):
+	def file_write(self, file_content, file_pathname, file_mode = "w+b"):
 	#
 		"""
 Write the given file to the defined location. Create subdirectories if
@@ -76,13 +76,13 @@ needed.
 :since:  v0.1.00
 		"""
 
-		if ((self.get_variable ("debug") == None) and (self.get_variable ("js_min_filenames") != None)):
+		if ((self.get_variable("debug") == None) and (self.get_variable("js_min_filenames") != None)):
 		#
-			( f_file_pathname,f_file_ext ) = path.splitext (file_pathname)
-			if (len (f_file_ext) > 0): file_pathname = "{0}.min{1}".format (f_file_pathname,f_file_ext)
+			( file_pathname, file_ext ) = path.splitext(file_pathname)
+			if (len(file_ext) > 0): file_pathname = "{0}.min{1}".format(file_pathname, file_ext)
 		#
 
-		return direct_builder_skel.file_write (self,file_content,file_pathname,file_mode = "w+b")
+		return direct_builder_skel.file_write(self, file_content, file_pathname, file_mode = "w+b")
 	#
 #
 
