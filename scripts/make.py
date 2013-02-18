@@ -25,7 +25,7 @@ http://www.direct-netware.de/redirect.php?licenses;mpl2
 ----------------------------------------------------------------------------
 NOTE_END //n"""
 
-from optparse import OptionParser
+from argparse import ArgumentParser
 from js_builder import direct_js_builder
 import os, re, sys
 
@@ -33,8 +33,6 @@ sys.path.append(os.getcwd())
 
 try: import makefile
 except: pass
-
-_direct_js_builder_make = None
 
 class direct_make(object):
 #
@@ -49,9 +47,9 @@ class direct_make(object):
             Mozilla Public License, v. 2.0
 	"""
 
-	option_parser = None
+	arg_parser = None
 	"""
-OptionParser instance
+ArgumentParser instance
 	"""
 
 	"""
@@ -68,17 +66,19 @@ Constructor __init__ (direct_make)
 :since: v0.1.00
 		"""
 
-		self.option_parser = OptionParser()
-		self.option_parser.add_option("--define", action = "store", type = "string", dest = "define")
-		self.option_parser.add_option("--filetype", action = "store", type = "string", dest = "filetype")
-		self.option_parser.add_option("--include", action = "store", type = "string", dest = "include")
-		self.option_parser.add_option("--output_dirs_chmod", action = "store", type = "string", dest = "output_dirs_chmod")
-		self.option_parser.add_option("--output_files_chmod", action = "store", type = "string", dest = "output_files_chmod")
-		self.option_parser.add_option("--output_path", action = "store", type = "string", dest = "output_path")
-		self.option_parser.add_option("--exclude", action = "store", type = "string", dest = "exclude")
-		self.option_parser.add_option("--exclude_dirs", action = "store", type = "string", dest = "exclude_dirs")
-		self.option_parser.add_option("--exclude_files", action = "store", type = "string", dest = "exclude_files")
-		self.option_parser.add_option("--strip_prefix", action = "store", type = "string", dest = "strip_prefix")
+		self.arg_parser = ArgumentParser()
+		self.arg_parser.add_argument("--define", action = "store", type = str, dest = "define")
+		self.arg_parser.add_argument("--filetype", action = "store", type = str, dest = "filetype")
+		self.arg_parser.add_argument("--include", action = "store", type = str, dest = "include")
+		self.arg_parser.add_argument("--output_dirs_chmod", action = "store", type = str, dest = "output_dirs_chmod")
+		self.arg_parser.add_argument("--output_files_chmod", action = "store", type = str, dest = "output_files_chmod")
+		self.arg_parser.add_argument("--output_path", action = "store", type = str, dest = "output_path")
+		self.arg_parser.add_argument("--exclude", action = "store", type = str, dest = "exclude")
+		self.arg_parser.add_argument("--exclude_dirs", action = "store", type = str, dest = "exclude_dirs")
+		self.arg_parser.add_argument("--exclude_files", action = "store", type = str, dest = "exclude_files")
+		self.arg_parser.add_argument("--strip_prefix", action = "store", type = str, dest = "strip_prefix")
+
+		self.arg_parser.add_argument("-v", "--version", action="version", version="http://www.direct-netware.de/redirect.php?js;builder")
 	#
 
 	def run(self):
@@ -89,7 +89,7 @@ Executes registered callbacks for the active application.
 :since: v1.0.0
 		"""
 
-		( options, invalid_args ) = self.option_parser.parse_args()
+		args = self.option_parser.parse_args()
 
 		global _direct_jsBuilder_parameters
 		targets = [ ]
@@ -101,13 +101,13 @@ Executes registered callbacks for the active application.
 				if ("make_output_path" in target): targets.append(target)
 			#
 		#
-		elif (options.output_path != None):
+		elif (args.output_path != None):
 		#
-			_direct_jsBuilder_parameters.update({ "make_output_path":options.output_path })
+			_direct_jsBuilder_parameters.update({ "make_output_path": args.output_path })
 			targets.append(_direct_jsBuilder_parameters)
 		#
 
-		if (options.filetype == None or options.include == None or len(targets) == 0): self.option_parser.print_help()
+		if (args.filetype == None or args.include == None or len(targets) == 0): self.option_parser.print_help()
 		else:
 		#
 			js_builder = None
@@ -115,9 +115,9 @@ Executes registered callbacks for the active application.
 
 			for target in targets:
 			#
-				if (options.define != None):
+				if (args.define != None):
 				#
-					define_array = options.define.split(",")
+					define_array = args.define.split(",")
 					re_define = re.compile("^(\w+)\=(.+?)$")
 
 					for define in define_array:
@@ -139,13 +139,13 @@ Executes registered callbacks for the active application.
 					#
 				#
 
-				if (js_builder == None): js_builder = direct_js_builder(target, options.include, target['make_output_path'], options.filetype, default_chmod_files = options.output_files_chmod, default_chmod_dirs = options.output_dirs_chmod)
-				else: js_builder.set_new_target(target, options.include, target['make_output_path'], options.filetype)
+				if (js_builder == None): js_builder = direct_js_builder(target, args.include, target['make_output_path'], args.filetype, default_chmod_files = args.output_files_chmod, default_chmod_dirs = args.output_dirs_chmod)
+				else: js_builder.set_new_target(target, args.include, target['make_output_path'], args.filetype)
 
-				if (options.exclude != None): js_builder.set_exclude(options.exclude)
-				if (options.exclude_dirs != None): js_builder.set_exclude_dirs(options.exclude_dirs)
-				if (options.exclude_files != None): js_builder.set_exclude_files(options.exclude_files)
-				if (options.strip_prefix != None): js_builder.set_strip_prefix(options.strip_prefix)
+				if (args.exclude != None): js_builder.set_exclude(args.exclude)
+				if (args.exclude_dirs != None): js_builder.set_exclude_dirs(args.exclude_dirs)
+				if (args.exclude_files != None): js_builder.set_exclude_files(args.exclude_files)
+				if (args.strip_prefix != None): js_builder.set_strip_prefix(args.strip_prefix)
 				js_builder.make_all()
 			#
 		#
@@ -168,14 +168,14 @@ except: _direct_jsBuilder_parameters = { }
 
 try:
 #
-	_direct_js_builder_make = direct_make()
-	_direct_js_builder_make.run()
+	g_make = direct_make()
+	g_make.run()
 #
+except SystemExit: pass
 except:
 #
 	sys.stderr.write("{0!r}".format(sys.exc_info()))
 	sys.exit(1)
 #
-else: sys.exit(0)
 
 ##j## EOF
