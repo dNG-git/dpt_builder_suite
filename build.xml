@@ -25,6 +25,7 @@ http://www.direct-netware.de/redirect.php?licenses;mpl2
 			<arg value="--strip_prefix=${pyBuilder.basedir}/" />
 			<arg value="--exclude_dirs=_developer,_extras" />
 			<arg value="--exclude_files=makefile.py" />
+			<arg value="--output_dirs_chmod=0755" />
 		</exec>
 	</target>
 
