@@ -10,13 +10,13 @@ pyBuilder
 Build Python code for different release targets
 ----------------------------------------------------------------------------
 (C) direct Netware Group - All rights reserved
-http://www.direct-netware.de/redirect.php?py;builder
+http://www.direct-netware.de/redirect.py?py;builder
 
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can
 obtain one at http://mozilla.org/MPL/2.0/.
 ----------------------------------------------------------------------------
-http://www.direct-netware.de/redirect.php?licenses;mpl2
+http://www.direct-netware.de/redirect.py?licenses;mpl2
 ----------------------------------------------------------------------------
 #echo(pyBuilderVersion)#
 #echo(__FILEPATH__)#
@@ -37,7 +37,7 @@ Provides a Python "make" environment object.
 :package:    ext_core
 :subpackage: pyBuilder
 :since:      v0.1.00
-:license:    http://www.direct-netware.de/redirect.php?licenses;mpl2
+:license:    http://www.direct-netware.de/redirect.py?licenses;mpl2
              Mozilla Public License, v. 2.0
 	"""
 
@@ -55,6 +55,7 @@ Parse the given content.
 :param file_pathname: File path
 :param file_name: File name
 
+:access: protected
 :return: (mixed) Line based array; False on error
 :since:  v0.1.00
 		"""
@@ -73,6 +74,7 @@ Remove all development comments from the content.
 
 :param data: Data to be parsed
 
+:access: protected
 :return: (str) Filtered data
 :since:  v0.1.00
 		"""
@@ -92,6 +94,7 @@ Change data according to the matched tag.
 :param data_position: Data starting position
 :param tag_end_position: Starting position of the closing tag
 
+:access: protected
 :return: (str) Converted data
 :since:  v0.1.00
 		"""
@@ -141,6 +144,7 @@ Check if a possible tag match is a false positive.
 
 :param data: Data starting with the possible tag
 
+:access: protected
 :return: (mixed) Matched tag definition; None if false positive
 :since:  v0.1.00
 		"""
