@@ -4,13 +4,13 @@ jsBuilder
 Build JavaScript code for different release targets
 
 (C) direct Netware Group - All rights reserved
-http://www.direct-netware.de/redirect.php?js;builder
+http://www.direct-netware.de/redirect.py?js;builder
 
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can
 obtain one at http://mozilla.org/MPL/2.0/.
 
-http://www.direct-netware.de/redirect.php?licenses;mpl2
+http://www.direct-netware.de/redirect.py?licenses;mpl2
 // -->
 <project name="jsBuilder" default="compile.jsBuilder">
 	<dirname property="jsBuilder.basedir" file="${ant.file}" />
@@ -25,6 +25,7 @@ http://www.direct-netware.de/redirect.php?licenses;mpl2
 			<arg value="--strip_prefix=${jsBuilder.basedir}/" />
 			<arg value="--exclude_dirs=_developer,_extras" />
 			<arg value="--exclude_files=makefile.py" />
+			<arg value="--output_dirs_chmod=0755" />
 		</exec>
 	</target>
 

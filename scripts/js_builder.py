@@ -10,13 +10,13 @@ jsBuilder
 Build JavaScript code for different release targets
 ----------------------------------------------------------------------------
 (C) direct Netware Group - All rights reserved
-http://www.direct-netware.de/redirect.php?js;builder
+http://www.direct-netware.de/redirect.py?js;builder
 
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can
 obtain one at http://mozilla.org/MPL/2.0/.
 ----------------------------------------------------------------------------
-http://www.direct-netware.de/redirect.php?licenses;mpl2
+http://www.direct-netware.de/redirect.py?licenses;mpl2
 ----------------------------------------------------------------------------
 #echo(jsBuilderVersion)#
 #echo(__FILEPATH__)#
@@ -38,7 +38,7 @@ Provides a Javascript "make" environment object.
 :package:    ext_core
 :subpackage: jsBuilder
 :since:      v1.0.0
-:license:    http://www.direct-netware.de/redirect.php?licenses;mpl2
+:license:    http://www.direct-netware.de/redirect.py?licenses;mpl2
              Mozilla Public License, v. 2.0
 	"""
 
@@ -51,6 +51,7 @@ Parse the given content.
 :param file_pathname: File path
 :param file_name: File name
 
+:access: protected
 :return: (mixed) Line based array; False on error
 :since:  v0.1.00
 		"""
@@ -72,6 +73,7 @@ needed.
 :param file_pathname: Path to the output file
 :param file_mode: Filemode to use
 
+:access: protected
 :return: (boolean) True on success
 :since:  v0.1.00
 		"""
