@@ -79,7 +79,7 @@ Remove all development comments from the content.
 :since:  v0.1.00
 		"""
 
-		if (self.event_handler != None): self.event_handler.debug("pyBuilder/#echo(__FILEPATH__)# -pyBuilder.data_remove_dev_comments(data)- (#echo(__LINE__)#)")
+		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -pyBuilder.data_remove_dev_comments(data)- (#echo(__LINE__)#)")
 		return re.sub('(\n[ \t]*"""\n---.+?---\n[ \t]*"""\n)|("""\w//.+?//\w"""\n)', "", data, 0, re.S)
 	#
 
@@ -99,7 +99,7 @@ Change data according to the matched tag.
 :since:  v0.1.00
 		"""
 
-		if (self.event_handler != None): self.event_handler.debug("pyBuilder/#echo(__FILEPATH__)# -pyBuilder.parser_change(tag_definition, data, {0:d}, {1:d}, {2:d})- (#echo(__LINE__)#)".format(tag_position, data_position, tag_end_position))
+		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -pyBuilder.parser_change(tag_definition, data, {0:d}, {1:d}, {2:d})- (#echo(__LINE__)#)".format(tag_position, data_position, tag_end_position))
 		var_return = data[:tag_position]
 
 		data_closed = data[self.parser_tag_find_end_position(data, tag_end_position, "*/"):]
@@ -149,7 +149,7 @@ Check if a possible tag match is a false positive.
 :since:  v0.1.00
 		"""
 
-		if (self.event_handler != None): self.event_handler.debug("pyBuilder/#echo(__FILEPATH__)# -pyBuilder.parser_check(data)- (#echo(__LINE__)#)")
+		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -pyBuilder.parser_check(data)- (#echo(__LINE__)#)")
 		var_return = None
 
 		if (data[:9] == '"""#ifdef'):
