@@ -52,10 +52,6 @@ class direct_make(object):
 ArgumentParser instance
 	"""
 
-	"""
-Construct the class
-	"""
-
 	def __init__(self):
 	#
 		"""
@@ -120,17 +116,17 @@ Executes registered callbacks for the active application.
 
 					for define in define_array:
 					#
-						result_object = re_define.match(define)
+						re_result = re_define.match(define)
 
-						if (result_object == None):
+						if (re_result == None):
 						#
 							define_key = define
 							define_value = True
 						#
 						else:
 						#
-							define_key = result_object.group(1)
-							define_value = result_object.group(2)
+							define_key = re_result.group(1)
+							define_value = re_result.group(2)
 						#
 
 						target[define_key] = define_value

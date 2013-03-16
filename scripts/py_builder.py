@@ -102,7 +102,7 @@ Change data according to the matched tag.
 		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -pyBuilder.parser_change(tag_definition, data, {0:d}, {1:d}, {2:d})- (#echo(__LINE__)#)".format(tag_position, data_position, tag_end_position))
 		var_return = data[:tag_position]
 
-		data_closed = data[self.parser_tag_find_end_position(data, tag_end_position, "*/"):]
+		data_closed = data[self.parser_tag_find_end_position(data, tag_end_position, '"""'):]
 
 		if (tag_definition[0] == '"""#ifdef'):
 		#
@@ -154,26 +154,26 @@ Check if a possible tag match is a false positive.
 
 		if (data[:9] == '"""#ifdef'):
 		#
-			re_object = re.match('^"""#ifdef\((\w+)\) """\n', data)
+			re_result = re.match('^"""#ifdef\((\w+)\) """\n', data)
 
-			if (re_object == None):
+			if (re_result == None):
 			#
-				re_object = re.match('^"""#ifdef\((\w+)\):\n', data)
+				re_result = re.match('^"""#ifdef\((\w+)\):\n', data)
 
-				if (re_object == None): var_return = None
+				if (re_result == None): var_return = None
 				else: var_return = ( '"""#ifdef', ":", ( ':#\\n"""', ':#"""' ) )
 			#
 			else: var_return = ( '"""#ifdef', '"""', ( '#\\n"""', '#"""' ) )
 		#
 		elif (data[:10] == '"""#ifndef'):
 		#
-			re_object = re.match('^"""#ifndef\((\w+)\) """\n', data)
+			re_result = re.match('^"""#ifndef\((\w+)\) """\n', data)
 
-			if (re_object == None):
+			if (re_result == None):
 			#
-				re_object = re.match('^"""#ifndef\((\w+)\):\n', data)
+				re_result = re.match('^"""#ifndef\((\w+)\):\n', data)
 
-				if (re_object == None): var_return = None
+				if (re_result == None): var_return = None
 				else: var_return = ( '"""#ifndef', ":", ( ':#\\n"""', ':#"""' ) )
 			#
 			else: var_return = ( '"""#ifndef', '"""', ( '#\\n"""', '#"""' ) )
