@@ -41,10 +41,30 @@ Provides a Python "make" environment object.
              Mozilla Public License, v. 2.0
 	"""
 
-	dir_exclude_list = [ "__pycache__" ]
-	"""
-Directories to be excluded
-	"""
+	def __init__(self, parameters, include, output_path, filetype, default_umask = None, default_chmod_files = None, default_chmod_dirs = None, timeout_retries = 5, event_handler = None):
+	#
+		"""
+Constructor __init__(direct_py_builder)
+
+:param parameters: DEFINE statements
+:param include: String (delimiter is ",") with directory or file names to
+                be included.
+:param output_path: Output path
+:param filetype: String (delimiter is ",") with extensions of files to be
+                 parsed.
+:param default_umask umask: to set before creating new directories or files
+:param default_chmod_files: chmod to set when creating a new file
+:param default_chmod_dirs: chmod to set when creating a new directory
+:param timeout_retries: Retries before timing out
+:param event_handler: EventHandler to use
+
+:since: v0.1.00
+		"""
+
+		direct_builder_skel.__init__(self, parameters, include, output_path, filetype, default_umask, default_chmod_files, default_chmod_dirs, timeout_retries, event_handler)
+
+		self.dir_exclude_list = [ "__pycache__" ]
+	#
 
 	def data_parse(self, data, file_pathname, file_name):
 	#

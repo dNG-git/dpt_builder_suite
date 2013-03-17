@@ -47,11 +47,6 @@ class direct_make(object):
             Mozilla Public License, v. 2.0
 	"""
 
-	arg_parser = None
-	"""
-ArgumentParser instance
-	"""
-
 	def __init__(self):
 	#
 		"""
@@ -61,6 +56,10 @@ Constructor __init__(direct_make)
 		"""
 
 		self.arg_parser = ArgumentParser()
+		"""
+ArgumentParser instance
+		"""
+
 		self.arg_parser.add_argument("--define", action = "store", type = str, dest = "define")
 		self.arg_parser.add_argument("--filetype", action = "store", type = str, dest = "filetype")
 		self.arg_parser.add_argument("--include", action = "store", type = str, dest = "include")
