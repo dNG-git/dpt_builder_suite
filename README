@@ -3,7 +3,7 @@ builderSkel
 Common skeleton for builder tools
 ----------------------------------------------------------------------------
 The following agreement is valid for all files and subdirectories of
-ext/core/builder_skel (git)
+py/builder_skel (git)
 ----------------------------------------------------------------------------
 
 Fiduciary Licence Agreement
