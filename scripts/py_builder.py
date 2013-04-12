@@ -76,7 +76,7 @@ Parse the given content.
 :param file_name: File name
 
 :access: protected
-:return: (mixed) Line based array; False on error
+:return: (str) Filtered data
 :since:  v0.1.00
 		"""
 
@@ -165,7 +165,7 @@ Check if a possible tag match is a false positive.
 :param data: Data starting with the possible tag
 
 :access: protected
-:return: (mixed) Matched tag definition; None if false positive
+:return: (tuple) Matched tag definition; None if false positive
 :since:  v0.1.00
 		"""
 
