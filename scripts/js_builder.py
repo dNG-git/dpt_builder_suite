@@ -52,7 +52,7 @@ Parse the given content.
 :param file_name: File name
 
 :access: protected
-:return: (mixed) Line based array; False on error
+:return: (str) Filtered data
 :since:  v0.1.00
 		"""
 
@@ -74,7 +74,7 @@ needed.
 :param file_mode: Filemode to use
 
 :access: protected
-:return: (boolean) True on success
+:return: (bool) True on success
 :since:  v0.1.00
 		"""
 
