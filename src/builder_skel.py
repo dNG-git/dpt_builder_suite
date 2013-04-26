@@ -73,8 +73,6 @@ Constructor __init__(direct_builder_skel)
 :since: v0.1.00
 		"""
 
-		if (event_handler != None): event_handler.debug("#echo(__FILEPATH__)# -builderSkel.__init__()- (#echo(__LINE__)#)")
-
 		self.chmod_dirs = (0o750 if (default_chmod_dirs == None) else int(default_chmod_dirs, 8))
 		"""
 chmod to set when creating a new directory
@@ -673,7 +671,6 @@ Sets the EventHandler.
 :since: v0.1.00
 		"""
 
-		if (event_handler != None): event_handler.debug("#echo(__FILEPATH__)# -builderSkel.set_event_handler(event_handler)- (#echo(__LINE__)#)")
 		self.event_handler = event_handler
 	#
 
