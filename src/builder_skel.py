@@ -570,7 +570,7 @@ Change data according to the matched tag.
 :since:  v0.1.00
 		"""
 
-		raise RuntimeError("Not implemented")
+		raise RuntimeError("Not implemented", 38)
 	#
 
 	def parser_check(self, data):
