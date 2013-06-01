@@ -315,9 +315,8 @@ Handle the given file and call the content parse method.
 
 		var_return = True
 
-		( file_basename, file_ext ) = path.splitext(file_pathname)
+		file_ext = path.splitext(file_pathname)[1][1:]
 		file_basename = path.basename(file_pathname)
-		file_ext = file_ext[1:]
 		file_object = direct_file(self.umask, self.chmod_files, self.timeout_retries, self.event_handler)
 		file_text_mode = False
 
@@ -885,8 +884,7 @@ Create a list of files - we need to scan directories recursively ...
 						#
 						elif (path.isfile(content_extended_os)):
 						#
-							( content_basename, content_ext ) = path.splitext(content)
-							content_ext = content_ext[1:]
+							content_ext = path.splitext(content)[1][1:]
 							content_id = content_estripped
 
 							if (type(content_id) != _unicode_object['type']): content_id = _unicode_object['unicode'](content_id, "utf-8")
