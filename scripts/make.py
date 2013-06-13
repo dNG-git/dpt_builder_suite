@@ -26,18 +26,20 @@ http://www.direct-netware.de/redirect.py?licenses;mpl2
 NOTE_END //n"""
 
 from argparse import ArgumentParser
-from py_builder import direct_py_builder
-import os, re, sys
+from py_builder import PyBuilder
+import os
+import re
+import sys
 
 sys.path.append(os.getcwd())
 
 try: import makefile
 except: pass
 
-class direct_make(object):
+class Make(object):
 #
 	"""
-"direct_make" is the main application object.
+"Make" is the main application object.
 
 :author:    direct Netware Group
 :copyright: direct Netware Group - All rights reserved
@@ -50,7 +52,7 @@ class direct_make(object):
 	def __init__(self):
 	#
 		"""
-Constructor __init__(direct_make)
+Constructor __init__(Make)
 
 :since: v0.1.00
 		"""
@@ -84,20 +86,20 @@ Executes registered callbacks for the active application.
 
 		args = self.arg_parser.parse_args()
 
-		global _direct_pyBuilder_parameters
+		global _parameters
 		targets = [ ]
 
-		if (len(_direct_pyBuilder_parameters) > 0 and type(_direct_pyBuilder_parameters) == list):
+		if (len(_parameters) > 0 and type(_parameters) == list):
 		#
-			for target in _direct_pyBuilder_parameters:
+			for target in _parameters:
 			#
 				if ("make_output_path" in target): targets.append(target)
 			#
 		#
 		elif (args.output_path != None):
 		#
-			_direct_pyBuilder_parameters.update({ "make_output_path": args.output_path })
-			targets.append(_direct_pyBuilder_parameters)
+			_parameters.update({ "make_output_path": args.output_path })
+			targets.append(_parameters)
 		#
 
 		if (args.filetype == None or args.include == None or len(targets) == 0): self.option_parser.print_help()
@@ -132,7 +134,7 @@ Executes registered callbacks for the active application.
 					#
 				#
 
-				if (py_builder == None): py_builder = direct_py_builder(target, args.include, target['make_output_path'], args.filetype, default_chmod_files = args.output_files_chmod, default_chmod_dirs = args.output_dirs_chmod)
+				if (py_builder == None): py_builder = PyBuilder(target, args.include, target['make_output_path'], args.filetype, default_chmod_files = args.output_files_chmod, default_chmod_dirs = args.output_dirs_chmod)
 				else: py_builder.set_new_target(target, args.include, target['make_output_path'], args.filetype)
 
 				if (args.exclude != None): py_builder.set_exclude(args.exclude)
@@ -154,15 +156,15 @@ pyBuilder #echo(pyBuilderVersion)#
 
 try:
 #
-	if (hasattr(makefile, "direct_makefile_py_set")): _direct_pyBuilder_parameters = makefile.direct_makefile_py_set()
-	else: _direct_pyBuilder_parameters = makefile.direct_makefile_set()
+	if (hasattr(makefile, "direct_makefile_py_set")): _parameters = makefile.direct_makefile_py_set()
+	else: _parameters = makefile.direct_makefile_set()
 #
-except: _direct_pyBuilder_parameters = { }
+except: _parameters = { }
 
 try:
 #
-	g_make = direct_make()
-	g_make.run()
+	make = Make()
+	make.run()
 #
 except SystemExit: pass
 except:
