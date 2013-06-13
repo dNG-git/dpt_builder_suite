@@ -26,9 +26,9 @@ NOTE_END //n"""
 from os import path
 from slimit.minifier import minify
 
-from builder_skel import direct_builder_skel
+from builder_skel import BuilderSkel
 
-class direct_js_builder(direct_builder_skel):
+class JsBuilder(BuilderSkel):
 #
 	"""
 Provides a Javascript "make" environment object.
@@ -56,11 +56,11 @@ Parse the given content.
 :since:  v0.1.00
 		"""
 
-		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -jsBuilder.data_parse(data)- (#echo(__LINE__)#)")
+		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -JsBuilder.data_parse(data)- (#echo(__LINE__)#)")
 
 		if (self.get_variable("debug") == None): data = minify(data, True)
 		if (self.get_variable("js_header") != None): data = "// {0}\n{1}".format(self.get_variable("js_header"), data)
-		return direct_builder_skel.data_parse(self, data, file_pathname, file_name)
+		return BuilderSkel.data_parse(self, data, file_pathname, file_name)
 	#
 
 	def file_write(self, file_content, file_pathname, file_mode = "w+b"):
@@ -84,7 +84,7 @@ needed.
 			if (len(file_ext) > 0): file_pathname = "{0}.min{1}".format(file_pathname, file_ext)
 		#
 
-		return direct_builder_skel.file_write(self, file_content, file_pathname, file_mode = "w+b")
+		return BuilderSkel.file_write(self, file_content, file_pathname, file_mode = "w+b")
 	#
 #
 
