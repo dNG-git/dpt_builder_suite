@@ -26,7 +26,9 @@ NOTE_END //n"""
 
 from os import path
 from time import time
-import os, re, sys
+import os
+import re
+import sys
 
 try: import hashlib
 except ImportError: import md5 as hashlib
@@ -34,12 +36,12 @@ except ImportError: import md5 as hashlib
 try: import cPickle as pickle
 except ImportError: import pickle
 
-from file import direct_file
+from file import File
 
 try: _unicode_object = { "type": unicode, "str": unicode.encode, "unicode": str.decode }
 except: _unicode_object = { "type": bytes, "str": bytes.decode, "unicode": str.encode }
 
-class direct_builder_skel(object):
+class BuilderSkel(object):
 #
 	"""
 Provides a Python "make" environment skeleton.
@@ -56,7 +58,7 @@ Provides a Python "make" environment skeleton.
 	def __init__(self, parameters, include, output_path, filetype, default_umask = None, default_chmod_files = None, default_chmod_dirs = None, timeout_retries = 5, event_handler = None):
 	#
 		"""
-Constructor __init__(direct_builder_skel)
+Constructor __init__(BuilderSkel)
 
 :param parameters: DEFINE statements
 :param include: String (delimiter is ",") with directory or file names to
@@ -161,7 +163,7 @@ Adds an extension to the list of ASCII file types.
 		global _unicode_object
 		if (type(extension) == _unicode_object['type']): extension = _unicode_object['str'](extension, "utf-8")
 
-		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -builderSkel.add_filetype_ascii({0})- (#echo(__LINE__)#)".format(extension))
+		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel.add_filetype_ascii({0})- (#echo(__LINE__)#)".format(extension))
 		self.filetype_ascii_list.append(extension)
 	#
 
@@ -180,7 +182,7 @@ Parse the given content.
 		"""
 
 		global _unicode_object
-		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -builderSkel.data_parse(data)- (#echo(__LINE__)#)")
+		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel.data_parse(data)- (#echo(__LINE__)#)")
 
 		var_return = data.replace("#" + "echo(__FILE__)#", file_name)
 		var_return = var_return.replace("#" + "echo(__FILEPATH__)#", file_pathname)
@@ -255,7 +257,7 @@ Use slashes - even on Microsoft(R) Windows(R) machines.
 		global _unicode_object
 		if (type(dir_path) == _unicode_object['type']): dir_path = _unicode_object['str'](dir_path, "utf-8")
 
-		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -builderSkel.dir_create({0}, {1:d})- (#echo(__LINE__)#)".format(dir_path, timeout))
+		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel.dir_create({0}, {1:d})- (#echo(__LINE__)#)".format(dir_path, timeout))
 
 		dir_path = re.sub("\/$", "", dir_path)
 		dir_path_os = path.normpath(dir_path)
@@ -311,13 +313,13 @@ Handle the given file and call the content parse method.
 		global _unicode_object
 		if (type(file_pathname) == _unicode_object['type']): file_pathname = _unicode_object['str'](file_pathname, "utf-8")
 
-		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -builderSkel.file_parse({0})- (#echo(__LINE__)#)".format(file_pathname))
+		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel.file_parse({0})- (#echo(__LINE__)#)".format(file_pathname))
 
 		var_return = True
 
 		file_ext = path.splitext(file_pathname)[1][1:]
 		file_basename = path.basename(file_pathname)
-		file_object = direct_file(self.umask, self.chmod_files, self.timeout_retries, self.event_handler)
+		file_object = File(self.umask, self.chmod_files, self.timeout_retries, self.event_handler)
 		file_text_mode = False
 
 		if (len(file_ext) > 0 and file_ext in self.filetype_ascii_list): file_text_mode = True
@@ -391,14 +393,14 @@ needed.
 		if (type(file_pathname) == _unicode_object['type']): file_pathname = _unicode_object['str'](file_pathname, "utf-8")
 		if (type(file_mode) == _unicode_object['type']): file_mode = _unicode_object['str'](file_mode, "utf-8")
 
-		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -builderSkel.file_write(file_content, {0}, {1})- (#echo(__LINE__)#)".format(file_pathname, file_mode))
+		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel.file_write(file_content, {0}, {1})- (#echo(__LINE__)#)".format(file_pathname, file_mode))
 
 		dir_path = path.dirname(file_pathname)
 		var_return = False
 
 		if (len(dir_path) < 1 or self.dir_create(dir_path)):
 		#
-			file_object = direct_file(self.umask, self.chmod_files, self.timeout_retries, self.event_handler)
+			file_object = File(self.umask, self.chmod_files, self.timeout_retries, self.event_handler)
 
 			if (file_object.open(file_pathname, False, file_mode)):
 			#
@@ -425,7 +427,7 @@ Gets the variable content with the given name.
 		global _unicode_object
 		if (type(name) == _unicode_object['type']): name = _unicode_object['str'](name, "utf-8")
 
-		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -builderSkel.get_variable({0})- (#echo(__LINE__)#)".format(name))
+		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel.get_variable({0})- (#echo(__LINE__)#)".format(name))
 		return self.parameters.get(name, None)
 	#
 
@@ -439,7 +441,7 @@ Parse and rewrite all directories and files given as include definitions.
 		"""
 
 		global _unicode_object
-		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -builderSkel.make_all()- (#echo(__LINE__)#)")
+		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel.make_all()- (#echo(__LINE__)#)")
 
 		var_return = False
 
@@ -451,7 +453,7 @@ Parse and rewrite all directories and files given as include definitions.
 
 		if (len(self.file_dict) < 1):
 		#
-			if (self.event_handler != None): self.event_handler.error("#echo(__FILEPATH__)# -builderSkel.make_all()- (#echo(__LINE__)#) reports: No valid files found for parsing")
+			if (self.event_handler != None): self.event_handler.error("#echo(__FILEPATH__)# -BuilderSkel.make_all()- (#echo(__LINE__)#) reports: No valid files found for parsing")
 		#
 		else:
 		#
@@ -497,7 +499,7 @@ Parser for "make" tags.
 		global _unicode_object
 		if (type(parser_tag) == _unicode_object['type']): parser_tag = _unicode_object['str'](parser_tag, "utf-8")
 
-		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -builderSkel.parser({0}, data, {1:d}, nested_tag_end_position)- (#echo(__LINE__)#)".format(parser_tag, data_position))
+		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel.parser({0}, data, {1:d}, nested_tag_end_position)- (#echo(__LINE__)#)".format(parser_tag, data_position))
 
 		if (nested_tag_end_position == None):
 		#
@@ -601,7 +603,7 @@ Find the starting position of the closing tag.
 :since:  v0.1.00
 		"""
 
-		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -builderSkel.parser_tag_end_find_position(data, data_position, tag_end_list)- (#echo(__LINE__)#)")
+		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel.parser_tag_end_find_position(data, data_position, tag_end_list)- (#echo(__LINE__)#)")
 		var_return = None
 
 		is_valid = True
@@ -640,7 +642,7 @@ Find the starting position of the enclosing content.
 :since:  v0.1.00
 		"""
 
-		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -builderSkel.parser_tag_find_end_position(data, data_position, tag_end)- (#echo(__LINE__)#)")
+		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel.parser_tag_find_end_position(data, data_position, tag_end)- (#echo(__LINE__)#)")
 		var_return = None
 
 		is_valid = True
@@ -686,7 +688,7 @@ Add "exclude" definitions for directories and files.
 		global _unicode_object
 		if (type(exclude) == _unicode_object['type']): exclude = _unicode_object['str'](exclude, "utf-8")
 
-		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -builderSkel.set_exclude({0})- (#echo(__LINE__)#)".format(exclude))
+		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel.set_exclude({0})- (#echo(__LINE__)#)".format(exclude))
 
 		if (type(exclude) == str):
 		#
@@ -698,7 +700,7 @@ Add "exclude" definitions for directories and files.
 				self.file_exclude_list.append(exclude)
 			#
 		#
-		elif (self.event_handler != None): self.event_handler.warn("#echo(__FILEPATH__)# -builderSkel.set_exclude()- (#echo(__LINE__)#) reports: Given parameter is not a string")
+		elif (self.event_handler != None): self.event_handler.warn("#echo(__FILEPATH__)# -BuilderSkel.set_exclude()- (#echo(__LINE__)#) reports: Given parameter is not a string")
 	#
 
 	def set_exclude_dirs(self, exclude):
@@ -714,14 +716,14 @@ Add "exclude" definitions for directories.
 		global _unicode_object
 		if (type(exclude) == _unicode_object['type']): exclude = _unicode_object['str'](exclude, "utf-8")
 
-		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -builderSkel.set_exclude_dirs({0})- (#echo(__LINE__)#)".format(exclude))
+		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel.set_exclude_dirs({0})- (#echo(__LINE__)#)".format(exclude))
 
 		if (type(exclude) == str):
 		#
 			exclude_list = exclude.split(",")
 			for exclude in exclude_list: self.dir_exclude_list.append(exclude)
 		#
-		elif (self.event_handler != None): self.event_handler.warn("#echo(__FILEPATH__)# -builderSkel.set_exclude_dirs()- (#echo(__LINE__)#) reports: Given parameter is not a string")
+		elif (self.event_handler != None): self.event_handler.warn("#echo(__FILEPATH__)# -BuilderSkel.set_exclude_dirs()- (#echo(__LINE__)#) reports: Given parameter is not a string")
 	#
 
 	def set_exclude_files(self, exclude):
@@ -737,14 +739,14 @@ Add "exclude" definitions for files.
 		global _unicode_object
 		if (type(exclude) == _unicode_object['type']): exclude = _unicode_object['str'](exclude, "utf-8")
 
-		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -builderSkel.set_exclude_files({0})- (#echo(__LINE__)#)".format(exclude))
+		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel.set_exclude_files({0})- (#echo(__LINE__)#)".format(exclude))
 
 		if (type(exclude) == str):
 		#
 			exclude_list = exclude.split(",")
 			for exclude in exclude_list: self.file_exclude_list.append(exclude)
 		#
-		elif (self.event_handler != None): self.event_handler.warn("#echo(__FILEPATH__)# -builderSkel.set_exclude_files()- (#echo(__LINE__)#) reports: Given parameter is not a string")
+		elif (self.event_handler != None): self.event_handler.warn("#echo(__FILEPATH__)# -BuilderSkel.set_exclude_files()- (#echo(__LINE__)#) reports: Given parameter is not a string")
 	#
 
 	def set_new_target(self, parameters, include, output_path, filetype):
@@ -762,7 +764,7 @@ Sets a new target for processing.
 :since: v0.1.00
 		"""
 
-		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -builderSkel.set_new_target(parameters, include, output_path, filetype)- (#echo(__LINE__)#)")
+		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel.set_new_target(parameters, include, output_path, filetype)- (#echo(__LINE__)#)")
 
 		self.dir_exclude_list = [ ]
 		self.file_exclude_list = [ ]
@@ -833,10 +835,10 @@ Define a prefix to be stripped from output paths.
 		global _unicode_object
 		if (type(strip_prefix) == _unicode_object['type']): strip_prefix = _unicode_object['str'](strip_prefix, "utf-8")
 
-		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -builderSkel.set_strip_prefix({0})- (#echo(__LINE__)#)".format(strip_prefix))
+		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel.set_strip_prefix({0})- (#echo(__LINE__)#)".format(strip_prefix))
 
 		if (type(strip_prefix) == str): self.output_strip_prefix = strip_prefix
-		elif (self.event_handler != None): self.event_handler.warn("#echo(__FILEPATH__)# -builderSkel.set_strip_prefix()- (#echo(__LINE__)#) reports: Given parameter is not a string")
+		elif (self.event_handler != None): self.event_handler.warn("#echo(__FILEPATH__)# -BuilderSkel.set_strip_prefix()- (#echo(__LINE__)#) reports: Given parameter is not a string")
 	#
 
 	def workdir_scan(self):
@@ -848,7 +850,7 @@ Scan given directories for files to be parsed.
 :since:  v0.1.00
 		"""
 
-		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -builderSkel.workdir_scan()- (#echo(__LINE__)#)")
+		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel.workdir_scan()- (#echo(__LINE__)#)")
 
 		"""
 Create a list of files - we need to scan directories recursively ...
