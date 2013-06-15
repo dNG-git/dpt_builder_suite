@@ -100,7 +100,7 @@ Remove all development comments from the content.
 		"""
 
 		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -PyBuilder.data_remove_dev_comments(data)- (#echo(__LINE__)#)")
-		return re.sub('(\n[ \t]*"""\n---.+?---\n[ \t]*"""\n)|("""\w//.+?//\w"""\n)', "", data, 0, re.S)
+		return re.sub('(\n[ \t]*"""\n---.+?---\n[ \t]*"""\n)|("""\\w//.+?//\\w"""\n)', "", data, 0, re.S)
 	#
 
 	def parser_change(self, tag_definition, data, tag_position, data_position, tag_end_position):
@@ -126,7 +126,7 @@ Change data according to the matched tag.
 
 		if (tag_definition[0] == '"""#ifdef'):
 		#
-			variable = re.match('^"""#ifdef\((\w+)\)', data[tag_position:data_position]).group(1)
+			variable = re.match('^"""#ifdef\\((\\w+)\\)', data[tag_position:data_position]).group(1)
 			tag_end = data[tag_end_position:self.parser_tag_find_end_position(data, tag_end_position, '"""')]
 
 			if (self.get_variable(variable) != None):
@@ -140,7 +140,7 @@ Change data according to the matched tag.
 		#
 		elif (tag_definition[0] == '"""#ifndef'):
 		#
-			variable = re.match('^"""#ifndef\((\w+)\)', data[tag_position:data_position]).group(1)
+			variable = re.match('^"""#ifndef\\((\\w+)\\)', data[tag_position:data_position]).group(1)
 			tag_end = data[tag_end_position:self.parser_tag_find_end_position(data, tag_end_position, '"""')]
 
 			if (self.get_variable(variable) == None):
@@ -174,11 +174,11 @@ Check if a possible tag match is a false positive.
 
 		if (data[:9] == '"""#ifdef'):
 		#
-			re_result = re.match('^"""#ifdef\((\w+)\) """\n', data)
+			re_result = re.match('^"""#ifdef\\((\\w+)\\) """\n', data)
 
 			if (re_result == None):
 			#
-				re_result = re.match('^"""#ifdef\((\w+)\):\n', data)
+				re_result = re.match('^"""#ifdef\\((\\w+)\\):\n', data)
 
 				if (re_result == None): var_return = None
 				else: var_return = ( '"""#ifdef', ":", ( ':#\\n"""', ':#"""' ) )
@@ -187,11 +187,11 @@ Check if a possible tag match is a false positive.
 		#
 		elif (data[:10] == '"""#ifndef'):
 		#
-			re_result = re.match('^"""#ifndef\((\w+)\) """\n', data)
+			re_result = re.match('^"""#ifndef\\((\\w+)\\) """\n', data)
 
 			if (re_result == None):
 			#
-				re_result = re.match('^"""#ifndef\((\w+)\):\n', data)
+				re_result = re.match('^"""#ifndef\\((\\w+)\\):\n', data)
 
 				if (re_result == None): var_return = None
 				else: var_return = ( '"""#ifndef', ":", ( ':#\\n"""', ':#"""' ) )
