@@ -201,7 +201,7 @@ Parse the given content.
 			var_return = "\n".join(data)
 		#
 
-		result_list = re.findall("#" + "echo\(((?!_)\w+)\)#", var_return)
+		result_list = re.findall("#" + "echo\\(((?!_)\\w+)\\)#", var_return)
 
 		if (len(result_list)):
 		#
@@ -259,7 +259,7 @@ Use slashes - even on Microsoft(R) Windows(R) machines.
 
 		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel.dir_create({0}, {1:d})- (#echo(__LINE__)#)".format(dir_path, timeout))
 
-		dir_path = re.sub("\/$", "", dir_path)
+		dir_path = re.sub("\\/$", "", dir_path)
 		dir_path_os = path.normpath(dir_path)
 
 		if (len(dir_path) == 0 or dir_path == "."): var_return = False
