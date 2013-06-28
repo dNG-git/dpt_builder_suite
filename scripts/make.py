@@ -84,7 +84,7 @@ Executes registered callbacks for the active application.
 :since: v1.0.0
 		"""
 
-		args = self.option_parser.parse_args()
+		args = self.arg_parser.parse_args()
 
 		global _parameters
 		targets = [ ]
@@ -102,11 +102,11 @@ Executes registered callbacks for the active application.
 			targets.append(_parameters)
 		#
 
-		if (args.filetype == None or args.include == None or len(targets) == 0): self.option_parser.print_help()
+		if (args.filetype == None or args.include == None or len(targets) == 0): self.arg_parser.print_help()
 		else:
 		#
 			js_builder = None
-			self.option_parser = None
+			self.arg_parser = None
 
 			for target in targets:
 			#
