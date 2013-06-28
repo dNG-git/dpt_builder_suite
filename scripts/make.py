@@ -102,11 +102,11 @@ Executes registered callbacks for the active application.
 			targets.append(_parameters)
 		#
 
-		if (args.filetype == None or args.include == None or len(targets) == 0): self.option_parser.print_help()
+		if (args.filetype == None or args.include == None or len(targets) == 0): self.arg_parser.print_help()
 		else:
 		#
 			py_builder = None
-			self.option_parser = None
+			self.arg_parser = None
 
 			for target in targets:
 			#
