@@ -42,7 +42,7 @@ Provides a Javascript "make" environment object.
              Mozilla Public License, v. 2.0
 	"""
 
-	def data_parse(self, data, file_pathname, file_name):
+	def _data_parse(self, data, file_pathname, file_name):
 	#
 		"""
 Parse the given content.
@@ -51,19 +51,18 @@ Parse the given content.
 :param file_pathname: File path
 :param file_name: File name
 
-:access: protected
 :return: (str) Filtered data
 :since:  v0.1.00
 		"""
 
-		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -JsBuilder.data_parse(data)- (#echo(__LINE__)#)")
+		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -JsBuilder._data_parse(data)- (#echo(__LINE__)#)")
 
-		if (self.get_variable("debug") == None): data = minify(data, True)
-		if (self.get_variable("js_header") != None): data = "// {0}\n{1}".format(self.get_variable("js_header"), data)
-		return BuilderSkel.data_parse(self, data, file_pathname, file_name)
+		if (self._get_variable("debug") == None): data = minify(data, True)
+		if (self._get_variable("js_header") != None): data = "// {0}\n{1}".format(self._get_variable("js_header"), data)
+		return BuilderSkel._data_parse(self, data, file_pathname, file_name)
 	#
 
-	def file_write(self, file_content, file_pathname, file_mode = "w+b"):
+	def _file_write(self, file_content, file_pathname, file_mode = "w+b"):
 	#
 		"""
 Write the given file to the defined location. Create subdirectories if
@@ -73,18 +72,17 @@ needed.
 :param file_pathname: Path to the output file
 :param file_mode: Filemode to use
 
-:access: protected
 :return: (bool) True on success
 :since:  v0.1.00
 		"""
 
-		if ((self.get_variable("debug") == None) and (self.get_variable("js_min_filenames") != None)):
+		if ((self._get_variable("debug") == None) and (self._get_variable("js_min_filenames") != None)):
 		#
 			( file_pathname, file_ext ) = path.splitext(file_pathname)
 			if (len(file_ext) > 0): file_pathname = "{0}.min{1}".format(file_pathname, file_ext)
 		#
 
-		return BuilderSkel.file_write(self, file_content, file_pathname, file_mode = "w+b")
+		return BuilderSkel._file_write(self, file_content, file_pathname, file_mode = "w+b")
 	#
 #
 
