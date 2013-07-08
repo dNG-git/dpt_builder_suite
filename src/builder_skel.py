@@ -167,7 +167,7 @@ Adds an extension to the list of ASCII file types.
 		self.filetype_ascii_list.append(extension)
 	#
 
-	def data_parse(self, data, file_pathname, file_name):
+	def _data_parse(self, data, file_pathname, file_name):
 	#
 		"""
 Parse the given content.
@@ -176,20 +176,19 @@ Parse the given content.
 :param file_pathname: File path
 :param file_name: File name
 
-:access: protected
 :return: (str) Filtered data
 :since:  v0.1.00
 		"""
 
 		global _unicode_object
-		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel.data_parse(data)- (#echo(__LINE__)#)")
+		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._data_parse(data)- (#echo(__LINE__)#)")
 
-		var_return = data.replace("#" + "echo(__FILE__)#", file_name)
-		var_return = var_return.replace("#" + "echo(__FILEPATH__)#", file_pathname)
+		_return = data.replace("#" + "echo(__FILE__)#", file_name)
+		_return = _return.replace("#" + "echo(__FILEPATH__)#", file_pathname)
 
-		if (var_return.find("#" + "echo(__LINE__)#") > -1):
+		if (_return.find("#" + "echo(__LINE__)#") > -1):
 		#
-			data = re.split("\r\n|\r|\n", var_return)
+			data = re.split("\r\n|\r|\n", _return)
 			line = 0
 
 			for result in data:
@@ -198,10 +197,10 @@ Parse the given content.
 				line += 1
 			#
 
-			var_return = "\n".join(data)
+			_return = "\n".join(data)
 		#
 
-		result_list = re.findall("#" + "echo\\(((?!_)\\w+)\\)#", var_return)
+		result_list = re.findall("#" + "echo\\(((?!_)\\w+)\\)#", _return)
 
 		if (len(result_list)):
 		#
@@ -212,27 +211,26 @@ Parse the given content.
 				if (result not in matched_list):
 				#
 					if (type(result) == _unicode_object['type']): result = _unicode_object['str'](result, "utf-8")
-					value = self.get_variable(result)
+					value = self._get_variable(result)
 
-					if (value == None): var_return = var_return.replace("#" + "echo({0})#".format(result), result)
-					else: var_return = var_return.replace("#" + "echo({0})#".format(result), value)
+					if (value == None): _return = _return.replace("#" + "echo({0})#".format(result), result)
+					else: _return = _return.replace("#" + "echo({0})#".format(result), value)
 
 					matched_list.append(result)
 				#
 			#
 		#
 
-		return var_return
+		return _return
 	#
 
-	def data_remove_dev_comments(self, data):
+	def _data_remove_dev_comments(self, data):
 	#
 		"""
 Remove all development comments from the content.
 
 :param data: Data to be parsed
 
-:access: protected
 :return: (str) Filtered data
 :since:  v0.1.00
 		"""
@@ -240,7 +238,7 @@ Remove all development comments from the content.
 		return data
 	#
 
-	def dir_create(self, dir_path, timeout = -1):
+	def _dir_create(self, dir_path, timeout = -1):
 	#
 		"""
 Creates a directory (or returns the status of is_writable if it exists).
@@ -249,7 +247,6 @@ Use slashes - even on Microsoft(R) Windows(R) machines.
 :param dir_path: Path to the new directory.
 :param timeout: Timeout to use
 
-:access: protected
 :return: (bool) True on success
 :since:  v0.1.00
 		"""
@@ -257,20 +254,20 @@ Use slashes - even on Microsoft(R) Windows(R) machines.
 		global _unicode_object
 		if (type(dir_path) == _unicode_object['type']): dir_path = _unicode_object['str'](dir_path, "utf-8")
 
-		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel.dir_create({0}, {1:d})- (#echo(__LINE__)#)".format(dir_path, timeout))
+		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._dir_create({0}, {1:d})- (#echo(__LINE__)#)".format(dir_path, timeout))
 
 		dir_path = re.sub("\\/$", "", dir_path)
 		dir_path_os = path.normpath(dir_path)
 
-		if (len(dir_path) == 0 or dir_path == "."): var_return = False
-		elif (path.isdir(dir_path_os) and os.access(dir_path_os, os.W_OK)): var_return = True
-		elif (path.exists(dir_path_os)): var_return = False
+		if (len(dir_path) == 0 or dir_path == "."): _return = False
+		elif (path.isdir(dir_path_os) and os.access(dir_path_os, os.W_OK)): _return = True
+		elif (path.exists(dir_path_os)): _return = False
 		else:
 		#
 			is_writable = True
 			dir_list = dir_path.split("/")
 			dir_count = len(dir_list)
-			var_return = False
+			_return = False
 
 			if (timeout < 0): timeout_time = time() + self.timeout_retries
 			else: timeout_time = time() + timeout
@@ -279,7 +276,7 @@ Use slashes - even on Microsoft(R) Windows(R) machines.
 			#
 				dir_list.pop()
 				dir_basepath = "/".join(dir_list)
-				is_writable = self.dir_create(dir_basepath)
+				is_writable = self._dir_create(dir_basepath)
 			#
 
 			if (is_writable and time() < timeout_time):
@@ -289,23 +286,22 @@ Use slashes - even on Microsoft(R) Windows(R) machines.
 				try:
 				#
 					os.mkdir(dir_path_os, self.chmod_dirs)
-					var_return = os.access(dir_path_os, os.W_OK)
+					_return = os.access(dir_path_os, os.W_OK)
 				#
 				except: pass
 			#
 		#
 
-		return var_return
+		return _return
 	#
 
-	def file_parse(self, file_pathname):
+	def _file_parse(self, file_pathname):
 	#
 		"""
 Handle the given file and call the content parse method.
 
 :param file_pathname: Path to the requested file
 
-:access: protected
 :return: (bool) True on success
 :since:  v0.1.00
 		"""
@@ -313,9 +309,9 @@ Handle the given file and call the content parse method.
 		global _unicode_object
 		if (type(file_pathname) == _unicode_object['type']): file_pathname = _unicode_object['str'](file_pathname, "utf-8")
 
-		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel.file_parse({0})- (#echo(__LINE__)#)".format(file_pathname))
+		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._file_parse({0})- (#echo(__LINE__)#)".format(file_pathname))
 
-		var_return = True
+		_return = True
 
 		file_ext = path.splitext(file_pathname)[1][1:]
 		file_basename = path.basename(file_pathname)
@@ -348,33 +344,33 @@ Handle the given file and call the content parse method.
 
 			if (file_old_content_md5 != None and file_old_content_md5 != self.parser_pickle[file_pathname]):
 			#
-				var_return = False
+				_return = False
 				sys.stdout.write("has been changed ... ")
 			#
 		#
 
-		if (var_return):
+		if (_return):
 		#
 			if (file_content == None):
 			#
 				file_content = ""
-				var_return = self.file_write("", self.output_path + file_pathname)
+				_return = self._file_write("", self.output_path + file_pathname)
 			#
 			elif (file_text_mode):
 			#
-				file_content = self.data_parse(file_content, file_pathname, file_basename)
-				var_return = self.file_write(file_content, self.output_path + file_pathname, "w+")
+				file_content = self._data_parse(file_content, file_pathname, file_basename)
+				_return = self._file_write(file_content, self.output_path + file_pathname, "w+")
 			#
-			else: var_return = self.file_write(file_content, self.output_path + file_pathname)
+			else: _return = self._file_write(file_content, self.output_path + file_pathname)
 
 			if (type(file_content) != _unicode_object['type']): file_content = _unicode_object['unicode'](file_content, "utf-8")
-			if (var_return): self.parser_pickle[file_pathname] = hashlib.md5(file_content).hexdigest()
+			if (_return): self.parser_pickle[file_pathname] = hashlib.md5(file_content).hexdigest()
 		#
 
-		return var_return
+		return _return
 	#
 
-	def file_write(self, file_content, file_pathname, file_mode = "w+b"):
+	def _file_write(self, file_content, file_pathname, file_mode = "w+b"):
 	#
 		"""
 Write the given file to the defined location. Create subdirectories if
@@ -384,7 +380,6 @@ needed.
 :param file_pathname: Path to the output file
 :param file_mode: Filemode to use
 
-:access: protected
 :return: (bool) True on success
 :since:  v0.1.00
 		"""
@@ -393,33 +388,32 @@ needed.
 		if (type(file_pathname) == _unicode_object['type']): file_pathname = _unicode_object['str'](file_pathname, "utf-8")
 		if (type(file_mode) == _unicode_object['type']): file_mode = _unicode_object['str'](file_mode, "utf-8")
 
-		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel.file_write(file_content, {0}, {1})- (#echo(__LINE__)#)".format(file_pathname, file_mode))
+		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._file_write(file_content, {0}, {1})- (#echo(__LINE__)#)".format(file_pathname, file_mode))
 
 		dir_path = path.dirname(file_pathname)
-		var_return = False
+		_return = False
 
-		if (len(dir_path) < 1 or self.dir_create(dir_path)):
+		if (len(dir_path) < 1 or self._dir_create(dir_path)):
 		#
 			file_object = File(self.umask, self.chmod_files, self.timeout_retries, self.event_handler)
 
 			if (file_object.open(file_pathname, False, file_mode)):
 			#
-				var_return = file_object.write(file_content)
+				_return = file_object.write(file_content)
 				file_object.close()
 			#
 		#
 
-		return var_return
+		return _return
 	#
 
-	def get_variable(self, name):
+	def _get_variable(self, name):
 	#
 		"""
 Gets the variable content with the given name.
 
 :param name: Variable name
 
-:access: protected
 :return: (mixed) Variable content; None if undefined
 :since:  v0.1.00
 		"""
@@ -427,7 +421,7 @@ Gets the variable content with the given name.
 		global _unicode_object
 		if (type(name) == _unicode_object['type']): name = _unicode_object['str'](name, "utf-8")
 
-		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel.get_variable({0})- (#echo(__LINE__)#)".format(name))
+		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._get_variable({0})- (#echo(__LINE__)#)".format(name))
 		return self.parameters.get(name, None)
 	#
 
@@ -443,11 +437,11 @@ Parse and rewrite all directories and files given as include definitions.
 		global _unicode_object
 		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel.make_all()- (#echo(__LINE__)#)")
 
-		var_return = False
+		_return = False
 
 		if ((self.workdir_rescan) and len(self.dir_list) > 0 and len(self.filetype_list) > 0):
 		#
-			self.workdir_scan()
+			self._workdir_scan()
 			self.workdir_rescan = False
 		#
 
@@ -459,12 +453,12 @@ Parse and rewrite all directories and files given as include definitions.
 		#
 			for file_id in self.file_dict:
 			#
-				var_file = self.file_dict[file_id]
-				if (type(var_file) == _unicode_object['type']): var_file = _unicode_object['str'](var_file, "utf-8")
+				_file = self.file_dict[file_id]
+				if (type(_file) == _unicode_object['type']): _file = _unicode_object['str'](_file, "utf-8")
 
-				sys.stdout.write(">>> Processing {0} ... ".format(var_file))
+				sys.stdout.write(">>> Processing {0} ... ".format(_file))
 
-				if (self.file_parse(var_file)): sys.stdout.write("done\n")
+				if (self._file_parse(_file)): sys.stdout.write("done\n")
 				else: sys.stdout.write("failed\n")
 			#
 		#
@@ -473,15 +467,15 @@ Parse and rewrite all directories and files given as include definitions.
 		#
 			sys.stdout.write(">> Writing make.py.pickle\n")
 
-			var_file = open("{0}/make.py.pickle".format(self.output_path), "wb")
-			pickle.dump(self.parser_pickle, var_file, pickle.HIGHEST_PROTOCOL)
-			var_file.close()
+			_file = open("{0}/make.py.pickle".format(self.output_path), "wb")
+			pickle.dump(self.parser_pickle, _file, pickle.HIGHEST_PROTOCOL)
+			_file.close()
 		#
 
-		return var_return
+		return _return
 	#
 
-	def parser(self, parser_tag, data, data_position = 0, nested_tag_end_position = None):
+	def _parser(self, parser_tag, data, data_position = 0, nested_tag_end_position = None):
 	#
 		"""
 Parser for "make" tags.
@@ -491,7 +485,6 @@ Parser for "make" tags.
 :param data_position: Current parser position
 :param nested_tag_end_position: End position for nested tags 
 
-:access: protected
 :return: (str) Converted data; None for nested parsing results without a match
 :since:  v0.1.00
 		"""
@@ -499,7 +492,7 @@ Parser for "make" tags.
 		global _unicode_object
 		if (type(parser_tag) == _unicode_object['type']): parser_tag = _unicode_object['str'](parser_tag, "utf-8")
 
-		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel.parser({0}, data, {1:d}, nested_tag_end_position)- (#echo(__LINE__)#)".format(parser_tag, data_position))
+		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._parser({0}, data, {1:d}, nested_tag_end_position)- (#echo(__LINE__)#)".format(parser_tag, data_position))
 
 		if (nested_tag_end_position == None):
 		#
@@ -517,33 +510,33 @@ Parser for "make" tags.
 
 		while (data_position > -1):
 		#
-			tag_definition = self.parser_check(data[data_position:])
+			tag_definition = self._parser_check(data[data_position:])
 
 			if (tag_definition == None): data_position += len(parser_tag)
 			else:
 			#
 				tag_length = len(tag_definition[0])
-				tag_start_end_position = self.parser_tag_find_end_position(data, data_position + tag_length, tag_definition[1])
+				tag_start_end_position = self._parser_tag_find_end_position(data, data_position + tag_length, tag_definition[1])
 				tag_end_position = -1
 
 				if (tag_start_end_position > -1):
 				#
-					tag_end_position = self.parser_tag_end_find_position(data, tag_start_end_position, tag_definition[2])
+					tag_end_position = self._parser_tag_end_find_position(data, tag_start_end_position, tag_definition[2])
 
 					if (tag_end_position < 0): nested_data = None
-					else: nested_data = self.parser(parser_tag, data, data_position + 1, tag_end_position)
+					else: nested_data = self._parser(parser_tag, data, data_position + 1, tag_end_position)
 
 					while (nested_data != None):
 					#
 						data = nested_data
-						tag_start_end_position = self.parser_tag_find_end_position(data, data_position + 1, tag_definition[1])
-						if (tag_start_end_position > -1): tag_end_position = self.parser_tag_end_find_position(data, tag_start_end_position, tag_definition[2])
+						tag_start_end_position = self._parser_tag_find_end_position(data, data_position + 1, tag_definition[1])
+						if (tag_start_end_position > -1): tag_end_position = self._parser_tag_end_find_position(data, tag_start_end_position, tag_definition[2])
 
-						nested_data = self.parser(parser_tag, data, data_position + 1, tag_end_position)
+						nested_data = self._parser(parser_tag, data, data_position + 1, tag_end_position)
 					#
 				#
 
-				if (tag_end_position > -1): data = self.parser_change(tag_definition, data, data_position, tag_start_end_position, tag_end_position)
+				if (tag_end_position > -1): data = self._parser_change(tag_definition, data, data_position, tag_start_end_position, tag_end_position)
 				else: data_position += tag_length
 			#
 
@@ -555,7 +548,7 @@ Parser for "make" tags.
 		return data
 	#
 
-	def parser_change(self, tag_definition, data, tag_position, data_position, tag_end_position):
+	def _parser_change(self, tag_definition, data, tag_position, data_position, tag_end_position):
 	#
 		"""
 Change data according to the matched tag.
@@ -566,7 +559,6 @@ Change data according to the matched tag.
 :param data_position: Data starting position
 :param tag_end_position: Starting position of the closing tag
 
-:access: protected
 :return: (str) Converted data
 :since:  v0.1.00
 		"""
@@ -574,14 +566,13 @@ Change data according to the matched tag.
 		raise RuntimeError("Not implemented", 38)
 	#
 
-	def parser_check(self, data):
+	def _parser_check(self, data):
 	#
 		"""
 Check if a possible tag match is a false positive.
 
 :param data: Data starting with the possible tag
 
-:access: protected
 :return: (tuple) Matched tag definition; None if false positive
 :since:  v0.1.00
 		"""
@@ -589,7 +580,7 @@ Check if a possible tag match is a false positive.
 		return None
 	#
 
-	def parser_tag_end_find_position(self, data, data_position, tag_end_list):
+	def _parser_tag_end_find_position(self, data, data_position, tag_end_list):
 	#
 		"""
 Find the starting position of the closing tag.
@@ -598,37 +589,36 @@ Find the starting position of the closing tag.
 :param data_position: Current parser position
 :param tag_end_list: List of possible closing tags to be searched for
 
-:access: protected
 :return: (int) Position; -1 if not found
 :since:  v0.1.00
 		"""
 
-		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel.parser_tag_end_find_position(data, data_position, tag_end_list)- (#echo(__LINE__)#)")
-		var_return = None
+		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._parser_tag_end_find_position(data, data_position, tag_end_list)- (#echo(__LINE__)#)")
+		_return = None
 
 		is_valid = True
 		result = -1
 
-		while ((var_return == None or var_return > -1) and is_valid):
+		while ((_return == None or _return > -1) and is_valid):
 		#
 			for tag_end in tag_end_list:
 			#
 				result = data.find(tag_end, data_position)
-				if (result > -1 and (var_return == None or result < var_return)): var_return = result
+				if (result > -1 and (_return == None or result < _return)): _return = result
 			#
 
-			if (var_return == None): var_return = -1
-			elif (var_return > -1):
+			if (_return == None): _return = -1
+			elif (_return > -1):
 			#
-				data_position = var_return
-				if (data[var_return - 1:var_return] != "\\"): is_valid = False
+				data_position = _return
+				if (data[_return - 1:_return] != "\\"): is_valid = False
 			#
 		#
 
-		return var_return
+		return _return
 	#
 
-	def parser_tag_find_end_position(self, data, data_position, tag_end):
+	def _parser_tag_find_end_position(self, data, data_position, tag_end):
 	#
 		"""
 Find the starting position of the enclosing content.
@@ -637,29 +627,28 @@ Find the starting position of the enclosing content.
 :param data_position: Current parser position
 :param tag_end: Tag end definition
 
-:access: protected
 :return: (int) Position; -1 if not found
 :since:  v0.1.00
 		"""
 
-		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel.parser_tag_find_end_position(data, data_position, tag_end)- (#echo(__LINE__)#)")
-		var_return = None
+		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._parser_tag_find_end_position(data, data_position, tag_end)- (#echo(__LINE__)#)")
+		_return = None
 
 		is_valid = True
 
-		while ((var_return == None or var_return > -1) and is_valid):
+		while ((_return == None or _return > -1) and is_valid):
 		#
-			var_return = data.find(tag_end, data_position)
+			_return = data.find(tag_end, data_position)
 
-			if (var_return > -1):
+			if (_return > -1):
 			#
-				data_position = var_return
-				if (data[var_return - 1:var_return] != "\\"): is_valid = False
+				data_position = _return
+				if (data[_return - 1:_return] != "\\"): is_valid = False
 			#
 		#
 
-		if (var_return > -1): var_return += len(tag_end)
-		return var_return
+		if (_return > -1): _return += len(tag_end)
+		return _return
 	#
 
 	def set_event_handler(self, event_handler = None):
@@ -778,9 +767,9 @@ Sets a new target for processing.
 		#
 			sys.stdout.write(">> Reading make.py.pickle\n")
 
-			var_file = open("{0}/make.py.pickle".format(output_path), "rb")
-			self.parser_pickle = pickle.load(var_file)
-			var_file.close()
+			_file = open("{0}/make.py.pickle".format(output_path), "rb")
+			self.parser_pickle = pickle.load(_file)
+			_file.close()
 		#
 		else: self.parser_pickle = { }
 
@@ -841,16 +830,15 @@ Define a prefix to be stripped from output paths.
 		elif (self.event_handler != None): self.event_handler.warn("#echo(__FILEPATH__)# -BuilderSkel.set_strip_prefix()- (#echo(__LINE__)#) reports: Given parameter is not a string")
 	#
 
-	def workdir_scan(self):
+	def _workdir_scan(self):
 	#
 		"""
 Scan given directories for files to be parsed.
 
-:access: protected
-:since:  v0.1.00
+:since: v0.1.00
 		"""
 
-		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel.workdir_scan()- (#echo(__LINE__)#)")
+		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._workdir_scan()- (#echo(__LINE__)#)")
 
 		"""
 Create a list of files - we need to scan directories recursively ...
