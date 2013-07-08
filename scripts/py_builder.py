@@ -66,7 +66,7 @@ Constructor __init__(PyBuilder)
 		self.dir_exclude_list = [ "__pycache__" ]
 	#
 
-	def data_parse(self, data, file_pathname, file_name):
+	def _data_parse(self, data, file_pathname, file_name):
 	#
 		"""
 Parse the given content.
@@ -75,35 +75,33 @@ Parse the given content.
 :param file_pathname: File path
 :param file_name: File name
 
-:access: protected
 :return: (str) Filtered data
 :since:  v0.1.00
 		"""
 
-		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -PyBuilder.data_parse(data)- (#echo(__LINE__)#)")
-		data = self.parser('"""#', BuilderSkel.data_parse(self, data, file_pathname, file_name))
+		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -PyBuilder._data_parse(data)- (#echo(__LINE__)#)")
+		data = self._parser('"""#', BuilderSkel._data_parse(self, data, file_pathname, file_name))
 
-		if (self.get_variable("dev_comments") == None): return self.data_remove_dev_comments(data)
+		if (self._get_variable("dev_comments") == None): return self._data_remove_dev_comments(data)
 		else: return data
 	#
 
-	def data_remove_dev_comments(self, data):
+	def _data_remove_dev_comments(self, data):
 	#
 		"""
 Remove all development comments from the content.
 
 :param data: Data to be parsed
 
-:access: protected
 :return: (str) Filtered data
 :since:  v0.1.00
 		"""
 
-		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -PyBuilder.data_remove_dev_comments(data)- (#echo(__LINE__)#)")
+		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -PyBuilder._data_remove_dev_comments(data)- (#echo(__LINE__)#)")
 		return re.sub('(\n[ \t]*"""\n---.+?---\n[ \t]*"""\n)|("""\\w//.+?//\\w"""\n)', "", data, 0, re.S)
 	#
 
-	def parser_change(self, tag_definition, data, tag_position, data_position, tag_end_position):
+	def _parser_change(self, tag_definition, data, tag_position, data_position, tag_end_position):
 	#
 		"""
 Change data according to the matched tag.
@@ -114,63 +112,61 @@ Change data according to the matched tag.
 :param data_position: Data starting position
 :param tag_end_position: Starting position of the closing tag
 
-:access: protected
 :return: (str) Converted data
 :since:  v0.1.00
 		"""
 
-		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -PyBuilder.parser_change(tag_definition, data, {0:d}, {1:d}, {2:d})- (#echo(__LINE__)#)".format(tag_position, data_position, tag_end_position))
-		var_return = data[:tag_position]
+		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -PyBuilder._parser_change(tag_definition, data, {0:d}, {1:d}, {2:d})- (#echo(__LINE__)#)".format(tag_position, data_position, tag_end_position))
+		_return = data[:tag_position]
 
-		data_closed = data[self.parser_tag_find_end_position(data, tag_end_position, '"""'):]
+		data_closed = data[self._parser_tag_find_end_position(data, tag_end_position, '"""'):]
 
 		if (tag_definition[0] == '"""#ifdef'):
 		#
 			variable = re.match('^"""#ifdef\\((\\w+)\\)', data[tag_position:data_position]).group(1)
-			tag_end = data[tag_end_position:self.parser_tag_find_end_position(data, tag_end_position, '"""')]
+			tag_end = data[tag_end_position:self._parser_tag_find_end_position(data, tag_end_position, '"""')]
 
-			if (self.get_variable(variable) != None):
+			if (self._get_variable(variable) != None):
 			#
-				if (data[data_position:data_position + 1] == "\n"): var_return += data[data_position + 1:tag_end_position].replace('"\\"', '"""')
-				else: var_return += data[data_position:tag_end_position].replace('"\\"', '"""')
+				if (data[data_position:data_position + 1] == "\n"): _return += data[data_position + 1:tag_end_position].replace('"\\"', '"""')
+				else: _return += data[data_position:tag_end_position].replace('"\\"', '"""')
 			#
 
 			if ((tag_end == '#\\n"""') or (tag_end == ':#\\n"""')): data_closed = re.sub("^\n", "", data_closed)
-			var_return += data_closed
+			_return += data_closed
 		#
 		elif (tag_definition[0] == '"""#ifndef'):
 		#
 			variable = re.match('^"""#ifndef\\((\\w+)\\)', data[tag_position:data_position]).group(1)
-			tag_end = data[tag_end_position:self.parser_tag_find_end_position(data, tag_end_position, '"""')]
+			tag_end = data[tag_end_position:self._parser_tag_find_end_position(data, tag_end_position, '"""')]
 
-			if (self.get_variable(variable) == None):
+			if (self._get_variable(variable) == None):
 			#
-				if (data[data_position:data_position + 1] == "\n"): var_return += data[data_position + 1:tag_end_position].replace('"\\"', '"""')
-				else: var_return += data[data_position:tag_end_position].replace('"\\"', '"""')
+				if (data[data_position:data_position + 1] == "\n"): _return += data[data_position + 1:tag_end_position].replace('"\\"', '"""')
+				else: _return += data[data_position:tag_end_position].replace('"\\"', '"""')
 			#
 
 			if ((tag_end == '#\\n"""') or (tag_end == ':#\\n"""')): data_closed = re.sub("^\n", "", data_closed)
-			var_return += data_closed
+			_return += data_closed
 		#
-		else: var_return += data_closed
+		else: _return += data_closed
 
-		return var_return
+		return _return
 	#
 
-	def parser_check(self, data):
+	def _parser_check(self, data):
 	#
 		"""
 Check if a possible tag match is a false positive.
 
 :param data: Data starting with the possible tag
 
-:access: protected
 :return: (tuple) Matched tag definition; None if false positive
 :since:  v0.1.00
 		"""
 
-		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -PyBuilder.parser_check(data)- (#echo(__LINE__)#)")
-		var_return = None
+		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -PyBuilder._parser_check(data)- (#echo(__LINE__)#)")
+		_return = None
 
 		if (data[:9] == '"""#ifdef'):
 		#
@@ -180,10 +176,10 @@ Check if a possible tag match is a false positive.
 			#
 				re_result = re.match('^"""#ifdef\\((\\w+)\\):\n', data)
 
-				if (re_result == None): var_return = None
-				else: var_return = ( '"""#ifdef', ":", ( ':#\\n"""', ':#"""' ) )
+				if (re_result == None): _return = None
+				else: _return = ( '"""#ifdef', ":", ( ':#\\n"""', ':#"""' ) )
 			#
-			else: var_return = ( '"""#ifdef', '"""', ( '#\\n"""', '#"""' ) )
+			else: _return = ( '"""#ifdef', '"""', ( '#\\n"""', '#"""' ) )
 		#
 		elif (data[:10] == '"""#ifndef'):
 		#
@@ -193,13 +189,13 @@ Check if a possible tag match is a false positive.
 			#
 				re_result = re.match('^"""#ifndef\\((\\w+)\\):\n', data)
 
-				if (re_result == None): var_return = None
-				else: var_return = ( '"""#ifndef', ":", ( ':#\\n"""', ':#"""' ) )
+				if (re_result == None): _return = None
+				else: _return = ( '"""#ifndef', ":", ( ':#\\n"""', ':#"""' ) )
 			#
-			else: var_return = ( '"""#ifndef', '"""', ( '#\\n"""', '#"""' ) )
+			else: _return = ( '"""#ifndef', '"""', ( '#\\n"""', '#"""' ) )
 		#
 
-		return var_return
+		return _return
 	#
 #
 
