@@ -39,7 +39,7 @@ except ImportError: import pickle
 from file import File
 
 try: _unicode_object = { "type": unicode, "str": unicode.encode, "unicode": str.decode }
-except: _unicode_object = { "type": bytes, "str": bytes.decode, "unicode": str.encode }
+except NameError: _unicode_object = { "type": bytes, "str": bytes.decode, "unicode": str.encode }
 
 class BuilderSkel(object):
 #
@@ -288,7 +288,7 @@ Use slashes - even on Microsoft(R) Windows(R) machines.
 					os.mkdir(dir_path_os, self.chmod_dirs)
 					_return = os.access(dir_path_os, os.W_OK)
 				#
-				except: pass
+				except IOError: pass
 			#
 		#
 
