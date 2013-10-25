@@ -34,7 +34,7 @@ import sys
 sys.path.append(os.getcwd())
 
 try: import makefile
-except: pass
+except ImportError: pass
 
 class Make(object):
 #
@@ -159,15 +159,15 @@ try:
 	if (hasattr(makefile, "direct_makefile_py_set")): _parameters = makefile.direct_makefile_py_set()
 	else: _parameters = makefile.direct_makefile_set()
 #
-except: _parameters = { }
+except NameError: _parameters = { }
 
 try:
 #
 	make = Make()
 	make.run()
 #
-except SystemExit: pass
-except:
+except KeyboardInterrupt: pass
+except Exception:
 #
 	sys.stderr.write("{0!r}".format(sys.exc_info()))
 	sys.exit(1)
