@@ -467,7 +467,7 @@ Parse and rewrite all directories and files given as include definitions.
 		#
 			sys.stdout.write(">> Writing make.py.pickle\n")
 
-			_file = open("{0}/make.py.pickle".format(self.output_path), "wb")
+			_file = open(path.normpath(self.parameters['make_pickle_path'] if ("make_pickle_path" in self.parameters) else "{0}/make.py.pickle".format(self.output_path)), "wb")
 			pickle.dump(self.parser_pickle, _file, pickle.HIGHEST_PROTOCOL)
 			_file.close()
 		#
@@ -563,7 +563,7 @@ Change data according to the matched tag.
 :since:  v0.1.00
 		"""
 
-		raise RuntimeError("Not implemented", 38)
+		raise RuntimeError("Not implemented")
 	#
 
 	def _parser_check(self, data):
@@ -761,23 +761,26 @@ Sets a new target for processing.
 
 		if (len(output_path) and (not output_path.endswith("/")) and (not output_path.endswith("\\"))): output_path += path.sep
 		self.output_path = output_path
+		self.output_strip_prefix = "";
+
+		if (type(parameters) == dict): self.parameters = parameters
+		else: self.parameters = { }
+
 		sys.stdout.write("> New output target {0}\n".format(output_path))
 
-		if (os.access(path.normpath("{0}/make.py.pickle".format(output_path)), os.W_OK)):
+		make_pickle_path = path.normpath(self.parameters['make_pickle_path'] if ("make_pickle_path" in self.parameters) else "{0}/make.py.pickle".format(output_path))
+
+		if (os.access(make_pickle_path, os.W_OK)):
 		#
 			sys.stdout.write(">> Reading make.py.pickle\n")
 
-			_file = open("{0}/make.py.pickle".format(output_path), "rb")
+			_file = open(make_pickle_path, "rb")
 			self.parser_pickle = pickle.load(_file)
 			_file.close()
 		#
 		else: self.parser_pickle = { }
 
 		if (type(self.parser_pickle) != dict): self.parser_pickle = { }
-		self.output_strip_prefix = "";
-
-		if (type(parameters) == dict): self.parameters = parameters
-		else: self.parameters = { }
 
 		data_list = include.split(",")
 
