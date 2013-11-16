@@ -113,7 +113,7 @@ Executes registered callbacks for the active application.
 				if (args.define != None):
 				#
 					define_array = args.define.split(",")
-					re_define = re.compile("^(\\w+)\\=(.+?)$")
+					re_define = re.compile("^(\\w+)\\=(.+)$")
 
 					for define in define_array:
 					#
