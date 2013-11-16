@@ -98,7 +98,7 @@ Remove all development comments from the content.
 		"""
 
 		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -PyBuilder._data_remove_dev_comments(data)- (#echo(__LINE__)#)")
-		return re.sub('(\n[ \t]*"""\n---.+?---\n[ \t]*"""\n)|("""\\w//.+?//\\w"""\n)', "", data, 0, re.S)
+		return re.sub('(\n[ \t]*"""\n---.+?---\n[ \t]*"""\n)|("""\\w//.+?//\\w"""\n)', "", data, flags = re.S)
 	#
 
 	def _parser_change(self, tag_definition, data, tag_position, data_position, tag_end_position):
