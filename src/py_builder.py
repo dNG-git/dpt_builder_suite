@@ -133,7 +133,6 @@ Change data according to the matched tag.
 			#
 
 			if ((tag_end == '#\\n"""') or (tag_end == ':#\\n"""')): data_closed = re.sub("^\n", "", data_closed)
-			_return += data_closed
 		#
 		elif (tag_definition[0] == '"""#ifndef'):
 		#
@@ -147,9 +146,9 @@ Change data according to the matched tag.
 			#
 
 			if ((tag_end == '#\\n"""') or (tag_end == ':#\\n"""')): data_closed = re.sub("^\n", "", data_closed)
-			_return += data_closed
 		#
-		else: _return += data_closed
+
+		_return += data_closed
 
 		return _return
 	#
