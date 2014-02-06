@@ -407,6 +407,77 @@ needed.
 		return _return
 	#
 
+	def _find_end_tag_position(self, data, data_position, tag_end_list):
+	#
+		"""
+Find the starting position of the closing tag.
+
+:param data: String that contains convertable data
+:param data_position: Current parser position
+:param tag_end_list: List of possible closing tags to be searched for
+
+:return: (int) Position; -1 if not found
+:since:  v0.1.00
+		"""
+
+		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._find_end_tag_position(data, data_position, tag_end_list)- (#echo(__LINE__)#)")
+		_return = None
+
+		is_valid = True
+		result = -1
+
+		while ((_return == None or _return > -1) and is_valid):
+		#
+			for tag_end in tag_end_list:
+			#
+				result = data.find(tag_end, data_position)
+				if (result > -1 and (_return == None or result < _return)): _return = result
+			#
+
+			if (_return == None): _return = -1
+			elif (_return > -1):
+			#
+				data_position = _return
+				if (data[_return - 1:_return] != "\\"): is_valid = False
+			#
+		#
+
+		return _return
+	#
+
+	def _find_tag_end_position(self, data, data_position, tag_end):
+	#
+		"""
+Find the starting position of the enclosing content.
+
+:param data: String that contains convertable data
+:param data_position: Current parser position
+:param tag_end: Tag end definition
+
+:return: (int) Position; -1 if not found
+:since:  v0.1.00
+		"""
+
+		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._find_tag_end_position(data, data_position, tag_end)- (#echo(__LINE__)#)")
+		_return = None
+
+		is_valid = True
+
+		while ((_return == None or _return > -1) and is_valid):
+		#
+			_return = data.find(tag_end, data_position)
+
+			if (_return > -1):
+			#
+				data_position = _return
+				if (data[_return - 1:_return] != "\\"): is_valid = False
+			#
+		#
+
+		if (_return > -1): _return += len(tag_end)
+		return _return
+	#
+
 	def _get_variable(self, name):
 	#
 		"""
@@ -475,7 +546,7 @@ Parse and rewrite all directories and files given as include definitions.
 		return _return
 	#
 
-	def _parser(self, parser_tag, data, data_position = 0, nested_tag_end_position = None):
+	def _parse(self, parser_tag, data, data_position = 0, nested_tag_end_position = None):
 	#
 		"""
 Parser for "make" tags.
@@ -492,7 +563,7 @@ Parser for "make" tags.
 		global _unicode_object
 		if (type(parser_tag) == _unicode_object['type']): parser_tag = _unicode_object['str'](parser_tag, "utf-8")
 
-		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._parser({0}, data, {1:d}, nested_tag_end_position)- (#echo(__LINE__)#)".format(parser_tag, data_position))
+		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._parse({0}, data, {1:d}, nested_tag_end_position)- (#echo(__LINE__)#)".format(parser_tag, data_position))
 
 		if (nested_tag_end_position == None):
 		#
@@ -510,33 +581,33 @@ Parser for "make" tags.
 
 		while (data_position > -1):
 		#
-			tag_definition = self._parser_check(data[data_position:])
+			tag_definition = self._match_check(data[data_position:])
 
 			if (tag_definition == None): data_position += len(parser_tag)
 			else:
 			#
 				tag_length = len(tag_definition[0])
-				tag_start_end_position = self._parser_tag_find_end_position(data, data_position + tag_length, tag_definition[1])
+				tag_start_end_position = self._find_tag_end_position(data, data_position + tag_length, tag_definition[1])
 				tag_end_position = -1
 
 				if (tag_start_end_position > -1):
 				#
-					tag_end_position = self._parser_tag_end_find_position(data, tag_start_end_position, tag_definition[2])
+					tag_end_position = self._find_end_tag_position(data, tag_start_end_position, tag_definition[2])
 
 					if (tag_end_position < 0): nested_data = None
-					else: nested_data = self._parser(parser_tag, data, data_position + 1, tag_end_position)
+					else: nested_data = self._parse(parser_tag, data, data_position + 1, tag_end_position)
 
 					while (nested_data != None):
 					#
 						data = nested_data
-						tag_start_end_position = self._parser_tag_find_end_position(data, data_position + 1, tag_definition[1])
-						if (tag_start_end_position > -1): tag_end_position = self._parser_tag_end_find_position(data, tag_start_end_position, tag_definition[2])
+						tag_start_end_position = self._find_tag_end_position(data, data_position + 1, tag_definition[1])
+						if (tag_start_end_position > -1): tag_end_position = self._find_end_tag_position(data, tag_start_end_position, tag_definition[2])
 
-						nested_data = self._parser(parser_tag, data, data_position + 1, tag_end_position)
+						nested_data = self._parse(parser_tag, data, data_position + 1, tag_end_position)
 					#
 				#
 
-				if (tag_end_position > -1): data = self._parser_change(tag_definition, data, data_position, tag_start_end_position, tag_end_position)
+				if (tag_end_position > -1): data = self._match_change(tag_definition, data, data_position, tag_start_end_position, tag_end_position)
 				else: data_position += tag_length
 			#
 
@@ -548,7 +619,7 @@ Parser for "make" tags.
 		return data
 	#
 
-	def _parser_change(self, tag_definition, data, tag_position, data_position, tag_end_position):
+	def _match_change(self, tag_definition, data, tag_position, data_position, tag_end_position):
 	#
 		"""
 Change data according to the matched tag.
@@ -566,7 +637,7 @@ Change data according to the matched tag.
 		raise RuntimeError("Not implemented")
 	#
 
-	def _parser_check(self, data):
+	def _match_check(self, data):
 	#
 		"""
 Check if a possible tag match is a false positive.
@@ -578,77 +649,6 @@ Check if a possible tag match is a false positive.
 		"""
 
 		return None
-	#
-
-	def _parser_tag_end_find_position(self, data, data_position, tag_end_list):
-	#
-		"""
-Find the starting position of the closing tag.
-
-:param data: String that contains convertable data
-:param data_position: Current parser position
-:param tag_end_list: List of possible closing tags to be searched for
-
-:return: (int) Position; -1 if not found
-:since:  v0.1.00
-		"""
-
-		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._parser_tag_end_find_position(data, data_position, tag_end_list)- (#echo(__LINE__)#)")
-		_return = None
-
-		is_valid = True
-		result = -1
-
-		while ((_return == None or _return > -1) and is_valid):
-		#
-			for tag_end in tag_end_list:
-			#
-				result = data.find(tag_end, data_position)
-				if (result > -1 and (_return == None or result < _return)): _return = result
-			#
-
-			if (_return == None): _return = -1
-			elif (_return > -1):
-			#
-				data_position = _return
-				if (data[_return - 1:_return] != "\\"): is_valid = False
-			#
-		#
-
-		return _return
-	#
-
-	def _parser_tag_find_end_position(self, data, data_position, tag_end):
-	#
-		"""
-Find the starting position of the enclosing content.
-
-:param data: String that contains convertable data
-:param data_position: Current parser position
-:param tag_end: Tag end definition
-
-:return: (int) Position; -1 if not found
-:since:  v0.1.00
-		"""
-
-		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._parser_tag_find_end_position(data, data_position, tag_end)- (#echo(__LINE__)#)")
-		_return = None
-
-		is_valid = True
-
-		while ((_return == None or _return > -1) and is_valid):
-		#
-			_return = data.find(tag_end, data_position)
-
-			if (_return > -1):
-			#
-				data_position = _return
-				if (data[_return - 1:_return] != "\\"): is_valid = False
-			#
-		#
-
-		if (_return > -1): _return += len(tag_end)
-		return _return
 	#
 
 	def set_event_handler(self, event_handler = None):
