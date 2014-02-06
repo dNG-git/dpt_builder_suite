@@ -80,7 +80,7 @@ Parse the given content.
 		"""
 
 		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -PyBuilder._data_parse(data)- (#echo(__LINE__)#)")
-		data = self._parser('"""#', BuilderSkel._data_parse(self, data, file_pathname, file_name))
+		data = self._parse('"""#', BuilderSkel._data_parse(self, data, file_pathname, file_name))
 
 		if (self._get_variable("dev_comments") == None): return self._data_remove_dev_comments(data)
 		else: return data
@@ -101,7 +101,7 @@ Remove all development comments from the content.
 		return re.sub('(\n[ \t]*"""\n---.+?---\n[ \t]*"""\n)|("""\\w//.+?//\\w"""\n)', "", data, flags = re.S)
 	#
 
-	def _parser_change(self, tag_definition, data, tag_position, data_position, tag_end_position):
+	def _match_change(self, tag_definition, data, tag_position, data_position, tag_end_position):
 	#
 		"""
 Change data according to the matched tag.
@@ -116,15 +116,15 @@ Change data according to the matched tag.
 :since:  v0.1.00
 		"""
 
-		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -PyBuilder._parser_change(tag_definition, data, {0:d}, {1:d}, {2:d})- (#echo(__LINE__)#)".format(tag_position, data_position, tag_end_position))
+		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -PyBuilder._match_change(tag_definition, data, {0:d}, {1:d}, {2:d})- (#echo(__LINE__)#)".format(tag_position, data_position, tag_end_position))
 		_return = data[:tag_position]
 
-		data_closed = data[self._parser_tag_find_end_position(data, tag_end_position, '"""'):]
+		data_closed = data[self._find_tag_end_position(data, tag_end_position, '"""'):]
 
 		if (tag_definition[0] == '"""#ifdef'):
 		#
 			variable = re.match('^"""#ifdef\\((\\w+)\\)', data[tag_position:data_position]).group(1)
-			tag_end = data[tag_end_position:self._parser_tag_find_end_position(data, tag_end_position, '"""')]
+			tag_end = data[tag_end_position:self._find_tag_end_position(data, tag_end_position, '"""')]
 
 			if (self._get_variable(variable) != None):
 			#
@@ -137,7 +137,7 @@ Change data according to the matched tag.
 		elif (tag_definition[0] == '"""#ifndef'):
 		#
 			variable = re.match('^"""#ifndef\\((\\w+)\\)', data[tag_position:data_position]).group(1)
-			tag_end = data[tag_end_position:self._parser_tag_find_end_position(data, tag_end_position, '"""')]
+			tag_end = data[tag_end_position:self._find_tag_end_position(data, tag_end_position, '"""')]
 
 			if (self._get_variable(variable) == None):
 			#
@@ -153,7 +153,7 @@ Change data according to the matched tag.
 		return _return
 	#
 
-	def _parser_check(self, data):
+	def _match_check(self, data):
 	#
 		"""
 Check if a possible tag match is a false positive.
@@ -164,7 +164,7 @@ Check if a possible tag match is a false positive.
 :since:  v0.1.00
 		"""
 
-		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -PyBuilder._parser_check(data)- (#echo(__LINE__)#)")
+		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -PyBuilder._match_check(data)- (#echo(__LINE__)#)")
 		_return = None
 
 		if (data[:9] == '"""#ifdef'):
