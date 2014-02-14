@@ -24,6 +24,8 @@ http://www.direct-netware.de/redirect.py?licenses;mpl2
 ----------------------------------------------------------------------------
 NOTE_END //n"""
 
+# pylint: disable=import-error,invalid-name,undefined-variable
+
 from os import path
 from time import time
 import os
@@ -38,8 +40,20 @@ except ImportError: import pickle
 
 from file import File
 
-try: _unicode_object = { "type": unicode, "str": unicode.encode, "unicode": str.decode }
-except NameError: _unicode_object = { "type": bytes, "str": bytes.decode, "unicode": str.encode }
+try:
+#
+	_PY_BYTES = unicode.encode
+	_PY_BYTES_TYPE = str
+	_PY_STR = unicode.encode
+	_PY_UNICODE_TYPE = unicode
+#
+except NameError:
+#
+	_PY_BYTES = str.encode
+	_PY_BYTES_TYPE = bytes
+	_PY_STR = bytes.decode
+	_PY_UNICODE_TYPE = str
+#
 
 class BuilderSkel(object):
 #
@@ -54,6 +68,8 @@ Provides a Python "make" environment skeleton.
 :license:    http://www.direct-netware.de/redirect.py?licenses;mpl2
              Mozilla Public License, v. 2.0
 	"""
+
+	# pylint: disable=unused-argument
 
 	def __init__(self, parameters, include, output_path, filetype, default_umask = None, default_chmod_files = None, default_chmod_dirs = None, timeout_retries = 5, event_handler = None):
 	#
@@ -160,8 +176,8 @@ Adds an extension to the list of ASCII file types.
 :param extension: File type extension to add
 		"""
 
-		global _unicode_object
-		if (type(extension) == _unicode_object['type']): extension = _unicode_object['str'](extension, "utf-8")
+		# global: _PY_STR, _PY_UNICODE_TYPE
+		if (_PY_UNICODE_TYPE != str and type(extension) == _PY_UNICODE_TYPE): extension = _PY_STR(extension, "utf-8")
 
 		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel.add_filetype_ascii({0})- (#echo(__LINE__)#)".format(extension))
 		self.filetype_ascii_list.append(extension)
@@ -180,7 +196,7 @@ Parse the given content.
 :since:  v0.1.00
 		"""
 
-		global _unicode_object
+		# global: _PY_STR, _PY_UNICODE_TYPE
 		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._data_parse(data)- (#echo(__LINE__)#)")
 
 		_return = data.replace("#" + "echo(__FILE__)#", file_name)
@@ -210,7 +226,7 @@ Parse the given content.
 			#
 				if (result not in matched_list):
 				#
-					if (type(result) == _unicode_object['type']): result = _unicode_object['str'](result, "utf-8")
+					if (_PY_UNICODE_TYPE != str and type(result) == _PY_UNICODE_TYPE): result = _PY_STR(result, "utf-8")
 					value = self._get_variable(result)
 
 					if (value == None): _return = _return.replace("#" + "echo({0})#".format(result), result)
@@ -251,8 +267,8 @@ Use slashes - even on Microsoft(R) Windows(R) machines.
 :since:  v0.1.00
 		"""
 
-		global _unicode_object
-		if (type(dir_path) == _unicode_object['type']): dir_path = _unicode_object['str'](dir_path, "utf-8")
+		# global: _PY_STR, _PY_UNICODE_TYPE
+		if (_PY_UNICODE_TYPE != str and type(dir_path) == _PY_UNICODE_TYPE): dir_path = _PY_STR(dir_path, "utf-8")
 
 		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._dir_create({0}, {1:d})- (#echo(__LINE__)#)".format(dir_path, timeout))
 
@@ -306,8 +322,8 @@ Handle the given file and call the content parse method.
 :since:  v0.1.00
 		"""
 
-		global _unicode_object
-		if (type(file_pathname) == _unicode_object['type']): file_pathname = _unicode_object['str'](file_pathname, "utf-8")
+		# global: _PY_BYTES, _PY_BYTES_TYPE, _PY_STR, _PY_UNICODE_TYPE
+		if (_PY_UNICODE_TYPE != str and type(file_pathname) == _PY_UNICODE_TYPE): file_pathname = _PY_STR(file_pathname, "utf-8")
 
 		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._file_parse({0})- (#echo(__LINE__)#)".format(file_pathname))
 
@@ -337,7 +353,7 @@ Handle the given file and call the content parse method.
 				file_old_content = file_object.read()
 				file_object.close()
 
-				if (type(file_old_content) != _unicode_object['type']): file_old_content = _unicode_object['unicode'](file_old_content, "utf-8")
+				if (type(file_old_content) != _PY_BYTES_TYPE): file_old_content = _PY_BYTES(file_old_content, "utf-8")
 				file_old_content_md5 = hashlib.md5(file_old_content).hexdigest()
 			#
 			else: file_old_content_md5 = None
@@ -363,7 +379,7 @@ Handle the given file and call the content parse method.
 			#
 			else: _return = self._file_write(file_content, self.output_path + file_pathname)
 
-			if (type(file_content) != _unicode_object['type']): file_content = _unicode_object['unicode'](file_content, "utf-8")
+			if (type(file_content) != _PY_BYTES_TYPE): file_content = _PY_BYTES(file_content, "utf-8")
 			if (_return): self.parser_pickle[file_pathname] = hashlib.md5(file_content).hexdigest()
 		#
 
@@ -384,9 +400,12 @@ needed.
 :since:  v0.1.00
 		"""
 
-		global _unicode_object
-		if (type(file_pathname) == _unicode_object['type']): file_pathname = _unicode_object['str'](file_pathname, "utf-8")
-		if (type(file_mode) == _unicode_object['type']): file_mode = _unicode_object['str'](file_mode, "utf-8")
+		# global: _PY_STR, _PY_UNICODE_TYPE
+		if (_PY_UNICODE_TYPE != str):
+		#
+			if (type(file_pathname) == _PY_UNICODE_TYPE): file_pathname = _PY_STR(file_pathname, "utf-8")
+			if (type(file_mode) == _PY_UNICODE_TYPE): file_mode = _PY_STR(file_mode, "utf-8")
+		#
 
 		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._file_write(file_content, {0}, {1})- (#echo(__LINE__)#)".format(file_pathname, file_mode))
 
@@ -489,8 +508,8 @@ Gets the variable content with the given name.
 :since:  v0.1.00
 		"""
 
-		global _unicode_object
-		if (type(name) == _unicode_object['type']): name = _unicode_object['str'](name, "utf-8")
+		# global: _PY_STR, _PY_UNICODE_TYPE
+		if (_PY_UNICODE_TYPE != str and type(name) == _PY_UNICODE_TYPE): name = _PY_STR(name, "utf-8")
 
 		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._get_variable({0})- (#echo(__LINE__)#)".format(name))
 		return self.parameters.get(name, None)
@@ -505,7 +524,7 @@ Parse and rewrite all directories and files given as include definitions.
 :since:  v0.1.00
 		"""
 
-		global _unicode_object
+		# global: _PY_STR, _PY_UNICODE_TYPE
 		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel.make_all()- (#echo(__LINE__)#)")
 
 		_return = False
@@ -525,7 +544,7 @@ Parse and rewrite all directories and files given as include definitions.
 			for file_id in self.file_dict:
 			#
 				_file = self.file_dict[file_id]
-				if (type(_file) == _unicode_object['type']): _file = _unicode_object['str'](_file, "utf-8")
+				if (_PY_UNICODE_TYPE != str and type(_file) == _PY_UNICODE_TYPE): _file = _PY_STR(_file, "utf-8")
 
 				sys.stdout.write(">>> Processing {0} ... ".format(_file))
 
@@ -554,14 +573,14 @@ Parser for "make" tags.
 :param parser_tag: Starting tag to be searched for
 :param data: Data to be parsed
 :param data_position: Current parser position
-:param nested_tag_end_position: End position for nested tags 
+:param nested_tag_end_position: End position for nested tags
 
 :return: (str) Converted data; None for nested parsing results without a match
 :since:  v0.1.00
 		"""
 
-		global _unicode_object
-		if (type(parser_tag) == _unicode_object['type']): parser_tag = _unicode_object['str'](parser_tag, "utf-8")
+		# global: _PY_STR, _PY_UNICODE_TYPE
+		if (_PY_UNICODE_TYPE != str and type(parser_tag) == _PY_UNICODE_TYPE): parser_tag = _PY_STR(parser_tag, "utf-8")
 
 		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._parse({0}, data, {1:d}, nested_tag_end_position)- (#echo(__LINE__)#)".format(parser_tag, data_position))
 
@@ -674,8 +693,8 @@ Add "exclude" definitions for directories and files.
 :since: v0.1.00
 		"""
 
-		global _unicode_object
-		if (type(exclude) == _unicode_object['type']): exclude = _unicode_object['str'](exclude, "utf-8")
+		# global: _PY_STR, _PY_UNICODE_TYPE
+		if (_PY_UNICODE_TYPE != str and type(exclude) == _PY_UNICODE_TYPE): exclude = _PY_STR(exclude, "utf-8")
 
 		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel.set_exclude({0})- (#echo(__LINE__)#)".format(exclude))
 
@@ -702,8 +721,8 @@ Add "exclude" definitions for directories.
 :since: v0.1.00
 		"""
 
-		global _unicode_object
-		if (type(exclude) == _unicode_object['type']): exclude = _unicode_object['str'](exclude, "utf-8")
+		# global: _PY_STR, _PY_UNICODE_TYPE
+		if (_PY_UNICODE_TYPE != str and type(exclude) == _PY_UNICODE_TYPE): exclude = _PY_STR(exclude, "utf-8")
 
 		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel.set_exclude_dirs({0})- (#echo(__LINE__)#)".format(exclude))
 
@@ -725,8 +744,8 @@ Add "exclude" definitions for files.
 :since: v0.1.00
 		"""
 
-		global _unicode_object
-		if (type(exclude) == _unicode_object['type']): exclude = _unicode_object['str'](exclude, "utf-8")
+		# global: _PY_STR, _PY_UNICODE_TYPE
+		if (_PY_UNICODE_TYPE != str and type(exclude) == _PY_UNICODE_TYPE): exclude = _PY_STR(exclude, "utf-8")
 
 		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel.set_exclude_files({0})- (#echo(__LINE__)#)".format(exclude))
 
@@ -753,6 +772,7 @@ Sets a new target for processing.
 :since: v0.1.00
 		"""
 
+		# global: _PY_BYTES, _PY_BYTES_TYPE
 		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel.set_new_target(parameters, include, output_path, filetype)- (#echo(__LINE__)#)")
 
 		self.dir_exclude_list = [ ]
@@ -761,7 +781,7 @@ Sets a new target for processing.
 
 		if (len(output_path) and (not output_path.endswith("/")) and (not output_path.endswith("\\"))): output_path += path.sep
 		self.output_path = output_path
-		self.output_strip_prefix = "";
+		self.output_strip_prefix = ""
 
 		if (type(parameters) == dict): self.parameters = parameters
 		else: self.parameters = { }
@@ -799,7 +819,7 @@ Sets a new target for processing.
 			#
 			elif (path.isfile(data)):
 			#
-				if (type(data) != _unicode_object['type']): data = _unicode_object['unicode'](data, "utf-8")
+				if (type(data) != _PY_BYTES_TYPE): data = _PY_BYTES(data, "utf-8")
 				file_id = hashlib.md5(data).hexdigest()
 
 				if (self.workdir_rescan == False and (file_id not in self.file_dict)):
@@ -824,8 +844,8 @@ Define a prefix to be stripped from output paths.
 :since: v0.1.00
 		"""
 
-		global _unicode_object
-		if (type(strip_prefix) == _unicode_object['type']): strip_prefix = _unicode_object['str'](strip_prefix, "utf-8")
+		# global: _PY_STR, _PY_UNICODE_TYPE
+		if (_PY_UNICODE_TYPE != str and type(strip_prefix) == _PY_UNICODE_TYPE): strip_prefix = _PY_STR(strip_prefix, "utf-8")
 
 		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel.set_strip_prefix({0})- (#echo(__LINE__)#)".format(strip_prefix))
 
@@ -841,6 +861,7 @@ Scan given directories for files to be parsed.
 :since: v0.1.00
 		"""
 
+		# global: _PY_BYTES, _PY_BYTES_TYPE, _PY_STR, _PY_UNICODE_TYPE
 		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._workdir_scan()- (#echo(__LINE__)#)")
 
 		"""
@@ -869,7 +890,7 @@ Create a list of files - we need to scan directories recursively ...
 
 						content_extended_os = path.normpath(content_extended)
 						content_estripped = re_content_estripped.sub("", content_extended)
-						if (type(content_estripped) == _unicode_object['type']): content_estripped = _unicode_object['str'](content_estripped, "utf-8")
+						if (_PY_UNICODE_TYPE != str and type(content_estripped) == _PY_UNICODE_TYPE): content_estripped = _PY_STR(content_estripped, "utf-8")
 
 						if (path.isdir(content_extended_os)):
 						#
@@ -880,7 +901,7 @@ Create a list of files - we need to scan directories recursively ...
 							content_ext = path.splitext(content)[1][1:]
 							content_id = content_estripped
 
-							if (type(content_id) != _unicode_object['type']): content_id = _unicode_object['unicode'](content_id, "utf-8")
+							if (type(content_id) != _PY_BYTES_TYPE): content_id = _PY_BYTES(content_id, "utf-8")
 							content_id = hashlib.md5(content_id).hexdigest()
 
 							if (len(content_ext) > 0 and content_ext in self.filetype_list and (content not in self.file_exclude_list) and (content_estripped not in self.file_exclude_list)): self.file_dict[content_id] = content_extended
