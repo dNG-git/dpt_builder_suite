@@ -25,6 +25,8 @@ http://www.direct-netware.de/redirect.py?licenses;mpl2
 ----------------------------------------------------------------------------
 NOTE_END //n"""
 
+# pylint: disable=import-error
+
 from argparse import ArgumentParser
 from js_builder import JsBuilder
 import os
@@ -84,9 +86,9 @@ Executes registered callbacks for the active application.
 :since: v1.0.0
 		"""
 
-		args = self.arg_parser.parse_args()
+		# global: _parameters
 
-		global _parameters
+		args = self.arg_parser.parse_args()
 		targets = [ ]
 
 		if (len(_parameters) > 0 and type(_parameters) == list):
@@ -152,7 +154,7 @@ print("""
 jsBuilder #echo(jsBuilderVersion)#
 (C) direct Netware Group - All rights reserved
 ----------------------------------------------------------------------------
-""");
+""")
 
 try:
 #
