@@ -337,7 +337,10 @@ Handle the given file and call the content parse method.
 		if (len(file_ext) > 0 and file_ext in self.filetype_ascii_list): file_text_mode = True
 		elif (len(file_basename) > 0): file_text_mode = file_basename in self.filetype_ascii_list
 
-		if ((file_text_mode and file_object.open(file_pathname, True, "r")) or file_object.open(file_pathname, True, "rb")):
+		if (
+			(file_text_mode and file_object.open(file_pathname, True, "r")) or
+			file_object.open(file_pathname, True, "rb")
+		):
 		#
 			file_content = file_object.read()
 			file_object.close()
@@ -348,7 +351,10 @@ Handle the given file and call the content parse method.
 
 		if (file_pathname in self.parser_pickle):
 		#
-			if ((file_text_mode and file_object.open(self.output_path + file_pathname, True, "r")) or file_object.open(self.output_path + file_pathname, True, "rb")):
+			if (
+				(file_text_mode and file_object.open(self.output_path + file_pathname, True, "r")) or
+				file_object.open(self.output_path + file_pathname, True, "rb")
+			):
 			#
 				file_old_content = file_object.read()
 				file_object.close()
@@ -557,7 +563,12 @@ Parse and rewrite all directories and files given as include definitions.
 		#
 			sys.stdout.write(">> Writing make.py.pickle\n")
 
-			_file = open(path.normpath(self.parameters['make_pickle_path'] if ("make_pickle_path" in self.parameters) else "{0}/make.py.pickle".format(self.output_path)), "wb")
+			_file = open(path.normpath(
+				self.parameters['make_pickle_path']
+				if ("make_pickle_path" in self.parameters) else
+				"{0}/make.py.pickle".format(self.output_path)
+			), "wb")
+
 			pickle.dump(self.parser_pickle, _file, pickle.HIGHEST_PROTOCOL)
 			_file.close()
 		#
@@ -620,13 +631,30 @@ Parser for "make" tags.
 					#
 						data = nested_data
 						tag_start_end_position = self._find_tag_end_position(data, data_position + 1, tag_definition[1])
-						if (tag_start_end_position > -1): tag_end_position = self._find_end_tag_position(data, tag_start_end_position, tag_definition[2])
+
+						if (tag_start_end_position > -1):
+						#
+							tag_end_position = self._find_end_tag_position(
+								data,
+								tag_start_end_position,
+								tag_definition[2]
+							)
+						#
 
 						nested_data = self._parse(parser_tag, data, data_position + 1, tag_end_position)
 					#
 				#
 
-				if (tag_end_position > -1): data = self._match_change(tag_definition, data, data_position, tag_start_end_position, tag_end_position)
+				if (tag_end_position > -1):
+				#
+					data = self._match_change(
+						tag_definition,
+						data,
+						data_position,
+						tag_start_end_position,
+						tag_end_position
+					)
+				#
 				else: data_position += tag_length
 			#
 
@@ -779,7 +807,12 @@ Sets a new target for processing.
 		self.file_exclude_list = [ ]
 		self.filetype_list = filetype.split(",")
 
-		if (len(output_path) and (not output_path.endswith("/")) and (not output_path.endswith("\\"))): output_path += path.sep
+		if (
+			len(output_path) and
+			(not output_path.endswith("/")) and
+			(not output_path.endswith("\\"))
+		): output_path += path.sep
+
 		self.output_path = output_path
 		self.output_strip_prefix = ""
 
@@ -788,7 +821,11 @@ Sets a new target for processing.
 
 		sys.stdout.write("> New output target {0}\n".format(output_path))
 
-		make_pickle_path = path.normpath(self.parameters['make_pickle_path'] if ("make_pickle_path" in self.parameters) else "{0}/make.py.pickle".format(output_path))
+		make_pickle_path = path.normpath(
+			self.parameters['make_pickle_path']
+			if ("make_pickle_path" in self.parameters) else
+			"{0}/make.py.pickle".format(output_path)
+		)
 
 		if (os.access(make_pickle_path, os.W_OK)):
 		#
@@ -894,7 +931,10 @@ Create a list of files - we need to scan directories recursively ...
 
 						if (path.isdir(content_extended_os)):
 						#
-							if ((content not in self.dir_exclude_list) and (content_estripped not in self.dir_exclude_list)): self.dir_list.append(content_extended)
+							if (
+								(content not in self.dir_exclude_list) and
+								(content_estripped not in self.dir_exclude_list)
+							): self.dir_list.append(content_extended)
 						#
 						elif (path.isfile(content_extended_os)):
 						#
@@ -904,7 +944,12 @@ Create a list of files - we need to scan directories recursively ...
 							if (type(content_id) != _PY_BYTES_TYPE): content_id = _PY_BYTES(content_id, "utf-8")
 							content_id = hashlib.md5(content_id).hexdigest()
 
-							if (len(content_ext) > 0 and content_ext in self.filetype_list and (content not in self.file_exclude_list) and (content_estripped not in self.file_exclude_list)): self.file_dict[content_id] = content_extended
+							if (
+								len(content_ext) > 0 and
+								content_ext in self.filetype_list and
+								content not in self.file_exclude_list and
+								content_estripped not in self.file_exclude_list
+							): self.file_dict[content_id] = content_extended
 						#
 					#
 				#
