@@ -136,7 +136,17 @@ Executes registered callbacks for the active application.
 					#
 				#
 
-				if (js_builder == None): js_builder = JsBuilder(target, args.include, target['make_output_path'], args.filetype, default_chmod_files = args.output_files_chmod, default_chmod_dirs = args.output_dirs_chmod)
+				if (js_builder == None):
+				#
+					js_builder = JsBuilder(
+						target,
+						args.include,
+						target['make_output_path'],
+						args.filetype,
+						default_chmod_files = args.output_files_chmod,
+						default_chmod_dirs = args.output_dirs_chmod
+					)
+				#
 				else: js_builder.set_new_target(target, args.include, target['make_output_path'], args.filetype)
 
 				if (args.exclude != None): js_builder.set_exclude(args.exclude)
