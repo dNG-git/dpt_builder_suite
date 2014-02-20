@@ -61,7 +61,18 @@ Constructor __init__(PyBuilder)
 :since: v0.1.00
 		"""
 
-		BuilderSkel.__init__(self, parameters, include, output_path, filetype, default_umask, default_chmod_files, default_chmod_dirs, timeout_retries, event_handler)
+		BuilderSkel.__init__(
+			self,
+			parameters,
+			include,
+			output_path,
+			filetype,
+			default_umask,
+			default_chmod_files,
+			default_chmod_dirs,
+			timeout_retries,
+			event_handler
+		)
 
 		self.dir_exclude_list = [ "__pycache__" ]
 	#
@@ -128,7 +139,10 @@ Change data according to the matched tag.
 
 			if (self._get_variable(variable) != None):
 			#
-				if (data[data_position:data_position + 1] == "\n"): _return += data[data_position + 1:tag_end_position].replace('"\\"', '"""')
+				if (data[data_position:data_position + 1] == "\n"):
+				#
+					_return += data[data_position + 1:tag_end_position].replace('"\\"', '"""')
+				#
 				else: _return += data[data_position:tag_end_position].replace('"\\"', '"""')
 			#
 
@@ -141,7 +155,10 @@ Change data according to the matched tag.
 
 			if (self._get_variable(variable) == None):
 			#
-				if (data[data_position:data_position + 1] == "\n"): _return += data[data_position + 1:tag_end_position].replace('"\\"', '"""')
+				if (data[data_position:data_position + 1] == "\n"):
+				#
+					_return += data[data_position + 1:tag_end_position].replace('"\\"', '"""')
+				#
 				else: _return += data[data_position:tag_end_position].replace('"\\"', '"""')
 			#
 
