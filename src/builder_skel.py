@@ -2,13 +2,10 @@
 ##j## BOF
 
 """
-The builder skeleton combines common methods to interate directories and
-parse files.
-"""
-"""n// NOTE
-----------------------------------------------------------------------------
 builderSkel
 Common skeleton for builder tools
+"""
+"""n// NOTE
 ----------------------------------------------------------------------------
 (C) direct Netware Group - All rights reserved
 http://www.direct-netware.de/redirect.py?builderSkel
