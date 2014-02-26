@@ -2,12 +2,10 @@
 ##j## BOF
 
 """
-This is the main Python "make" worker class file.
-"""
-"""n// NOTE
-----------------------------------------------------------------------------
 pyBuilder
 Build Python code for different release targets
+"""
+"""n// NOTE
 ----------------------------------------------------------------------------
 (C) direct Netware Group - All rights reserved
 http://www.direct-netware.de/redirect.py?py;builder
