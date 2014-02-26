@@ -2,12 +2,10 @@
 ##j## BOF
 
 """
-This is the main JavaScript "make" worker class file.
-"""
-"""n// NOTE
-----------------------------------------------------------------------------
 jsBuilder
 Build JavaScript code for different release targets
+"""
+"""n// NOTE
 ----------------------------------------------------------------------------
 (C) direct Netware Group - All rights reserved
 http://www.direct-netware.de/redirect.py?js;builder

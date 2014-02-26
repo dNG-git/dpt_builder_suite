@@ -2,14 +2,14 @@
 ##j## BOF
 
 """
+jsBuilder
+Build Javascript code for different release targets
+
 This is a Python "make" script to generate different output Javascript
 scripts based on "makefile.py" definitions for example for GPL/commercial
 differences.
 """
 """n// NOTE
-----------------------------------------------------------------------------
-jsBuilder
-Build Javascript code for different release targets
 ----------------------------------------------------------------------------
 (C) direct Netware Group - All rights reserved
 http://www.direct-netware.de/redirect.py?js;builder
