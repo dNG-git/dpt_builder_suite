@@ -2,192 +2,33 @@
 jsBuilder
 Build JavaScript code for different release targets
 ----------------------------------------------------------------------------
-The following agreement is valid for all files and subdirectories of
-js/builder (git)
+
+The JavaScript builder parses and minimizes files using SlimIt. Furthermore
+a given license line is added above the minimized source code.
+
+----------------------------------------------------------------------------
+Licensing
 ----------------------------------------------------------------------------
 
-Fiduciary Licence Agreement
----------------------------
-v1.0.0
+This source code is released under the conditions of the license defined in
+the "LICENSE" file.
 
-Based on the Fiduciary Licence Agreement (Version 1.3.3 for the KDE project
-by KDE e.V.) released under the terms of the Creative Commons
-Attribution/Share-alike licence version 2.5 by the Free Software Foundation
-Europe (FSFE).
-
-***
+----------------------------------------------------------------------------
+Contributing
+----------------------------------------------------------------------------
 
 Thank you for your interest in projects of the direct Netware Group (dNG).
 As a supporter of the development project listed above we would kindly ask
-you to agree to and send a written copy of this license agreement to the
-address named below.
+you to agree to and send a written copy of our "Fiduciary Licence
+Agreement".
 
-***
+A copy is available under "_developer/FLA.pdf".
 
-Agreement
----------
-(Please cross out unsuitable alternatives.)
+Alternatively we request all push requests to contain a "FLA-agreed-by"
+tag. This indicates that the push is licensed under the terms of the
+"Fiduciary Licence Agreement" and can be integrated.
 
-Between 
-
-the author
-
-_______________________________________________ (Name)
-
-_______________________________________________ (Occupation, D.o. Birth)
-
-_______________________________________________ (Street)
-
-_______________________________________________ (ZIP, City, Country)
-
-_______________________________________________ (Email)
-
-the owner of the exclusive licence,
-
-_______________________________________________ (Company or name)
-
-_______________________________________________ (HQ or addr.)
-
-_______________________________________________ (managing director)
-
-- acquired by virtue of a contract date as of
-
-  _____________________________________________
-- contracting party:
-
-  _____________________________________________
-- acquired as employer in the context of a work and service relationship
-
-hereinafter referred to as "Beneficiary"
-
-and the direct Netware Group, which at the time of this writing has the
-official address:
-
-direct Netware Group
-z.Hd. Herr Wolf
-Winterbergstr. 84d
-1237 Dresden
-Germany
-
-***
-
-§1 Grant
-
-(1) Subject to the provision of §2, Beneficiary assigns to the direct
-    Netware Group the Copyright in computer programs and other
-    copyrightable material world-wide, or in countries where such an
-    assignment is not possible, grants an exclusive licence, including,
-    inter alia:
-
-1. the right to reproduce in original or modified form;
-2. the right to redistribute in original or modified form;
-3. the right of making available in data networks, in particular via the
-   Internet, as well as by providing downloads, in original or modified
-   form;
-4. the right to authorize third parties to make derivative works of the
-   Software, or to work on and commit changes or perform this conduct
-   themselves.
-
-(2) Beneficiary's moral or personal rights remain unaffected by this
-    Agreement.
-
-(3) In some countries, the law may provide that the employer is deemed to
-    be the owner of the rights on materials developed by an employee in the
-    course of his or her employment, unless the parties have agreed
-    otherwise. The Beneficiary is aware of these provisions, and therefore
-    warrants, represents and guarantees that the Subject Matter is free of
-    any of his or her employer's exclusive exploitation rights.
-
-§2 Subject Matter
-
-The rights and licences granted in §1 apply to both "Software" and
-"Documentation." For the purpose of this Agreement, "Software" shall mean
-all computer programs, copyrightable sections of computer programs or
-modifications of computer programs that have been developed or programmed
-by Beneficiary and that are specified in this Agreement below or that are
-listed in Exhibit A attached to this Agreement and dated and signed by the
-contracting parties. Likewise, "Documentation" shall refer to all manuals
-and documentation written by Beneficiary alongside and usually distributed
-with the "Software" and are similarly specified below or listed in
-Exhibit A:
-
-__________________________________________________________________
-
-__________________________________________________________________
-
-__________________________________________________________________
-
-Except in countries where such an assignment is not possible,5 the rights
-(and licences) granted under this agreement by Beneficiary shall also
-include future developments, future corrections of errors or faults and
-other future modifications and derivative works of the software to which
-Beneficiary obtains copyright ownership under this agreement. Excluded from
-this provision are modifications that are not derived from the subject
-matter and that have to be regarded as independent and original software.
-
-§3 direct Netware Group's Rights and Re-Transfer of Non-Exclusive Licence
-
-(1) The direct Netware Group shall exercise the granted rights and licences
-    in its own name. Furthermore, the direct Netware Group shall be
-    authorized to enjoin third parties from using the software and forbid
-    any unlawful or copyright infringing use of the Software, and shall be
-    entitled to enforce all its rights in its own name in and out of court.
-    The direct Netware Group shall also be authorized to permit third
-    parties to exercise the direct Netware Group's rights in and out of
-    court.
-
-(2) The direct Netware Group grants to Beneficiary a non-exclusive,
-    worldwide, perpetual and unrestricted licence in the Software. This
-    right's (and licence's) scope shall encompass and include all the
-    rights (and licences) specified in §1. Furthermore, the direct Netware
-    Group grants to Beneficiary additional non-exclusive, transferable
-    license to use, reproduce, redistribute and make available the Software
-    and / or Documentation as needed for releases of the Software and / or
-    Documentation under other licences. This re-transfer shall not limit
-    the scope of the direct Netware Group's exclusive licence in the
-    Software and rights pursuant to §1.
-
-(3) The direct Netware Group guarantees to use the rights and licences
-    transferred in strict accordance with the regulations imposed by Free
-    Software licences, including, but not limited to, the GNU General
-    Public Licence (GPL) or the GNU Lesser General Public Licence (LGPL)
-    respectively. In the event the direct Netware Group violates the
-    principles of Free Software, all granted rights and licences shall
-    automatically return to the Beneficiary and the licences granted
-    hereunder shall be terminated and expire.
-
-(4) The transfer of the rights and licences specified in §1 shall be
-    unrestricted in territory and thus shall apply world-wide and be
-    temporally unlimited.
-
-§4 Miscellaneous
-
-(1) Regarding the succession of rights in this contractual relationship,
-    German law shall apply, unless this Agreement imposes deviating
-    regulations. In case of the Beneficiary's death, the assignment of
-    exclusive rights shall continue with the heirs. In case of more than
-    one heir, all heirs have to exercise their rights through a common
-    authorized person.
-
-(2) Place of jurisdiction for all legal conflicts arising out of or in
-    connection with this Agreement is Dresden, Germany.
-
-
-_______________________________________________
-(Date, Place)
-
-
-_______________________________________________
-(Beneficiary)
-
-***
-
-
-_______________________________________________
-(Date, Place)
-
-
-_______________________________________________
-(direct Netware Group)
+Pushes not licensed as public domain or under the "Fiduciary Licence
+Agreement" can't be accepted.
 
 ----------------------------------------------------------------------------
