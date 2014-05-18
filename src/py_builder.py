@@ -75,42 +75,7 @@ Constructor __init__(PyBuilder)
 		self.dir_exclude_list = [ "__pycache__" ]
 	#
 
-	def _data_parse(self, data, file_pathname, file_name):
-	#
-		"""
-Parse the given content.
-
-:param data: Data to be parsed
-:param file_pathname: File path
-:param file_name: File name
-
-:return: (str) Filtered data
-:since:  v0.1.00
-		"""
-
-		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -PyBuilder._data_parse(data)- (#echo(__LINE__)#)")
-		data = self._parse('"""#', BuilderSkel._data_parse(self, data, file_pathname, file_name))
-
-		if (self._get_variable("dev_comments") == None): return self._data_remove_dev_comments(data)
-		else: return data
-	#
-
-	def _data_remove_dev_comments(self, data):
-	#
-		"""
-Remove all development comments from the content.
-
-:param data: Data to be parsed
-
-:return: (str) Filtered data
-:since:  v0.1.00
-		"""
-
-		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -PyBuilder._data_remove_dev_comments(data)- (#echo(__LINE__)#)")
-		return re.sub('(\n[ \t]*"""\n---.+?---\n[ \t]*"""\n)|("""\\w//.+?//\\w"""\n)', "", data, flags = re.S)
-	#
-
-	def _match_change(self, tag_definition, data, tag_position, data_position, tag_end_position):
+	def _change_match(self, tag_definition, data, tag_position, data_position, tag_end_position):
 	#
 		"""
 Change data according to the matched tag.
@@ -125,7 +90,7 @@ Change data according to the matched tag.
 :since:  v0.1.00
 		"""
 
-		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -PyBuilder._match_change(tag_definition, data, {0:d}, {1:d}, {2:d})- (#echo(__LINE__)#)".format(tag_position, data_position, tag_end_position))
+		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -PyBuilder._change_match(tag_definition, data, {0:d}, {1:d}, {2:d})- (#echo(__LINE__)#)".format(tag_position, data_position, tag_end_position))
 		_return = data[:tag_position]
 
 		data_closed = data[self._find_tag_end_position(data, tag_end_position, '"""'):]
@@ -168,7 +133,7 @@ Change data according to the matched tag.
 		return _return
 	#
 
-	def _match_check(self, data):
+	def _check_match(self, data):
 	#
 		"""
 Check if a possible tag match is a false positive.
@@ -179,7 +144,7 @@ Check if a possible tag match is a false positive.
 :since:  v0.1.00
 		"""
 
-		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -PyBuilder._match_check(data)- (#echo(__LINE__)#)")
+		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -PyBuilder._check_match(data)- (#echo(__LINE__)#)")
 		_return = None
 
 		if (data[:9] == '"""#ifdef'):
@@ -210,6 +175,41 @@ Check if a possible tag match is a false positive.
 		#
 
 		return _return
+	#
+
+	def _parse_data(self, data, file_pathname, file_name):
+	#
+		"""
+Parse the given content.
+
+:param data: Data to be parsed
+:param file_pathname: File path
+:param file_name: File name
+
+:return: (str) Filtered data
+:since:  v0.1.00
+		"""
+
+		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -PyBuilder._parse_data(data)- (#echo(__LINE__)#)")
+		data = self._parse('"""#', BuilderSkel._parse_data(self, data, file_pathname, file_name))
+
+		if (self._get_variable("dev_comments") == None): return self._remove_data_dev_comments(data)
+		else: return data
+	#
+
+	def _remove_data_dev_comments(self, data):
+	#
+		"""
+Remove all development comments from the content.
+
+:param data: Data to be parsed
+
+:return: (str) Filtered data
+:since:  v0.1.00
+		"""
+
+		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -PyBuilder._remove_data_dev_comments(data)- (#echo(__LINE__)#)")
+		return re.sub('(\n[ \t]*"""\n---.+?---\n[ \t]*"""\n)|("""\\w//.+?//\\w"""\n)', "", data, flags = re.S)
 	#
 #
 
