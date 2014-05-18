@@ -180,78 +180,39 @@ Adds an extension to the list of ASCII file types.
 		self.filetype_ascii_list.append(extension)
 	#
 
-	def _data_parse(self, data, file_pathname, file_name):
+	def _change_match(self, tag_definition, data, tag_position, data_position, tag_end_position):
 	#
 		"""
-Parse the given content.
+Change data according to the matched tag.
 
+:param tag_definition: Matched tag definition
 :param data: Data to be parsed
-:param file_pathname: File path
-:param file_name: File name
+:param tag_position: Tag starting position
+:param data_position: Data starting position
+:param tag_end_position: Starting position of the closing tag
 
-:return: (str) Filtered data
+:return: (str) Converted data
 :since:  v0.1.00
 		"""
 
-		# global: _PY_STR, _PY_UNICODE_TYPE
-		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._data_parse(data)- (#echo(__LINE__)#)")
-
-		_return = data.replace("#" + "echo(__FILE__)#", file_name)
-		_return = _return.replace("#" + "echo(__FILEPATH__)#", file_pathname)
-
-		if (_return.find("#" + "echo(__LINE__)#") > -1):
-		#
-			data = re.split("\r\n|\r|\n", _return)
-			line = 0
-
-			for result in data:
-			#
-				data[line] = result.replace("#" + "echo(__LINE__)#", str(line + 1))
-				line += 1
-			#
-
-			_return = "\n".join(data)
-		#
-
-		result_list = re.findall("#" + "echo\\(((?!_)\\w+)\\)#", _return)
-
-		if (len(result_list)):
-		#
-			matched_list = [ ]
-
-			for result in result_list:
-			#
-				if (result not in matched_list):
-				#
-					if (_PY_UNICODE_TYPE != str and type(result) == _PY_UNICODE_TYPE): result = _PY_STR(result, "utf-8")
-					value = self._get_variable(result)
-
-					if (value == None): _return = _return.replace("#" + "echo({0})#".format(result), result)
-					else: _return = _return.replace("#" + "echo({0})#".format(result), value)
-
-					matched_list.append(result)
-				#
-			#
-		#
-
-		return _return
+		raise RuntimeError("Not implemented")
 	#
 
-	def _data_remove_dev_comments(self, data):
+	def _check_match(self, data):
 	#
 		"""
-Remove all development comments from the content.
+Check if a possible tag match is a false positive.
 
-:param data: Data to be parsed
+:param data: Data starting with the possible tag
 
-:return: (str) Filtered data
+:return: (tuple) Matched tag definition; None if false positive
 :since:  v0.1.00
 		"""
 
-		return data
+		return None
 	#
 
-	def _dir_create(self, dir_path, timeout = -1):
+	def _create_dir(self, dir_path, timeout = -1):
 	#
 		"""
 Creates a directory (or returns the status of is_writable if it exists).
@@ -267,7 +228,7 @@ Use slashes - even on Microsoft(R) Windows(R) machines.
 		# global: _PY_STR, _PY_UNICODE_TYPE
 		if (_PY_UNICODE_TYPE != str and type(dir_path) == _PY_UNICODE_TYPE): dir_path = _PY_STR(dir_path, "utf-8")
 
-		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._dir_create({0}, {1:d})- (#echo(__LINE__)#)".format(dir_path, timeout))
+		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._create_dir({0}, {1:d})- (#echo(__LINE__)#)".format(dir_path, timeout))
 
 		dir_path = re.sub("\\/$", "", dir_path)
 		dir_path_os = path.normpath(dir_path)
@@ -289,7 +250,7 @@ Use slashes - even on Microsoft(R) Windows(R) machines.
 			#
 				dir_list.pop()
 				dir_basepath = "/".join(dir_list)
-				is_writable = self._dir_create(dir_basepath)
+				is_writable = self._create_dir(dir_basepath)
 			#
 
 			if (is_writable and time() < timeout_time):
@@ -302,127 +263,6 @@ Use slashes - even on Microsoft(R) Windows(R) machines.
 					_return = os.access(dir_path_os, os.W_OK)
 				#
 				except IOError: pass
-			#
-		#
-
-		return _return
-	#
-
-	def _file_parse(self, file_pathname):
-	#
-		"""
-Handle the given file and call the content parse method.
-
-:param file_pathname: Path to the requested file
-
-:return: (bool) True on success
-:since:  v0.1.00
-		"""
-
-		# global: _PY_BYTES, _PY_BYTES_TYPE, _PY_STR, _PY_UNICODE_TYPE
-		if (_PY_UNICODE_TYPE != str and type(file_pathname) == _PY_UNICODE_TYPE): file_pathname = _PY_STR(file_pathname, "utf-8")
-
-		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._file_parse({0})- (#echo(__LINE__)#)".format(file_pathname))
-
-		_return = True
-
-		file_ext = path.splitext(file_pathname)[1][1:]
-		file_basename = path.basename(file_pathname)
-		file_object = File(self.umask, self.chmod_files, self.timeout_retries, self.event_handler)
-		file_text_mode = False
-
-		if (len(file_ext) > 0 and file_ext in self.filetype_ascii_list): file_text_mode = True
-		elif (len(file_basename) > 0): file_text_mode = file_basename in self.filetype_ascii_list
-
-		if (
-			(file_text_mode and file_object.open(file_pathname, True, "r")) or
-			file_object.open(file_pathname, True, "rb")
-		):
-		#
-			file_content = file_object.read()
-			file_object.close()
-		#
-		else: file_content = None
-
-		file_pathname = re.sub("^{0}".format(re.escape(self.output_strip_prefix)), "", file_pathname)
-
-		if (file_pathname in self.parser_pickle):
-		#
-			if (
-				(file_text_mode and file_object.open(self.output_path + file_pathname, True, "r")) or
-				file_object.open(self.output_path + file_pathname, True, "rb")
-			):
-			#
-				file_old_content = file_object.read()
-				file_object.close()
-
-				if (type(file_old_content) != _PY_BYTES_TYPE): file_old_content = _PY_BYTES(file_old_content, "utf-8")
-				file_old_content_md5 = hashlib.md5(file_old_content).hexdigest()
-			#
-			else: file_old_content_md5 = None
-
-			if (file_old_content_md5 != None and file_old_content_md5 != self.parser_pickle[file_pathname]):
-			#
-				_return = False
-				sys.stdout.write("has been changed ... ")
-			#
-		#
-
-		if (_return):
-		#
-			if (file_content == None):
-			#
-				file_content = ""
-				_return = self._file_write("", self.output_path + file_pathname)
-			#
-			elif (file_text_mode):
-			#
-				file_content = self._data_parse(file_content, file_pathname, file_basename)
-				_return = self._file_write(file_content, self.output_path + file_pathname, "w+")
-			#
-			else: _return = self._file_write(file_content, self.output_path + file_pathname)
-
-			if (type(file_content) != _PY_BYTES_TYPE): file_content = _PY_BYTES(file_content, "utf-8")
-			if (_return): self.parser_pickle[file_pathname] = hashlib.md5(file_content).hexdigest()
-		#
-
-		return _return
-	#
-
-	def _file_write(self, file_content, file_pathname, file_mode = "w+b"):
-	#
-		"""
-Write the given file to the defined location. Create subdirectories if
-needed.
-
-:param file_content: Parsed content
-:param file_pathname: Path to the output file
-:param file_mode: Filemode to use
-
-:return: (bool) True on success
-:since:  v0.1.00
-		"""
-
-		# global: _PY_STR, _PY_UNICODE_TYPE
-		if (_PY_UNICODE_TYPE != str):
-		#
-			if (type(file_pathname) == _PY_UNICODE_TYPE): file_pathname = _PY_STR(file_pathname, "utf-8")
-			if (type(file_mode) == _PY_UNICODE_TYPE): file_mode = _PY_STR(file_mode, "utf-8")
-		#
-
-		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._file_write(file_content, {0}, {1})- (#echo(__LINE__)#)".format(file_pathname, file_mode))
-
-		dir_path = path.dirname(file_pathname)
-		_return = False
-
-		if (len(dir_path) < 1 or self._dir_create(dir_path)):
-		#
-			file_object = File(self.umask, self.chmod_files, self.timeout_retries, self.event_handler)
-
-			if (file_object.open(file_pathname, False, file_mode)):
-			#
-				_return = file_object.write(file_content)
-				file_object.close()
 			#
 		#
 
@@ -534,7 +374,7 @@ Parse and rewrite all directories and files given as include definitions.
 
 		if ((self.workdir_rescan) and len(self.dir_list) > 0 and len(self.filetype_list) > 0):
 		#
-			self._workdir_scan()
+			self._scan_workdir()
 			self.workdir_rescan = False
 		#
 
@@ -551,7 +391,7 @@ Parse and rewrite all directories and files given as include definitions.
 
 				sys.stdout.write(">>> Processing {0} ... ".format(_file))
 
-				if (self._file_parse(_file)): sys.stdout.write("done\n")
+				if (self._parse_file(_file)): sys.stdout.write("done\n")
 				else: sys.stdout.write("failed\n")
 			#
 		#
@@ -608,7 +448,7 @@ Parser for "make" tags.
 
 		while (data_position > -1):
 		#
-			tag_definition = self._match_check(data[data_position:])
+			tag_definition = self._check_match(data[data_position:])
 
 			if (tag_definition == None): data_position += len(parser_tag)
 			else:
@@ -644,7 +484,7 @@ Parser for "make" tags.
 
 				if (tag_end_position > -1):
 				#
-					data = self._match_change(
+					data = self._change_match(
 						tag_definition,
 						data,
 						data_position,
@@ -663,36 +503,228 @@ Parser for "make" tags.
 		return data
 	#
 
-	def _match_change(self, tag_definition, data, tag_position, data_position, tag_end_position):
+	def _parse_data(self, data, file_pathname, file_name):
 	#
 		"""
-Change data according to the matched tag.
+Parse the given content.
 
-:param tag_definition: Matched tag definition
 :param data: Data to be parsed
-:param tag_position: Tag starting position
-:param data_position: Data starting position
-:param tag_end_position: Starting position of the closing tag
+:param file_pathname: File path
+:param file_name: File name
 
-:return: (str) Converted data
+:return: (str) Filtered data
 :since:  v0.1.00
 		"""
 
-		raise RuntimeError("Not implemented")
+		# global: _PY_STR, _PY_UNICODE_TYPE
+		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._parse_data(data)- (#echo(__LINE__)#)")
+
+		_return = data.replace("#" + "echo(__FILE__)#", file_name)
+		_return = _return.replace("#" + "echo(__FILEPATH__)#", file_pathname)
+
+		if (_return.find("#" + "echo(__LINE__)#") > -1):
+		#
+			data = re.split("\r\n|\r|\n", _return)
+			line = 0
+
+			for result in data:
+			#
+				data[line] = result.replace("#" + "echo(__LINE__)#", str(line + 1))
+				line += 1
+			#
+
+			_return = "\n".join(data)
+		#
+
+		result_list = re.findall("#" + "echo\\(((?!_)\\w+)\\)#", _return)
+
+		if (len(result_list)):
+		#
+			matched_list = [ ]
+
+			for result in result_list:
+			#
+				if (result not in matched_list):
+				#
+					if (_PY_UNICODE_TYPE != str and type(result) == _PY_UNICODE_TYPE): result = _PY_STR(result, "utf-8")
+					value = self._get_variable(result)
+
+					if (value == None): _return = _return.replace("#" + "echo({0})#".format(result), result)
+					else: _return = _return.replace("#" + "echo({0})#".format(result), value)
+
+					matched_list.append(result)
+				#
+			#
+		#
+
+		return _return
 	#
 
-	def _match_check(self, data):
+	def _parse_file(self, file_pathname):
 	#
 		"""
-Check if a possible tag match is a false positive.
+Handle the given file and call the content parse method.
 
-:param data: Data starting with the possible tag
+:param file_pathname: Path to the requested file
 
-:return: (tuple) Matched tag definition; None if false positive
+:return: (bool) True on success
 :since:  v0.1.00
 		"""
 
-		return None
+		# global: _PY_BYTES, _PY_BYTES_TYPE, _PY_STR, _PY_UNICODE_TYPE
+		if (_PY_UNICODE_TYPE != str and type(file_pathname) == _PY_UNICODE_TYPE): file_pathname = _PY_STR(file_pathname, "utf-8")
+
+		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._parse_file({0})- (#echo(__LINE__)#)".format(file_pathname))
+
+		_return = True
+
+		file_ext = path.splitext(file_pathname)[1][1:]
+		file_basename = path.basename(file_pathname)
+		file_object = File(self.umask, self.chmod_files, self.timeout_retries, self.event_handler)
+		file_text_mode = False
+
+		if (len(file_ext) > 0 and file_ext in self.filetype_ascii_list): file_text_mode = True
+		elif (len(file_basename) > 0): file_text_mode = file_basename in self.filetype_ascii_list
+
+		if (
+			(file_text_mode and file_object.open(file_pathname, True, "r")) or
+			file_object.open(file_pathname, True, "rb")
+		):
+		#
+			file_content = file_object.read()
+			file_object.close()
+		#
+		else: file_content = None
+
+		file_pathname = re.sub("^{0}".format(re.escape(self.output_strip_prefix)), "", file_pathname)
+
+		if (file_pathname in self.parser_pickle):
+		#
+			if (
+				(file_text_mode and file_object.open(self.output_path + file_pathname, True, "r")) or
+				file_object.open(self.output_path + file_pathname, True, "rb")
+			):
+			#
+				file_old_content = file_object.read()
+				file_object.close()
+
+				if (type(file_old_content) != _PY_BYTES_TYPE): file_old_content = _PY_BYTES(file_old_content, "utf-8")
+				file_old_content_md5 = hashlib.md5(file_old_content).hexdigest()
+			#
+			else: file_old_content_md5 = None
+
+			if (file_old_content_md5 != None and file_old_content_md5 != self.parser_pickle[file_pathname]):
+			#
+				_return = False
+				sys.stdout.write("has been changed ... ")
+			#
+		#
+
+		if (_return):
+		#
+			if (file_content == None):
+			#
+				file_content = ""
+				_return = self._write_file("", self.output_path + file_pathname)
+			#
+			elif (file_text_mode):
+			#
+				file_content = self._parse_data(file_content, file_pathname, file_basename)
+				_return = self._write_file(file_content, self.output_path + file_pathname, "w+")
+			#
+			else: _return = self._write_file(file_content, self.output_path + file_pathname)
+
+			if (type(file_content) != _PY_BYTES_TYPE): file_content = _PY_BYTES(file_content, "utf-8")
+			if (_return): self.parser_pickle[file_pathname] = hashlib.md5(file_content).hexdigest()
+		#
+
+		return _return
+	#
+
+	def _remove_data_dev_comments(self, data):
+	#
+		"""
+Remove all development comments from the content.
+
+:param data: Data to be parsed
+
+:return: (str) Filtered data
+:since:  v0.1.00
+		"""
+
+		return data
+	#
+
+	def _scan_workdir(self):
+	#
+		"""
+Scan given directories for files to be parsed.
+
+:since: v0.1.00
+		"""
+
+		# global: _PY_BYTES, _PY_BYTES_TYPE, _PY_STR, _PY_UNICODE_TYPE
+		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._scan_workdir()- (#echo(__LINE__)#)")
+
+		"""
+Create a list of files - we need to scan directories recursively ...
+		"""
+
+		re_content_estripped = re.compile("^{0}".format(re.escape(self.output_strip_prefix)))
+		sys.stdout.write(">> Ready to build file index\n")
+		dir_counter = 0
+
+		while (len(self.dir_list) > dir_counter):
+		#
+			sys.stdout.write(">>> Scanning {0} ... ".format(self.dir_list[dir_counter]))
+			dir_path_os = path.normpath(self.dir_list[dir_counter])
+
+			if (path.isdir(dir_path_os) and os.access(dir_path_os, os.R_OK)):
+			#
+				content_list = os.listdir(dir_path_os)
+
+				for content in content_list:
+				#
+					if (content[0] != "."):
+					#
+						if (self.dir_list[dir_counter].endswith("/")): content_extended = self.dir_list[dir_counter] + content
+						else: content_extended = "{0}/{1}".format(self.dir_list[dir_counter], content)
+
+						content_extended_os = path.normpath(content_extended)
+						content_estripped = re_content_estripped.sub("", content_extended)
+						if (_PY_UNICODE_TYPE != str and type(content_estripped) == _PY_UNICODE_TYPE): content_estripped = _PY_STR(content_estripped, "utf-8")
+
+						if (path.isdir(content_extended_os)):
+						#
+							if (
+								(content not in self.dir_exclude_list) and
+								(content_estripped not in self.dir_exclude_list)
+							): self.dir_list.append(content_extended)
+						#
+						elif (path.isfile(content_extended_os)):
+						#
+							content_ext = path.splitext(content)[1][1:]
+							content_id = content_estripped
+
+							if (type(content_id) != _PY_BYTES_TYPE): content_id = _PY_BYTES(content_id, "utf-8")
+							content_id = hashlib.md5(content_id).hexdigest()
+
+							if (
+								len(content_ext) > 0 and
+								content_ext in self.filetype_list and
+								content not in self.file_exclude_list and
+								content_estripped not in self.file_exclude_list
+							): self.file_dict[content_id] = content_extended
+						#
+					#
+				#
+
+				sys.stdout.write("done\n")
+			#
+			else: sys.stdout.write("failed\n")
+
+			dir_counter += 1
+		#
 	#
 
 	def set_event_handler(self, event_handler = None):
@@ -887,76 +919,44 @@ Define a prefix to be stripped from output paths.
 		elif (self.event_handler != None): self.event_handler.warn("#echo(__FILEPATH__)# -BuilderSkel.set_strip_prefix()- (#echo(__LINE__)#) reports: Given parameter is not a string")
 	#
 
-	def _workdir_scan(self):
+	def _write_file(self, file_content, file_pathname, file_mode = "w+b"):
 	#
 		"""
-Scan given directories for files to be parsed.
+Write the given file to the defined location. Create subdirectories if
+needed.
 
-:since: v0.1.00
+:param file_content: Parsed content
+:param file_pathname: Path to the output file
+:param file_mode: Filemode to use
+
+:return: (bool) True on success
+:since:  v0.1.00
 		"""
 
-		# global: _PY_BYTES, _PY_BYTES_TYPE, _PY_STR, _PY_UNICODE_TYPE
-		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._workdir_scan()- (#echo(__LINE__)#)")
-
-		"""
-Create a list of files - we need to scan directories recursively ...
-		"""
-
-		re_content_estripped = re.compile("^{0}".format(re.escape(self.output_strip_prefix)))
-		sys.stdout.write(">> Ready to build file index\n")
-		dir_counter = 0
-
-		while (len(self.dir_list) > dir_counter):
+		# global: _PY_STR, _PY_UNICODE_TYPE
+		if (_PY_UNICODE_TYPE != str):
 		#
-			sys.stdout.write(">>> Scanning {0} ... ".format(self.dir_list[dir_counter]))
-			dir_path_os = path.normpath(self.dir_list[dir_counter])
-
-			if (path.isdir(dir_path_os) and os.access(dir_path_os, os.R_OK)):
-			#
-				content_list = os.listdir(dir_path_os)
-
-				for content in content_list:
-				#
-					if (content[0] != "."):
-					#
-						if (self.dir_list[dir_counter].endswith("/")): content_extended = self.dir_list[dir_counter] + content
-						else: content_extended = "{0}/{1}".format(self.dir_list[dir_counter], content)
-
-						content_extended_os = path.normpath(content_extended)
-						content_estripped = re_content_estripped.sub("", content_extended)
-						if (_PY_UNICODE_TYPE != str and type(content_estripped) == _PY_UNICODE_TYPE): content_estripped = _PY_STR(content_estripped, "utf-8")
-
-						if (path.isdir(content_extended_os)):
-						#
-							if (
-								(content not in self.dir_exclude_list) and
-								(content_estripped not in self.dir_exclude_list)
-							): self.dir_list.append(content_extended)
-						#
-						elif (path.isfile(content_extended_os)):
-						#
-							content_ext = path.splitext(content)[1][1:]
-							content_id = content_estripped
-
-							if (type(content_id) != _PY_BYTES_TYPE): content_id = _PY_BYTES(content_id, "utf-8")
-							content_id = hashlib.md5(content_id).hexdigest()
-
-							if (
-								len(content_ext) > 0 and
-								content_ext in self.filetype_list and
-								content not in self.file_exclude_list and
-								content_estripped not in self.file_exclude_list
-							): self.file_dict[content_id] = content_extended
-						#
-					#
-				#
-
-				sys.stdout.write("done\n")
-			#
-			else: sys.stdout.write("failed\n")
-
-			dir_counter += 1
+			if (type(file_pathname) == _PY_UNICODE_TYPE): file_pathname = _PY_STR(file_pathname, "utf-8")
+			if (type(file_mode) == _PY_UNICODE_TYPE): file_mode = _PY_STR(file_mode, "utf-8")
 		#
+
+		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._write_file(file_content, {0}, {1})- (#echo(__LINE__)#)".format(file_pathname, file_mode))
+
+		dir_path = path.dirname(file_pathname)
+		_return = False
+
+		if (len(dir_path) < 1 or self._create_dir(dir_path)):
+		#
+			file_object = File(self.umask, self.chmod_files, self.timeout_retries, self.event_handler)
+
+			if (file_object.open(file_pathname, False, file_mode)):
+			#
+				_return = file_object.write(file_content)
+				file_object.close()
+			#
+		#
+
+		return _return
 	#
 #
 
