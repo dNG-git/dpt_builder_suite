@@ -40,7 +40,7 @@ Provides a Javascript "make" environment object.
              Mozilla Public License, v. 2.0
 	"""
 
-	def _data_parse(self, data, file_pathname, file_name):
+	def _parse_data(self, data, file_pathname, file_name):
 	#
 		"""
 Parse the given content.
@@ -53,14 +53,14 @@ Parse the given content.
 :since:  v0.1.00
 		"""
 
-		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -JsBuilder._data_parse(data)- (#echo(__LINE__)#)")
+		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -JsBuilder._parse_data(data)- (#echo(__LINE__)#)")
 
 		if (self._get_variable("debug") == None): data = minify(data, True)
 		if (self._get_variable("js_header") != None): data = "// {0}\n{1}".format(self._get_variable("js_header"), data)
-		return BuilderSkel._data_parse(self, data, file_pathname, file_name)
+		return BuilderSkel._parse_data(self, data, file_pathname, file_name)
 	#
 
-	def _file_write(self, file_content, file_pathname, file_mode = "w+b"):
+	def _write_file(self, file_content, file_pathname, file_mode = "w+b"):
 	#
 		"""
 Write the given file to the defined location. Create subdirectories if
@@ -80,7 +80,7 @@ needed.
 			if (len(file_ext) > 0): file_pathname = "{0}.min{1}".format(file_pathname, file_ext)
 		#
 
-		return BuilderSkel._file_write(self, file_content, file_pathname, file_mode = "w+b")
+		return BuilderSkel._write_file(self, file_content, file_pathname, file_mode = "w+b")
 	#
 #
 
