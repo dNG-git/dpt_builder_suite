@@ -138,14 +138,13 @@ Executes registered callbacks for the active application.
 
 				if (py_builder == None):
 				#
-					py_builder = PyBuilder(
-						target,
-						args.include,
-						target['make_output_path'],
-						args.filetype,
-						default_chmod_files = args.output_files_chmod,
-						default_chmod_dirs = args.output_dirs_chmod
-					)
+					py_builder = PyBuilder(target,
+					                       args.include,
+					                       target['make_output_path'],
+					                       args.filetype,
+					                       default_chmod_files = args.output_files_chmod,
+					                       default_chmod_dirs = args.output_dirs_chmod
+					                      )
 				#
 				else: py_builder.set_new_target(target, args.include, target['make_output_path'], args.filetype)
 

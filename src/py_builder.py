@@ -59,18 +59,17 @@ Constructor __init__(PyBuilder)
 :since: v0.1.00
 		"""
 
-		BuilderSkel.__init__(
-			self,
-			parameters,
-			include,
-			output_path,
-			filetype,
-			default_umask,
-			default_chmod_files,
-			default_chmod_dirs,
-			timeout_retries,
-			event_handler
-		)
+		BuilderSkel.__init__(self,
+		                     parameters,
+		                     include,
+		                     output_path,
+		                     filetype,
+		                     default_umask,
+		                     default_chmod_files,
+		                     default_chmod_dirs,
+		                     timeout_retries,
+		                     event_handler
+		                    )
 
 		self.dir_exclude_list = [ "__pycache__" ]
 	#
@@ -109,7 +108,7 @@ Change data according to the matched tag.
 				else: _return += data[data_position:tag_end_position].replace('"\\"', '"""')
 			#
 
-			if ((tag_end == '#\\n"""') or (tag_end == ':#\\n"""')): data_closed = re.sub("^\n", "", data_closed)
+			if (tag_end == '#\\n"""' or tag_end == ':#\\n"""'): data_closed = re.sub("^\n", "", data_closed)
 		#
 		elif (tag_definition[0] == '"""#ifndef'):
 		#
@@ -125,7 +124,7 @@ Change data according to the matched tag.
 				else: _return += data[data_position:tag_end_position].replace('"\\"', '"""')
 			#
 
-			if ((tag_end == '#\\n"""') or (tag_end == ':#\\n"""')): data_closed = re.sub("^\n", "", data_closed)
+			if (tag_end == '#\\n"""' or tag_end == ':#\\n"""'): data_closed = re.sub("^\n", "", data_closed)
 		#
 
 		_return += data_closed
