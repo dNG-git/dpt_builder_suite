@@ -138,14 +138,13 @@ Executes registered callbacks for the active application.
 
 				if (js_builder == None):
 				#
-					js_builder = JsBuilder(
-						target,
-						args.include,
-						target['make_output_path'],
-						args.filetype,
-						default_chmod_files = args.output_files_chmod,
-						default_chmod_dirs = args.output_dirs_chmod
-					)
+					js_builder = JsBuilder(target,
+					                       args.include,
+					                       target['make_output_path'],
+					                       args.filetype,
+					                       default_chmod_files = args.output_files_chmod,
+					                       default_chmod_dirs = args.output_dirs_chmod
+					                      )
 				#
 				else: js_builder.set_new_target(target, args.include, target['make_output_path'], args.filetype)
 

@@ -74,7 +74,7 @@ needed.
 :since:  v0.1.00
 		"""
 
-		if ((self._get_variable("debug") == None) and (self._get_variable("js_min_filenames") != None)):
+		if (self._get_variable("debug") == None and self._get_variable("js_min_filenames") != None):
 		#
 			( file_pathname, file_ext ) = path.splitext(file_pathname)
 			if (len(file_ext) > 0): file_pathname = "{0}.min{1}".format(file_pathname, file_ext)
