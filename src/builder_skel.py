@@ -400,9 +400,9 @@ Parse and rewrite all directories and files given as include definitions.
 		#
 			sys.stdout.write(">> Writing make.py.pickle\n")
 
-			_file = open(path.normpath(self.parameters['make_pickle_path']
-			                           if ("make_pickle_path" in self.parameters) else
-			                           "{0}/make.py.pickle".format(self.output_path)
+			_file = open(path.normpath(self.parameters.get("make_pickle_path",
+			                                               "{0}/make.py.pickle".format(self.output_path)
+			                                              )
 			                          ),
 			             "wb"
 			            )
@@ -844,10 +844,7 @@ Sets a new target for processing.
 
 		sys.stdout.write("> New output target {0}\n".format(output_path))
 
-		make_pickle_path = path.normpath(self.parameters['make_pickle_path']
-		                                 if ("make_pickle_path" in self.parameters) else
-		                                 "{0}/make.py.pickle".format(output_path)
-		                                )
+		make_pickle_path = path.normpath(self.parameters.get("make_pickle_path", "{0}/make.py.pickle".format(output_path)))
 
 		if (os.access(make_pickle_path, os.W_OK)):
 		#
