@@ -4,8 +4,6 @@
 """
 builderSkel
 Common skeleton for builder tools
-"""
-"""n// NOTE
 ----------------------------------------------------------------------------
 (C) direct Netware Group - All rights reserved
 http://www.direct-netware.de/redirect.py?builderSkel
@@ -18,8 +16,7 @@ http://www.direct-netware.de/redirect.py?licenses;mpl2
 ----------------------------------------------------------------------------
 #echo(builderSkelVersion)#
 #echo(__FILEPATH__)#
-----------------------------------------------------------------------------
-NOTE_END //n"""
+"""
 
 # pylint: disable=import-error,invalid-name,undefined-variable
 
@@ -121,7 +118,7 @@ Files to be ignored while scanning
 		"""
 Filetype extensions to be parsed
 		"""
-		self.filetype_ascii_list = [ "txt", "js", "php", "py", "xml" ]
+		self.filetype_ascii_list = [ "css", "js", "php", "py", "scss", "txt", "xml" ]
 		"""
 Filetype extensions to be parsed
 		"""

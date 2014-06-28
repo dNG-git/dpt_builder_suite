@@ -2,10 +2,6 @@
 ##j## BOF
 
 """
-Dummy direct_file module
-"""
-"""n// NOTE
-----------------------------------------------------------------------------
 builderSkel
 Common skeleton for builder tools
 ----------------------------------------------------------------------------
@@ -19,9 +15,8 @@ obtain one at http://mozilla.org/MPL/2.0/.
 http://www.direct-netware.de/redirect.py?licenses;mpl2
 ----------------------------------------------------------------------------
 #echo(builderSkelVersion)#
-builderSkel/#echo(__FILEPATH__)#
-----------------------------------------------------------------------------
-NOTE_END //n"""
+#echo(__FILEPATH__)#
+"""
 
 class direct_file (object): pass
 
