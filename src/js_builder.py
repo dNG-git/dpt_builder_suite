@@ -4,8 +4,6 @@
 """
 jsBuilder
 Build JavaScript code for different release targets
-"""
-"""n// NOTE
 ----------------------------------------------------------------------------
 (C) direct Netware Group - All rights reserved
 http://www.direct-netware.de/redirect.py?js;builder
@@ -18,8 +16,7 @@ http://www.direct-netware.de/redirect.py?licenses;mpl2
 ----------------------------------------------------------------------------
 #echo(jsBuilderVersion)#
 #echo(__FILEPATH__)#
-----------------------------------------------------------------------------
-NOTE_END //n"""
+"""
 
 from os import path
 from slimit.minifier import minify
@@ -55,7 +52,11 @@ Parse the given content.
 
 		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -JsBuilder._parse_data(data)- (#echo(__LINE__)#)")
 
-		if (self._get_variable("debug") == None): data = minify(data, True)
+		if (self._get_variable("js_min_filenames") != None
+		    and file_pathname[-7:].lower() != ".min.js"
+		    and self._get_variable("debug") == None
+		   ): data = minify(data, True)
+
 		if (self._get_variable("js_header") != None): data = "// {0}\n{1}".format(self._get_variable("js_header"), data)
 		return BuilderSkel._parse_data(self, data, file_pathname, file_name)
 	#
@@ -74,13 +75,16 @@ needed.
 :since:  v0.1.00
 		"""
 
-		if (self._get_variable("debug") == None and self._get_variable("js_min_filenames") != None):
+		if (self._get_variable("js_min_filenames") != None
+		    and file_pathname[-7:].lower() != ".min.js"
+		    and self._get_variable("debug") == None
+		   ):
 		#
 			( file_pathname, file_ext ) = path.splitext(file_pathname)
 			if (len(file_ext) > 0): file_pathname = "{0}.min{1}".format(file_pathname, file_ext)
 		#
 
-		return BuilderSkel._write_file(self, file_content, file_pathname, file_mode = "w+b")
+		return BuilderSkel._write_file(self, file_content, file_pathname, file_mode)
 	#
 #
 
