@@ -2,11 +2,11 @@
 ##j## BOF
 
 """
-builderSkel
-Common skeleton for builder tools
+file.py
+Working with a file abstraction layer
 ----------------------------------------------------------------------------
 (C) direct Netware Group - All rights reserved
-http://www.direct-netware.de/redirect.py?builderSkel
+http://www.direct-netware.de/redirect.py?py;file
 
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can
@@ -14,10 +14,9 @@ obtain one at http://mozilla.org/MPL/2.0/.
 ----------------------------------------------------------------------------
 http://www.direct-netware.de/redirect.py?licenses;mpl2
 ----------------------------------------------------------------------------
-#echo(builderSkelVersion)#
-#echo(__FILEPATH__)#
+Sphinx dummy file
 """
 
-class direct_file (object): pass
+class File(object): pass
 
 ##j## EOF
