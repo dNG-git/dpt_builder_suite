@@ -15,8 +15,8 @@
 import os
 import sys
 
-sys.path.append("src")
 sys.path.append("_developer/sphinx.py/_dummy_src")
+sys.path.append("src")
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
