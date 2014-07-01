@@ -398,7 +398,7 @@ Parse and rewrite all directories and files given as include definitions.
 			sys.stdout.write(">> Writing make.py.pickle\n")
 
 			_file = open(path.normpath(self.parameters.get("make_pickle_path",
-			                                               "{0}/make.py.pickle".format(self.output_path)
+			                                               path.join(self.output_path, "make.py.pickle")
 			                                              )
 			                          ),
 			             "wb"
@@ -841,7 +841,7 @@ Sets a new target for processing.
 
 		sys.stdout.write("> New output target {0}\n".format(output_path))
 
-		make_pickle_path = path.normpath(self.parameters.get("make_pickle_path", "{0}/make.py.pickle".format(output_path)))
+		make_pickle_path = path.normpath(self.parameters.get("make_pickle_path", path.join(output_path, "make.py.pickle")))
 
 		if (os.access(make_pickle_path, os.W_OK)):
 		#
