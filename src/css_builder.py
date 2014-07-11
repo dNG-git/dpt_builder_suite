@@ -20,7 +20,7 @@ http://www.direct-netware.de/redirect.py?licenses;mpl2
 
 from os import path
 from rcssmin import cssmin
-from scss import parser as ScssParser
+from scss import config, Scss
 
 from builder_skel import BuilderSkel
 
@@ -53,8 +53,11 @@ Parse the given content.
 
 		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -CssBuilder._parse_data(data)- (#echo(__LINE__)#)")
 
-		( _, file_ext ) = path.splitext(file_name)
-		if (file_ext.lower() == "scss"): data = ScssParser.parse(data)
+		if (path.splitext(file_name)[-1].lower() == ".scss"):
+		#
+			config.STATIC_URL = ""
+			data = Scss().compile(data)
+		#
 
 		if (self._get_variable("css_min_filenames") != None
 		    and file_name[-8:].lower() != ".min.css"
@@ -85,7 +88,7 @@ needed.
 		   ):
 		#
 			( file_pathname, file_ext ) = path.splitext(file_pathname)
-			if (file_ext.lower() == "scss"): file_ext = "css"
+			if (file_ext.lower() == ".scss"): file_ext = ".css"
 
 			if (len(file_ext) > 0): file_pathname = "{0}.min{1}".format(file_pathname, file_ext)
 		#
