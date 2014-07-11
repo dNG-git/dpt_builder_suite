@@ -1,7 +1,7 @@
-_extras
 __py*
 .*
 *.pyc
-builder.js.*
-makefile.*
 nbproject
+/_extras
+/builder.js.*
+/makefile.*
