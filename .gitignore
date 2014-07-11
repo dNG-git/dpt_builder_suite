@@ -1,7 +1,7 @@
-_extras
 __py*
 .*
 *.pyc
-builder_skel.*
-makefile.*
 nbproject
+/_extras
+/builder_skel.*
+/makefile.*
