@@ -355,6 +355,34 @@ Gets the variable content with the given name.
 		return self.parameters.get(name, None)
 	#
 
+	def _is_excluded_dir(self, dirname):
+	#
+		"""
+Returns true if the directory should be excluded.
+
+:param dirname: Directory name
+
+:return: (bool) True if excluded
+:since:  v0.1.00
+		"""
+
+		return (dirname in self.dir_exclude_list)
+	#
+
+	def _is_excluded_file(self, filename):
+	#
+		"""
+Returns true if the file should be excluded.
+
+:param filename: File name
+
+:return: (bool) True if excluded
+:since:  v0.1.00
+		"""
+
+		return (filename in self.file_exclude_list)
+	#
+
 	def make_all(self):
 	#
 		"""
@@ -690,8 +718,8 @@ Create a list of files - we need to scan directories recursively ...
 
 						if (path.isdir(content_extended_os)):
 						#
-							if ((content not in self.dir_exclude_list)
-							    and (content_estripped not in self.dir_exclude_list)
+							if ((not self._is_excluded_dir(content))
+							    and (not self._is_excluded_dir(content_estripped))
 							   ): self.dir_list.append(content_extended)
 						#
 						elif (path.isfile(content_extended_os)):
@@ -704,8 +732,8 @@ Create a list of files - we need to scan directories recursively ...
 
 							if (len(content_ext) > 0
 							    and content_ext in self.filetype_list
-							    and content not in self.file_exclude_list
-							    and content_estripped not in self.file_exclude_list
+							    and (not self._is_excluded_file(content))
+							    and (not self._is_excluded_file(content_estripped))
 							   ): self.file_dict[content_id] = content_extended
 						#
 					#
