@@ -96,15 +96,20 @@ needed.
 :since:  v0.1.00
 		"""
 
-		if (self._get_variable("css_min_filenames") != None
-		    and file_pathname[-8:].lower() != ".min.css"
-		    and self._get_variable("debug") == None
-		   ):
+		if (file_pathname[-8:].lower() != ".min.css"):
 		#
-			( file_pathname, file_ext ) = path.splitext(file_pathname)
-			if (file_ext.lower() == ".scss"): file_ext = ".css"
+			( file_pathname_no_ext, file_ext ) = path.splitext(file_pathname)
 
-			if (len(file_ext) > 0): file_pathname = "{0}.min{1}".format(file_pathname, file_ext)
+			if (file_ext.lower() == ".scss"):
+			#
+				file_ext = ".css"
+				file_pathname = file_pathname_no_ext + file_ext
+			#
+
+			if (self._get_variable("css_min_filenames") != None
+			    and self._get_variable("debug") == None
+			    and len(file_ext) > 0
+			   ): file_pathname = "{0}.min{1}".format(file_pathname_no_ext, file_ext)
 		#
 
 		return BuilderSkel._write_file(self, file_content, file_pathname, file_mode)
