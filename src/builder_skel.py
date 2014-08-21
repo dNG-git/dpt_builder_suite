@@ -6,13 +6,13 @@ builderSkel
 Common skeleton for builder tools
 ----------------------------------------------------------------------------
 (C) direct Netware Group - All rights reserved
-http://www.direct-netware.de/redirect.py?builderSkel
+https://www.direct-netware.de/redirect?py;builder_skel
 
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can
 obtain one at http://mozilla.org/MPL/2.0/.
 ----------------------------------------------------------------------------
-http://www.direct-netware.de/redirect.py?licenses;mpl2
+https://www.direct-netware.de/redirect?licenses;mpl2
 ----------------------------------------------------------------------------
 #echo(builderSkelVersion)#
 #echo(__FILEPATH__)#
@@ -54,13 +54,12 @@ class BuilderSkel(object):
 	"""
 Provides a Python "make" environment skeleton.
 
-:author:     direct Netware Group
-:copyright:  direct Netware Group - All rights reserved
-:package:    ext_core
-:subpackage: builderSkel
-:since:      v0.1.00
-:license:    http://www.direct-netware.de/redirect.py?licenses;mpl2
-             Mozilla Public License, v. 2.0
+:author:    direct Netware Group
+:copyright: direct Netware Group - All rights reserved
+:package:   builderSkel
+:since:     v0.1.00
+:license:   https://www.direct-netware.de/redirect?licenses;mpl2
+            Mozilla Public License, v. 2.0
 	"""
 
 	# pylint: disable=unused-argument
@@ -118,7 +117,7 @@ Files to be ignored while scanning
 		"""
 Filetype extensions to be parsed
 		"""
-		self.filetype_ascii_list = [ "css", "js", "php", "py", "scss", "txt", "xml" ]
+		self.filetype_ascii_list = [ "css", "js", "php", "py", "scss", "sql", "txt", "xml" ]
 		"""
 Filetype extensions to be parsed
 		"""
