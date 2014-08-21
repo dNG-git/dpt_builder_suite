@@ -4,13 +4,13 @@ cssBuilder
 Build minimized CSS code for different release targets
 
 (C) direct Netware Group - All rights reserved
-http://www.direct-netware.de/redirect.py?css;builder
+https://www.direct-netware.de/redirect?css;builder
 
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can
 obtain one at http://mozilla.org/MPL/2.0/.
 
-http://www.direct-netware.de/redirect.py?licenses;mpl2
+https://www.direct-netware.de/redirect?licenses;mpl2
 // -->
 <project name="cssBuilder" default="compile.src">
 	<dirname property="cssBuilder.basedir" file="${ant.file}" />
