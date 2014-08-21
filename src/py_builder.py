@@ -6,13 +6,13 @@ pyBuilder
 Build Python code for different release targets
 ----------------------------------------------------------------------------
 (C) direct Netware Group - All rights reserved
-http://www.direct-netware.de/redirect.py?py;builder
+https://www.direct-netware.de/redirect?py;builder
 
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can
 obtain one at http://mozilla.org/MPL/2.0/.
 ----------------------------------------------------------------------------
-http://www.direct-netware.de/redirect.py?licenses;mpl2
+https://www.direct-netware.de/redirect?licenses;mpl2
 ----------------------------------------------------------------------------
 #echo(pyBuilderVersion)#
 #echo(__FILEPATH__)#
@@ -27,13 +27,12 @@ class PyBuilder(BuilderSkel):
 	"""
 Provides a Python "make" environment object.
 
-:author:     direct Netware Group
-:copyright:  direct Netware Group - All rights reserved
-:package:    ext_core
-:subpackage: pyBuilder
-:since:      v0.1.00
-:license:    http://www.direct-netware.de/redirect.py?licenses;mpl2
-             Mozilla Public License, v. 2.0
+:author:    direct Netware Group
+:copyright: direct Netware Group - All rights reserved
+:package:   pyBuilder
+:since:     v0.1.00
+:license:   https://www.direct-netware.de/redirect?licenses;mpl2
+            Mozilla Public License, v. 2.0
 	"""
 
 	def __init__(self, parameters, include, output_path, filetype, default_umask = None, default_chmod_files = None, default_chmod_dirs = None, timeout_retries = 5, event_handler = None):
