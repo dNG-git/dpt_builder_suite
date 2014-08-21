@@ -6,13 +6,13 @@ jsBuilder
 Build JavaScript code for different release targets
 ----------------------------------------------------------------------------
 (C) direct Netware Group - All rights reserved
-http://www.direct-netware.de/redirect.py?js;builder
+https://www.direct-netware.de/redirect?js;builder
 
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can
 obtain one at http://mozilla.org/MPL/2.0/.
 ----------------------------------------------------------------------------
-http://www.direct-netware.de/redirect.py?licenses;mpl2
+https://www.direct-netware.de/redirect?licenses;mpl2
 ----------------------------------------------------------------------------
 #echo(jsBuilderVersion)#
 #echo(__FILEPATH__)#
@@ -28,13 +28,12 @@ class JsBuilder(BuilderSkel):
 	"""
 Provides a Javascript "make" environment object.
 
-:author:     direct Netware Group
-:copyright:  direct Netware Group - All rights reserved
-:package:    ext_core
-:subpackage: jsBuilder
-:since:      v1.0.0
-:license:    http://www.direct-netware.de/redirect.py?licenses;mpl2
-             Mozilla Public License, v. 2.0
+:author:    direct Netware Group
+:copyright: direct Netware Group - All rights reserved
+:package:   jsBuilder
+:since:     v1.0.0
+:license:   https://www.direct-netware.de/redirect?licenses;mpl2
+            Mozilla Public License, v. 2.0
 	"""
 
 	def _parse_data(self, data, file_pathname, file_name):

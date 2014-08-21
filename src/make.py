@@ -6,13 +6,13 @@ jsBuilder
 Build Javascript code for different release targets
 ----------------------------------------------------------------------------
 (C) direct Netware Group - All rights reserved
-http://www.direct-netware.de/redirect.py?js;builder
+https://www.direct-netware.de/redirect?js;builder
 
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can
 obtain one at http://mozilla.org/MPL/2.0/.
 ----------------------------------------------------------------------------
-http://www.direct-netware.de/redirect.py?licenses;mpl2
+https://www.direct-netware.de/redirect?licenses;mpl2
 ----------------------------------------------------------------------------
 #echo(jsBuilderVersion)#
 #echo(__FILEPATH__)#
@@ -40,7 +40,7 @@ class Make(object):
 :copyright: direct Netware Group - All rights reserved
 :package:   jsBuilder
 :since:     v0.1.00
-:license:   http://www.direct-netware.de/redirect.py?licenses;mpl2
+:license:   https://www.direct-netware.de/redirect?licenses;mpl2
             Mozilla Public License, v. 2.0
 	"""
 
@@ -68,7 +68,7 @@ ArgumentParser instance
 		self.arg_parser.add_argument("--exclude_files", action = "store", type = str, dest = "exclude_files")
 		self.arg_parser.add_argument("--strip_prefix", action = "store", type = str, dest = "strip_prefix")
 
-		self.arg_parser.add_argument("-v", "--version", action="version", version="http://www.direct-netware.de/redirect.py?js;builder")
+		self.arg_parser.add_argument("-v", "--version", action = "version", version = "https://www.direct-netware.de/redirect?js;builder")
 	#
 
 	def run(self):
