@@ -6,13 +6,13 @@ cssBuilder
 Build minimized CSS code for different release targets
 ----------------------------------------------------------------------------
 (C) direct Netware Group - All rights reserved
-http://www.direct-netware.de/redirect.py?css;builder
+https://www.direct-netware.de/redirect?css;builder
 
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can
 obtain one at http://mozilla.org/MPL/2.0/.
 ----------------------------------------------------------------------------
-http://www.direct-netware.de/redirect.py?licenses;mpl2
+https://www.direct-netware.de/redirect?licenses;mpl2
 ----------------------------------------------------------------------------
 #echo(cssBuilderVersion)#
 #echo(__FILEPATH__)#
@@ -29,13 +29,12 @@ class CssBuilder(BuilderSkel):
 	"""
 Provides a (R)CSS "make" environment object.
 
-:author:     direct Netware Group
-:copyright:  direct Netware Group - All rights reserved
-:package:    ext_core
-:subpackage: cssBuilder
-:since:      v1.0.0
-:license:    http://www.direct-netware.de/redirect.py?licenses;mpl2
-             Mozilla Public License, v. 2.0
+:author:    direct Netware Group
+:copyright: direct Netware Group - All rights reserved
+:package:   cssBuilder
+:since:     v1.0.0
+:license:   https://www.direct-netware.de/redirect?licenses;mpl2
+            Mozilla Public License, v. 2.0
 	"""
 
 	def _is_excluded_file(self, filename):
