@@ -1,0 +1,7 @@
+__py*
+.*
+*.pyc
+nbproject
+/_extras
+/builder.js.*
+/makefile.*
