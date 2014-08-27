@@ -32,7 +32,7 @@ except ImportError: import md5 as hashlib
 try: import cPickle as pickle
 except ImportError: import pickle
 
-from file import File
+from dNG.data.file import File
 
 try:
 #
