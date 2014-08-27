@@ -4,4 +4,4 @@ __py*
 nbproject
 /_extras
 /builder_suite.*
-/makefile.*
+/make*
