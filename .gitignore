@@ -3,5 +3,5 @@ __py*
 *.pyc
 nbproject
 /_extras
-/builder_skel.*
+/builder_suite.*
 /makefile.*

@@ -1,11 +1,11 @@
 ----------------------------------------------------------------------------
-builderSkel
-Common skeleton for builder tools
+builderSuite
+Build code for different release targets
 ----------------------------------------------------------------------------
 
-The builder skeleton provides a simple source code file parser to rewrite
-parts of the file automatically. This includes mostly but is not limited to
-line numbers in debug log messages and removing development notes.
+The builder suite provides support to rewrite placeholders for debug log
+messages, removing development notes and adding source code conditionally.
+Python, CSS, JavaScript and SCSS are supported.
 
 ----------------------------------------------------------------------------
 Licensing

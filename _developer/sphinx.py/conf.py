@@ -234,7 +234,7 @@ man_pages = [
 texinfo_documents = [
   ( "index", "DevelopersManual", "Developer's Manual",
     "direct Netware Group", "DevelopersManual",
-    "Common skeleton for builder tools",
+    "Build code for different release targets",
     "Miscellaneous" ),
 ]
 

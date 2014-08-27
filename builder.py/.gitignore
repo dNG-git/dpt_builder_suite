@@ -1,7 +1,0 @@
-__py*
-.*
-*.pyc
-nbproject
-/_extras
-/builder.py.*
-/makefile.*
