@@ -2,11 +2,11 @@
 ##j## BOF
 
 """
-builderSkel
-Common skeleton for builder tools
+builderSuite
+Build code for different release targets
 ----------------------------------------------------------------------------
 (C) direct Netware Group - All rights reserved
-https://www.direct-netware.de/redirect?py;builder_skel
+https://www.direct-netware.de/redirect?py;builder_suite
 
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can
@@ -14,7 +14,7 @@ obtain one at http://mozilla.org/MPL/2.0/.
 ----------------------------------------------------------------------------
 https://www.direct-netware.de/redirect?licenses;mpl2
 ----------------------------------------------------------------------------
-#echo(builderSkelVersion)#
+#echo(builderSuiteVersion)#
 #echo(__FILEPATH__)#
 """
 
@@ -23,6 +23,7 @@ from os import path
 from shutil import copyfile
 import os
 
+from dNG.distutils.temporary_directory import TemporaryDirectory
 from .build_mixin import BuildMixin
 
 class InstallData(_install_data, BuildMixin):
@@ -33,7 +34,7 @@ platform-independent data files
 
 :author:    direct Netware Group
 :copyright: direct Netware Group - All rights reserved
-:package:   builderSkel
+:package:   builderSuite
 :since:     v0.1.01
 :license:   https://www.direct-netware.de/redirect?licenses;mpl2
             Mozilla Public License, v. 2.0
@@ -44,7 +45,7 @@ platform-independent data files
 Callbacks to call while executing "install_data".
 	"""
 
-	def _extend_data_files(self, target_path, target_directory):
+	def _extend_data_files(self, target_path):
 	#
 		"""
 Extends the list of tuples for data files based on the content of the given
@@ -55,7 +56,7 @@ target directory.
 :since: v0.1.01
 		"""
 
-		for dirpath, _, filenames in os.walk(path.join(target_path, target_directory)):
+		for dirpath, _, filenames in os.walk(target_path):
 		#
 			files = [ ]
 			for filename in filenames: files.append(path.join(dirpath, filename))
@@ -71,26 +72,26 @@ Build modules, packages, and copy data files to build directory
 :since: v0.1.01
 		"""
 
-		target_directories = [ ]
-
-		for callback_definition in InstallData._install_data_callback_definitions:
+		with TemporaryDirectory(dir = ".") as target_path:
 		#
-			for source_directory in callback_definition['source_directories']:
+			for callback_definition in InstallData._install_data_callback_definitions:
 			#
-				if (os.access(source_directory, os.R_OK | os.X_OK)):
+				for source_directory in callback_definition['source_directories']:
 				#
-					callback_definition['callback'](source_directory, InstallData._build_target_path, InstallData._build_target_parameters)
-					if (source_directory not in target_directories): target_directories.append(source_directory)
+					if (os.access(source_directory, os.R_OK | os.X_OK)):
+					#
+						callback_definition['callback'](source_directory,
+						                                target_path,
+						                                InstallData._build_target_parameters
+						                               )
+					#
 				#
 			#
-		#
 
-		for target_directory in target_directories:
-		#
-			self._extend_data_files(InstallData._build_target_path, target_directory)
-		#
+			self._extend_data_files(target_path)
 
-		_install_data.run(self)
+			_install_data.run(self)
+		#
 	#
 
 	@staticmethod

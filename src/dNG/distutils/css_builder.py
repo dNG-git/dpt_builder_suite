@@ -2,11 +2,11 @@
 ##j## BOF
 
 """
-cssBuilder
-Build minimized CSS code for different release targets
+builderSuite
+Build code for different release targets
 ----------------------------------------------------------------------------
 (C) direct Netware Group - All rights reserved
-https://www.direct-netware.de/redirect?css;builder
+https://www.direct-netware.de/redirect?py;builder_suite
 
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can
@@ -14,7 +14,7 @@ obtain one at http://mozilla.org/MPL/2.0/.
 ----------------------------------------------------------------------------
 https://www.direct-netware.de/redirect?licenses;mpl2
 ----------------------------------------------------------------------------
-#echo(cssBuilderVersion)#
+#echo(builderSuiteVersion)#
 #echo(__FILEPATH__)#
 """
 
@@ -27,11 +27,11 @@ from .builder_skel import BuilderSkel
 class CssBuilder(BuilderSkel):
 #
 	"""
-Provides a (R)CSS "make" environment object.
+Provides a (S)CSS "make" environment object.
 
 :author:    direct Netware Group
 :copyright: direct Netware Group - All rights reserved
-:package:   cssBuilder
+:package:   builderSuite
 :since:     v0.1.01
 :license:   https://www.direct-netware.de/redirect?licenses;mpl2
             Mozilla Public License, v. 2.0

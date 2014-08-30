@@ -32,10 +32,10 @@ sys.path.append(os.getcwd())
 try: import makefile
 except ImportError: pass
 
-class Make(object):
+class MakePy(object):
 #
 	"""
-"Make" is the main application object.
+"MakePy" is the main application object for handling Python files.
 
 :author:    direct Netware Group
 :copyright: direct Netware Group - All rights reserved
@@ -48,7 +48,7 @@ class Make(object):
 	def __init__(self):
 	#
 		"""
-Constructor __init__(Make)
+Constructor __init__(MakePy)
 
 :since: v0.1.01
 		"""
@@ -168,8 +168,8 @@ except NameError: _parameters = { }
 
 try:
 #
-	make = Make()
-	make.run()
+	make_py = MakePy()
+	make_py.run()
 #
 except KeyboardInterrupt: pass
 except Exception:

@@ -2,11 +2,11 @@
 ##j## BOF
 
 """
-cssBuilder
-Build minimized CSS code for different release targets
+builderSuite
+Build code for different release targets
 ----------------------------------------------------------------------------
 (C) direct Netware Group - All rights reserved
-https://www.direct-netware.de/redirect?css;builder
+https://www.direct-netware.de/redirect?py;builder_suite
 
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can
@@ -14,7 +14,7 @@ obtain one at http://mozilla.org/MPL/2.0/.
 ----------------------------------------------------------------------------
 https://www.direct-netware.de/redirect?licenses;mpl2
 ----------------------------------------------------------------------------
-#echo(cssBuilderVersion)#
+#echo(builderSuiteVersion)#
 #echo(__FILEPATH__)#
 """
 
@@ -32,14 +32,14 @@ sys.path.append(os.getcwd())
 try: import makefile
 except ImportError: pass
 
-class Make(object):
+class MakeCss(object):
 #
 	"""
-"Make" is the main application object.
+"MakeCss" is the main application object for (S)CSS files.
 
 :author:    direct Netware Group
 :copyright: direct Netware Group - All rights reserved
-:package:   cssBuilder
+:package:   builderSuite
 :since:     v0.1.00
 :license:   https://www.direct-netware.de/redirect?licenses;mpl2
             Mozilla Public License, v. 2.0
@@ -48,7 +48,7 @@ class Make(object):
 	def __init__(self):
 	#
 		"""
-Constructor __init__(Make)
+Constructor __init__(MakeCss)
 
 :since: v0.1.00
 		"""
@@ -154,7 +154,7 @@ Executes registered callbacks for the active application.
 
 print("""
 ----------------------------------------------------------------------------
-cssBuilder #echo(cssBuilderVersion)#
+builder for (S)CSS #echo(cssBuilderVersion)#
 (C) direct Netware Group - All rights reserved
 ----------------------------------------------------------------------------
 """)
@@ -168,8 +168,8 @@ except NameError: _parameters = { }
 
 try:
 #
-	make = Make()
-	make.run()
+	make_css = MakeCss()
+	make_css.run()
 #
 except KeyboardInterrupt: pass
 except Exception:

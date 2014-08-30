@@ -2,11 +2,11 @@
 ##j## BOF
 
 """
-builderSkel
-Common skeleton for builder tools
+builderSuite
+Build code for different release targets
 ----------------------------------------------------------------------------
 (C) direct Netware Group - All rights reserved
-https://www.direct-netware.de/redirect?py;builder_skel
+https://www.direct-netware.de/redirect?py;builder_suite
 
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can
@@ -14,7 +14,7 @@ obtain one at http://mozilla.org/MPL/2.0/.
 ----------------------------------------------------------------------------
 https://www.direct-netware.de/redirect?licenses;mpl2
 ----------------------------------------------------------------------------
-#echo(builderSkelVersion)#
+#echo(builderSuiteVersion)#
 #echo(__FILEPATH__)#
 """
 
@@ -32,7 +32,7 @@ python.org: Create and return a temporary directory.
 
 :author:    direct Netware Group
 :copyright: direct Netware Group - All rights reserved
-:package:   builderSkel
+:package:   builderSuite
 :since:     v0.1.01
 :license:   https://www.direct-netware.de/redirect?licenses;mpl2
             Mozilla Public License, v. 2.0
@@ -42,6 +42,8 @@ python.org: Create and return a temporary directory.
 		#
 			"""
 Constructor __init__(TemporaryDirectory)
+
+:since: v0.1.01
 			"""
 
 			self.dir = dir
@@ -54,6 +56,8 @@ Constructor __init__(TemporaryDirectory)
 		#
 			"""
 python.org: Enter the runtime context related to this object.
+
+:since: v0.1.01
 			"""
 
 			self.name = mkdtemp(self.suffix, self.prefix, self.dir)
@@ -64,6 +68,8 @@ python.org: Enter the runtime context related to this object.
 		#
 			"""
 python.org: Exit the runtime context related to this object.
+
+:since: v0.1.01
 			"""
 
 			self.cleanup()
@@ -73,6 +79,8 @@ python.org: Exit the runtime context related to this object.
 		#
 			"""
 python.org: The directory can be explicitly cleaned up by calling the cleanup() method.
+
+:since: v0.1.01
 			"""
 
 			rmtree(self.name)

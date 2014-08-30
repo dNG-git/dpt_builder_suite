@@ -25,7 +25,7 @@ from dNG.distutils.js_builder import JsBuilder
 class InstallJsData(object):
 #
 	"""
-python.org: Create and return a temporary directory.
+This class provides the callback for JavaScript files.
 
 :author:    direct Netware Group
 :copyright: direct Netware Group - All rights reserved
@@ -36,12 +36,12 @@ python.org: Create and return a temporary directory.
 	"""
 
 	@staticmethod
-	def callback(source_path, target_path, target_parameters):
+	def callback(source_directory, target_path, target_parameters):
 	#
 		"""
 Callback to be used in "dNG.distutils.InstallData".
 
-:param source_path: Source directory to work in
+:param source_directory: Source directory to work in
 :param target_path: Target directory for build
 :param target_parameters: Target parameters
 
@@ -49,14 +49,14 @@ Callback to be used in "dNG.distutils.InstallData".
 		"""
 
 		js_builder = JsBuilder(target_parameters,
-		                       source_path,
+		                       source_directory,
 		                       target_path,
 		                       "js",
 		                       default_chmod_files = "0644",
 		                       default_chmod_dirs = "0755"
 		                      )
 
-		js_builder.set_strip_prefix(target_path + path.sep)
+		if (target_parameters.get("js_strip_source_directory", False)): js_builder.set_strip_prefix(source_directory + path.sep)
 
 		js_builder.make_all()
 	#

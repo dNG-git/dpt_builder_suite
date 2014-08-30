@@ -29,6 +29,13 @@ class BuildPy(_build_py, BuildMixin):
 #
 	"""
 python.org: Build the .py/.pyc files of a package
+
+:author:    direct Netware Group
+:copyright: direct Netware Group - All rights reserved
+:package:   builderSuite
+:since:     v0.1.01
+:license:   https://www.direct-netware.de/redirect?licenses;mpl2
+            Mozilla Public License, v. 2.0
 	"""
 
 	def _extend_packages(self, target_path):
