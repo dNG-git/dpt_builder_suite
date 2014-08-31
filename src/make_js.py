@@ -25,7 +25,7 @@ import os
 import re
 import sys
 
-from from dNG.distutils.js_builder import JsBuilder
+from dNG.distutils.js_builder import JsBuilder
 
 sys.path.append(os.getcwd())
 
