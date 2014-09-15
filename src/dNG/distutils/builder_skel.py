@@ -281,10 +281,9 @@ Find the starting position of the closing tag.
 		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._find_end_tag_position(data, data_position, tag_end_list)- (#echo(__LINE__)#)")
 		_return = None
 
-		is_valid = True
 		result = -1
 
-		while ((_return == None or _return > -1) and is_valid):
+		while (_return == None or _return > -1):
 		#
 			for tag_end in tag_end_list:
 			#
@@ -296,7 +295,7 @@ Find the starting position of the closing tag.
 			elif (_return > -1):
 			#
 				data_position = _return
-				if (data[_return - 1:_return] != "\\"): is_valid = False
+				if (data[_return - 1:_return] != "\\"): break
 			#
 		#
 
@@ -319,16 +318,14 @@ Find the starting position of the enclosing content.
 		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._find_tag_end_position(data, data_position, tag_end)- (#echo(__LINE__)#)")
 		_return = None
 
-		is_valid = True
-
-		while ((_return == None or _return > -1) and is_valid):
+		while (_return == None or _return > -1):
 		#
 			_return = data.find(tag_end, data_position)
 
 			if (_return > -1):
 			#
 				data_position = _return
-				if (data[_return - 1:_return] != "\\"): is_valid = False
+				if (data[_return - 1:_return] != "\\"): break
 			#
 		#
 
@@ -518,7 +515,7 @@ Parser for "make" tags.
 				else: data_position += tag_length
 			#
 
-			if (nested_check): data_position = -1
+			if (nested_check): break
 			else: data_position = data.find(parser_tag, data_position)
 		#
 
