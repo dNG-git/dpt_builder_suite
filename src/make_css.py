@@ -92,13 +92,13 @@ Executes registered callbacks for the active application.
 				if ("make_output_path" in target): targets.append(target)
 			#
 		#
-		elif (args.output_path != None):
+		elif (args.output_path is not None):
 		#
 			_parameters.update({ "make_output_path": args.output_path })
 			targets.append(_parameters)
 		#
 
-		if (args.filetype == None or args.include == None or len(targets) == 0): self.arg_parser.print_help()
+		if (args.filetype is None or args.include is None or len(targets) == 0): self.arg_parser.print_help()
 		else:
 		#
 			css_builder = None
@@ -106,7 +106,7 @@ Executes registered callbacks for the active application.
 
 			for target in targets:
 			#
-				if (args.define != None):
+				if (args.define is not None):
 				#
 					define_array = args.define.split(",")
 					re_define = re.compile("^(\\w+)\\=(.+)$")
@@ -115,7 +115,7 @@ Executes registered callbacks for the active application.
 					#
 						re_result = re_define.match(define)
 
-						if (re_result == None):
+						if (re_result is None):
 						#
 							define_key = define
 							define_value = True
@@ -130,7 +130,7 @@ Executes registered callbacks for the active application.
 					#
 				#
 
-				if (css_builder == None):
+				if (css_builder is None):
 				#
 					css_builder = CssBuilder(target,
 					                         args.include,
@@ -142,10 +142,10 @@ Executes registered callbacks for the active application.
 				#
 				else: css_builder.set_new_target(target, args.include, target['make_output_path'], args.filetype)
 
-				if (args.exclude != None): css_builder.set_exclude(args.exclude)
-				if (args.exclude_dirs != None): css_builder.set_exclude_dirs(args.exclude_dirs)
-				if (args.exclude_files != None): css_builder.set_exclude_files(args.exclude_files)
-				if (args.strip_prefix != None): css_builder.set_strip_prefix(args.strip_prefix)
+				if (args.exclude is not None): css_builder.set_exclude(args.exclude)
+				if (args.exclude_dirs is not None): css_builder.set_exclude_dirs(args.exclude_dirs)
+				if (args.exclude_files is not None): css_builder.set_exclude_files(args.exclude_files)
+				if (args.strip_prefix is not None): css_builder.set_strip_prefix(args.strip_prefix)
 				css_builder.make_all()
 			#
 		#

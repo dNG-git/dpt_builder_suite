@@ -64,7 +64,7 @@ Parse the given content.
 :since:  v0.1.00
 		"""
 
-		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -CssBuilder._parse_data(data)- (#echo(__LINE__)#)")
+		if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -CssBuilder._parse_data(data)- (#echo(__LINE__)#)")
 
 		if (path.splitext(file_name)[-1].lower() == ".scss"):
 		#
@@ -72,12 +72,12 @@ Parse the given content.
 			data = Scss().compile(data)
 		#
 
-		if (self._get_variable("css_min_filenames") != None
+		if (self._get_variable("css_min_filenames") is not None
 		    and file_name[-8:].lower() != ".min.css"
-		    and self._get_variable("debug") == None
+		    and self._get_variable("debug") is None
 		   ): data = cssmin(data)
 
-		if (self._get_variable("css_header") != None): data = "/* {0} */\n{1}".format(self._get_variable("css_header"), data)
+		if (self._get_variable("css_header") is not None): data = "/* {0} */\n{1}".format(self._get_variable("css_header"), data)
 		return BuilderSkel._parse_data(self, data, file_pathname, file_name)
 	#
 
@@ -105,8 +105,8 @@ needed.
 				file_pathname = file_pathname_no_ext + file_ext
 			#
 
-			if (self._get_variable("css_min_filenames") != None
-			    and self._get_variable("debug") == None
+			if (self._get_variable("css_min_filenames") is not None
+			    and self._get_variable("debug") is None
 			    and len(file_ext) > 0
 			   ): file_pathname = "{0}.min{1}".format(file_pathname_no_ext, file_ext)
 		#

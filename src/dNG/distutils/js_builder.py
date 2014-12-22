@@ -49,14 +49,14 @@ Parse the given content.
 :since:  v0.1.01
 		"""
 
-		if (self.event_handler != None): self.event_handler.debug("#echo(__FILEPATH__)# -JsBuilder._parse_data(data)- (#echo(__LINE__)#)")
+		if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -JsBuilder._parse_data(data)- (#echo(__LINE__)#)")
 
-		if (self._get_variable("js_min_filenames") != None
+		if (self._get_variable("js_min_filenames") is not None
 		    and file_pathname[-7:].lower() != ".min.js"
-		    and self._get_variable("debug") == None
+		    and self._get_variable("debug") is None
 		   ): data = minify(data, True)
 
-		if (self._get_variable("js_header") != None): data = "// {0}\n{1}".format(self._get_variable("js_header"), data)
+		if (self._get_variable("js_header") is not None): data = "// {0}\n{1}".format(self._get_variable("js_header"), data)
 		return BuilderSkel._parse_data(self, data, file_pathname, file_name)
 	#
 
@@ -74,9 +74,9 @@ needed.
 :since:  v0.1.01
 		"""
 
-		if (self._get_variable("js_min_filenames") != None
+		if (self._get_variable("js_min_filenames") is not None
 		    and file_pathname[-7:].lower() != ".min.js"
-		    and self._get_variable("debug") == None
+		    and self._get_variable("debug") is None
 		   ):
 		#
 			( file_pathname, file_ext ) = path.splitext(file_pathname)
