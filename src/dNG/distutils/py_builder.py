@@ -85,7 +85,7 @@ Change data according to the matched tag.
 :since:  v0.1.01
 		"""
 
-		if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -PyBuilder._change_match(tag_definition, data, {0:d}, {1:d}, {2:d})- (#echo(__LINE__)#)".format(tag_position, data_position, tag_end_position))
+		if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -PyBuilder._change_match({0:d}, {1:d}, {2:d})- (#echo(__LINE__)#)".format(tag_position, data_position, tag_end_position))
 		_return = data[:tag_position]
 
 		data_closed = data[self._find_tag_end_position(data, tag_end_position, '"""'):]
@@ -139,7 +139,7 @@ Check if a possible tag match is a false positive.
 :since:  v0.1.01
 		"""
 
-		if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -PyBuilder._check_match(data)- (#echo(__LINE__)#)")
+		if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -PyBuilder._check_match()- (#echo(__LINE__)#)")
 		_return = None
 
 		if (data[:9] == '"""#ifdef'):
@@ -185,7 +185,7 @@ Parse the given content.
 :since:  v0.1.01
 		"""
 
-		if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -PyBuilder._parse_data(data)- (#echo(__LINE__)#)")
+		if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -PyBuilder._parse_data()- (#echo(__LINE__)#)")
 		data = self._parse('"""#', BuilderSkel._parse_data(self, data, file_pathname, file_name))
 
 		if (self._get_variable("dev_comments") is None): return self._remove_data_dev_comments(data)
@@ -203,7 +203,7 @@ Remove all development comments from the content.
 :since:  v0.1.01
 		"""
 
-		if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -PyBuilder._remove_data_dev_comments(data)- (#echo(__LINE__)#)")
+		if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -PyBuilder._remove_data_dev_comments()- (#echo(__LINE__)#)")
 		return re.sub('(\n[ \t]*"""\n---.+?---\n[ \t]*"""\n)|("""\\w//.+?//\\w"""\n)', "", data, flags = re.S)
 	#
 #

@@ -170,7 +170,7 @@ Adds an extension to the list of ASCII file types.
 		"""
 
 		# global: _PY_STR, _PY_UNICODE_TYPE
-		if (_PY_UNICODE_TYPE != str and type(extension) == _PY_UNICODE_TYPE): extension = _PY_STR(extension, "utf-8")
+		if (str is not _PY_UNICODE_TYPE and type(extension) is _PY_UNICODE_TYPE): extension = _PY_STR(extension, "utf-8")
 
 		if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel.add_filetype_ascii({0})- (#echo(__LINE__)#)".format(extension))
 		self.filetype_ascii_list.append(extension)
@@ -222,7 +222,7 @@ Use slashes - even on Microsoft(R) Windows(R) machines.
 		"""
 
 		# global: _PY_STR, _PY_UNICODE_TYPE
-		if (_PY_UNICODE_TYPE != str and type(dir_path) == _PY_UNICODE_TYPE): dir_path = _PY_STR(dir_path, "utf-8")
+		if (str is not _PY_UNICODE_TYPE and type(dir_path) is _PY_UNICODE_TYPE): dir_path = _PY_STR(dir_path, "utf-8")
 
 		if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._create_dir({0}, {1:d})- (#echo(__LINE__)#)".format(dir_path, timeout))
 
@@ -278,7 +278,7 @@ Find the starting position of the closing tag.
 :since:  v0.1.00
 		"""
 
-		if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._find_end_tag_position(data, data_position, tag_end_list)- (#echo(__LINE__)#)")
+		if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._find_end_tag_position()- (#echo(__LINE__)#)")
 		_return = None
 
 		result = -1
@@ -315,7 +315,7 @@ Find the starting position of the enclosing content.
 :since:  v0.1.00
 		"""
 
-		if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._find_tag_end_position(data, data_position, tag_end)- (#echo(__LINE__)#)")
+		if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._find_tag_end_position()- (#echo(__LINE__)#)")
 		_return = None
 
 		while (_return is None or _return > -1):
@@ -345,7 +345,7 @@ Gets the variable content with the given name.
 		"""
 
 		# global: _PY_STR, _PY_UNICODE_TYPE
-		if (_PY_UNICODE_TYPE != str and type(name) == _PY_UNICODE_TYPE): name = _PY_STR(name, "utf-8")
+		if (str is not _PY_UNICODE_TYPE and type(name) is _PY_UNICODE_TYPE): name = _PY_STR(name, "utf-8")
 
 		if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._get_variable({0})- (#echo(__LINE__)#)".format(name))
 		return self.parameters.get(name, None)
@@ -408,7 +408,7 @@ Parse and rewrite all directories and files given as include definitions.
 			for file_id in self.file_dict:
 			#
 				_file = self.file_dict[file_id]
-				if (_PY_UNICODE_TYPE != str and type(_file) == _PY_UNICODE_TYPE): _file = _PY_STR(_file, "utf-8")
+				if (str is not _PY_UNICODE_TYPE and type(_file) is _PY_UNICODE_TYPE): _file = _PY_STR(_file, "utf-8")
 
 				sys.stdout.write(">>> Processing {0} ... ".format(_file))
 
@@ -450,9 +450,9 @@ Parser for "make" tags.
 		"""
 
 		# global: _PY_STR, _PY_UNICODE_TYPE
-		if (_PY_UNICODE_TYPE != str and type(parser_tag) == _PY_UNICODE_TYPE): parser_tag = _PY_STR(parser_tag, "utf-8")
+		if (str is not _PY_UNICODE_TYPE and type(parser_tag) is _PY_UNICODE_TYPE): parser_tag = _PY_STR(parser_tag, "utf-8")
 
-		if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._parse({0}, data, {1:d}, nested_tag_end_position)- (#echo(__LINE__)#)".format(parser_tag, data_position))
+		if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._parse({0}, {1:d})- (#echo(__LINE__)#)".format(parser_tag, data_position))
 
 		if (nested_tag_end_position is None):
 		#
@@ -537,7 +537,7 @@ Parse the given content.
 		"""
 
 		# global: _PY_STR, _PY_UNICODE_TYPE
-		if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._parse_data(data)- (#echo(__LINE__)#)")
+		if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._parse_data()- (#echo(__LINE__)#)")
 
 		_return = data.replace("#" + "echo(__FILE__)#", file_name)
 		_return = _return.replace("#" + "echo(__FILEPATH__)#", file_pathname)
@@ -566,7 +566,7 @@ Parse the given content.
 			#
 				if (result not in matched_list):
 				#
-					if (_PY_UNICODE_TYPE != str and type(result) == _PY_UNICODE_TYPE): result = _PY_STR(result, "utf-8")
+					if (str is not _PY_UNICODE_TYPE and type(result) is _PY_UNICODE_TYPE): result = _PY_STR(result, "utf-8")
 					value = self._get_variable(result)
 
 					if (value is None): _return = _return.replace("#" + "echo({0})#".format(result), result)
@@ -592,7 +592,7 @@ Handle the given file and call the content parse method.
 		"""
 
 		# global: _PY_BYTES, _PY_BYTES_TYPE, _PY_STR, _PY_UNICODE_TYPE
-		if (_PY_UNICODE_TYPE != str and type(file_pathname) == _PY_UNICODE_TYPE): file_pathname = _PY_STR(file_pathname, "utf-8")
+		if (str is not _PY_UNICODE_TYPE and type(file_pathname) is _PY_UNICODE_TYPE): file_pathname = _PY_STR(file_pathname, "utf-8")
 
 		if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._parse_file({0})- (#echo(__LINE__)#)".format(file_pathname))
 
@@ -626,7 +626,7 @@ Handle the given file and call the content parse method.
 				file_old_content = file_object.read()
 				file_object.close()
 
-				if (type(file_old_content) != _PY_BYTES_TYPE): file_old_content = _PY_BYTES(file_old_content, "utf-8")
+				if (type(file_old_content) is not _PY_BYTES_TYPE): file_old_content = _PY_BYTES(file_old_content, "utf-8")
 				file_old_content_md5 = hashlib.md5(file_old_content).hexdigest()
 			#
 			else: file_old_content_md5 = None
@@ -652,7 +652,7 @@ Handle the given file and call the content parse method.
 			#
 			else: _return = self._write_file(file_content, self.output_path + file_pathname)
 
-			if (type(file_content) != _PY_BYTES_TYPE): file_content = _PY_BYTES(file_content, "utf-8")
+			if (type(file_content) is not _PY_BYTES_TYPE): file_content = _PY_BYTES(file_content, "utf-8")
 			if (_return): self.parser_pickle[file_pathname] = hashlib.md5(file_content).hexdigest()
 		#
 
@@ -710,7 +710,7 @@ Create a list of files - we need to scan directories recursively ...
 
 						content_extended_os = path.normpath(content_extended)
 						content_estripped = re_content_estripped.sub("", content_extended)
-						if (_PY_UNICODE_TYPE != str and type(content_estripped) == _PY_UNICODE_TYPE): content_estripped = _PY_STR(content_estripped, "utf-8")
+						if (str is not _PY_UNICODE_TYPE and type(content_estripped) is _PY_UNICODE_TYPE): content_estripped = _PY_STR(content_estripped, "utf-8")
 
 						if (path.isdir(content_extended_os)):
 						#
@@ -723,7 +723,7 @@ Create a list of files - we need to scan directories recursively ...
 							content_ext = path.splitext(content)[1][1:]
 							content_id = content_estripped
 
-							if (type(content_id) != _PY_BYTES_TYPE): content_id = _PY_BYTES(content_id, "utf-8")
+							if (type(content_id) is not _PY_BYTES_TYPE): content_id = _PY_BYTES(content_id, "utf-8")
 							content_id = hashlib.md5(content_id).hexdigest()
 
 							if (len(content_ext) > 0
@@ -767,11 +767,11 @@ Add "exclude" definitions for directories and files.
 		"""
 
 		# global: _PY_STR, _PY_UNICODE_TYPE
-		if (_PY_UNICODE_TYPE != str and type(exclude) == _PY_UNICODE_TYPE): exclude = _PY_STR(exclude, "utf-8")
+		if (str is not _PY_UNICODE_TYPE and type(exclude) is _PY_UNICODE_TYPE): exclude = _PY_STR(exclude, "utf-8")
 
 		if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel.set_exclude({0})- (#echo(__LINE__)#)".format(exclude))
 
-		if (type(exclude) == str):
+		if (type(exclude) is str):
 		#
 			exclude_list = exclude.split(",")
 
@@ -795,11 +795,11 @@ Add "exclude" definitions for directories.
 		"""
 
 		# global: _PY_STR, _PY_UNICODE_TYPE
-		if (_PY_UNICODE_TYPE != str and type(exclude) == _PY_UNICODE_TYPE): exclude = _PY_STR(exclude, "utf-8")
+		if (str is not _PY_UNICODE_TYPE and type(exclude) is _PY_UNICODE_TYPE): exclude = _PY_STR(exclude, "utf-8")
 
 		if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel.set_exclude_dirs({0})- (#echo(__LINE__)#)".format(exclude))
 
-		if (type(exclude) == str):
+		if (type(exclude) is str):
 		#
 			exclude_list = exclude.split(",")
 			for exclude in exclude_list: self.dir_exclude_list.append(exclude)
@@ -818,11 +818,11 @@ Add "exclude" definitions for files.
 		"""
 
 		# global: _PY_STR, _PY_UNICODE_TYPE
-		if (_PY_UNICODE_TYPE != str and type(exclude) == _PY_UNICODE_TYPE): exclude = _PY_STR(exclude, "utf-8")
+		if (str is not _PY_UNICODE_TYPE and type(exclude) is _PY_UNICODE_TYPE): exclude = _PY_STR(exclude, "utf-8")
 
 		if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel.set_exclude_files({0})- (#echo(__LINE__)#)".format(exclude))
 
-		if (type(exclude) == str):
+		if (type(exclude) is str):
 		#
 			exclude_list = exclude.split(",")
 			for exclude in exclude_list: self.file_exclude_list.append(exclude)
@@ -846,7 +846,7 @@ Sets a new target for processing.
 		"""
 
 		# global: _PY_BYTES, _PY_BYTES_TYPE
-		if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel.set_new_target(parameters, include, output_path, filetype)- (#echo(__LINE__)#)")
+		if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel.set_new_target()- (#echo(__LINE__)#)")
 
 		self.dir_exclude_list = [ ]
 		self.file_exclude_list = [ ]
@@ -860,7 +860,7 @@ Sets a new target for processing.
 		self.output_path = output_path
 		self.output_strip_prefix = ""
 
-		if (type(parameters) == dict): self.parameters = parameters
+		if (type(parameters) is dict): self.parameters = parameters
 		else: self.parameters = { }
 
 		sys.stdout.write("> New output target {0}\n".format(output_path))
@@ -877,7 +877,7 @@ Sets a new target for processing.
 		#
 		else: self.parser_pickle = { }
 
-		if (type(self.parser_pickle) != dict): self.parser_pickle = { }
+		if (type(self.parser_pickle) is not dict): self.parser_pickle = { }
 
 		data_list = include.split(",")
 
@@ -896,7 +896,7 @@ Sets a new target for processing.
 			#
 			elif (path.isfile(data)):
 			#
-				if (type(data) != _PY_BYTES_TYPE): data = _PY_BYTES(data, "utf-8")
+				if (type(data) is not _PY_BYTES_TYPE): data = _PY_BYTES(data, "utf-8")
 				file_id = hashlib.md5(data).hexdigest()
 
 				if (self.workdir_rescan == False and file_id not in self.file_dict):
@@ -922,11 +922,11 @@ Define a prefix to be stripped from output paths.
 		"""
 
 		# global: _PY_STR, _PY_UNICODE_TYPE
-		if (_PY_UNICODE_TYPE != str and type(strip_prefix) == _PY_UNICODE_TYPE): strip_prefix = _PY_STR(strip_prefix, "utf-8")
+		if (str is not _PY_UNICODE_TYPE and type(strip_prefix) is _PY_UNICODE_TYPE): strip_prefix = _PY_STR(strip_prefix, "utf-8")
 
 		if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel.set_strip_prefix({0})- (#echo(__LINE__)#)".format(strip_prefix))
 
-		if (type(strip_prefix) == str): self.output_strip_prefix = strip_prefix
+		if (type(strip_prefix) is str): self.output_strip_prefix = strip_prefix
 		elif (self.event_handler is not None): self.event_handler.warn("#echo(__FILEPATH__)# -BuilderSkel.set_strip_prefix()- (#echo(__LINE__)#) reports: Given parameter is not a string")
 	#
 
@@ -945,13 +945,13 @@ needed.
 		"""
 
 		# global: _PY_STR, _PY_UNICODE_TYPE
-		if (_PY_UNICODE_TYPE != str):
+		if (str is not _PY_UNICODE_TYPE):
 		#
-			if (type(file_pathname) == _PY_UNICODE_TYPE): file_pathname = _PY_STR(file_pathname, "utf-8")
-			if (type(file_mode) == _PY_UNICODE_TYPE): file_mode = _PY_STR(file_mode, "utf-8")
+			if (type(file_pathname) is _PY_UNICODE_TYPE): file_pathname = _PY_STR(file_pathname, "utf-8")
+			if (type(file_mode) is _PY_UNICODE_TYPE): file_mode = _PY_STR(file_mode, "utf-8")
 		#
 
-		if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._write_file(file_content, {0}, {1})- (#echo(__LINE__)#)".format(file_pathname, file_mode))
+		if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._write_file({0}, {1})- (#echo(__LINE__)#)".format(file_pathname, file_mode))
 
 		dir_path = path.dirname(file_pathname)
 		_return = False

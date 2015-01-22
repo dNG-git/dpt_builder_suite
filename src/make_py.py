@@ -85,7 +85,7 @@ Executes registered callbacks for the active application.
 		args = self.arg_parser.parse_args()
 		targets = [ ]
 
-		if (len(_parameters) > 0 and type(_parameters) == list):
+		if (len(_parameters) > 0 and type(_parameters) is list):
 		#
 			for target in _parameters:
 			#

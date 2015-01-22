@@ -49,7 +49,7 @@ Parse the given content.
 :since:  v0.1.01
 		"""
 
-		if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -JsBuilder._parse_data(data)- (#echo(__LINE__)#)")
+		if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -JsBuilder._parse_data()- (#echo(__LINE__)#)")
 
 		if (self._get_variable("js_min_filenames") is not None
 		    and file_pathname[-7:].lower() != ".min.js"

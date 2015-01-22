@@ -64,7 +64,7 @@ Parse the given content.
 :since:  v0.1.00
 		"""
 
-		if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -CssBuilder._parse_data(data)- (#echo(__LINE__)#)")
+		if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -CssBuilder._parse_data()- (#echo(__LINE__)#)")
 
 		if (path.splitext(file_name)[-1].lower() == ".scss"):
 		#
