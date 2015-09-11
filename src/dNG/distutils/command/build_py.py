@@ -49,9 +49,9 @@ directory.
 :since: v0.1.01
 		"""
 
-		for dirpath, _, _ in os.walk(target_path):
+		for dir_path, _, _ in os.walk(target_path):
 		#
-			package = dirpath[len(target_path) + 1:].replace(path.sep, ".")
+			package = dir_path[len(target_path) + 1:].replace(path.sep, ".")
 			if (package not in self.packages): self.packages.append(package)
 		#
 	#

@@ -351,32 +351,32 @@ Gets the variable content with the given name.
 		return self.parameters.get(name, None)
 	#
 
-	def _is_excluded_dir(self, dirname):
+	def _is_excluded_dir(self, dir_name):
 	#
 		"""
 Returns true if the directory should be excluded.
 
-:param dirname: Directory name
+:param dir_name: Directory name
 
 :return: (bool) True if excluded
 :since:  v0.1.00
 		"""
 
-		return (dirname in self.dir_exclude_list)
+		return (dir_name in self.dir_exclude_list)
 	#
 
-	def _is_excluded_file(self, filename):
+	def _is_excluded_file(self, file_name):
 	#
 		"""
 Returns true if the file should be excluded.
 
-:param filename: File name
+:param file_name: File name
 
 :return: (bool) True if excluded
 :since:  v0.1.00
 		"""
 
-		return (filename in self.file_exclude_list)
+		return (file_name in self.file_exclude_list)
 	#
 
 	def make_all(self):

@@ -56,11 +56,11 @@ target directory.
 :since: v0.1.01
 		"""
 
-		for dirpath, _, filenames in os.walk(target_path):
+		for dir_path, _, file_names in os.walk(target_path):
 		#
 			files = [ ]
-			for filename in filenames: files.append(path.join(dirpath, filename))
-			if (len(files) > 0): self.data_files.append(( dirpath[len(target_path) + 1:], files ))
+			for file_name in file_names: files.append(path.join(dir_path, file_name))
+			if (len(files) > 0): self.data_files.append(( dir_path[len(target_path) + 1:], files ))
 		#
 	#
 
@@ -112,12 +112,12 @@ Adds a callback to be called while executing "install_data".
 	#
 
 	@staticmethod
-	def plain_copy(source_dirpath, target_path, target_parameters):
+	def plain_copy(source_dir_path, target_path, target_parameters):
 	#
 		"""
 Callback to be used in "dNG.distutils.InstallData".
 
-:param source_dirpath: Source directory to copy files in
+:param source_dir_path: Source directory to copy files in
 :param target_path: Target directory for build
 :param target_parameters: Target parameters
 
@@ -126,14 +126,14 @@ Callback to be used in "dNG.distutils.InstallData".
 
 		extensions = target_parameters.get("install_data_plain_copy_extensions", "").split(",")
 
-		for dirpath, _, filenames in os.walk(source_dirpath):
+		for dir_path, _, file_names in os.walk(source_dir_path):
 		#
-			target_dirpath = path.join(target_path, dirpath)
-			if (not os.access(target_dirpath, os.W_OK)): os.mkdir(target_dirpath, 0o755)
+			target_dir_path = path.join(target_path, dir_path)
+			if (not os.access(target_dir_path, os.W_OK)): os.mkdir(target_dir_path, 0o755)
 
-			for filename in filenames:
+			for file_name in file_names:
 			#
-				if (path.splitext(filename)[1][1:] in extensions): copyfile(path.join(dirpath, filename), path.join(target_dirpath, filename))
+				if (path.splitext(file_name)[1][1:] in extensions): copyfile(path.join(dir_path, file_name), path.join(target_dir_path, file_name))
 			#
 		#
 	#

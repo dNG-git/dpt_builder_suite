@@ -37,18 +37,18 @@ Provides a (S)CSS "make" environment object.
             Mozilla Public License, v. 2.0
 	"""
 
-	def _is_excluded_file(self, filename):
+	def _is_excluded_file(self, file_name):
 	#
 		"""
 Returns true if the file should be excluded.
 
-:param filename: File name
+:param file_name: File name
 
 :return: (bool) True if excluded
 :since:  v0.1.00
 		"""
 
-		return (filename[0] == "_" or BuilderSkel._is_excluded_file(self, filename))
+		return (file_name[0] == "_" or BuilderSkel._is_excluded_file(self, file_name))
 	#
 
 	def _parse_data(self, data, file_pathname, file_name):
