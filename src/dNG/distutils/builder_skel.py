@@ -167,6 +167,8 @@ umask to set before creating a new file
 Adds an extension to the list of ASCII file types.
 
 :param extension: File type extension to add
+
+:since: v0.1.00
 		"""
 
 		# global: _PY_STR, _PY_UNICODE_TYPE
@@ -954,7 +956,7 @@ needed.
 		if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._write_file({0}, {1})- (#echo(__LINE__)#)".format(file_pathname, file_mode))
 
 		dir_path = path.dirname(file_pathname)
-		_return = False
+		_return = True
 
 		if (len(dir_path) < 1 or self._create_dir(dir_path)):
 		#
@@ -962,10 +964,11 @@ needed.
 
 			if (file_object.open(file_pathname, False, file_mode)):
 			#
-				_return = file_object.write(file_content)
+				file_object.write(file_content)
 				file_object.close()
 			#
 		#
+		else: _return = False
 
 		return _return
 	#
