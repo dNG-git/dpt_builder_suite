@@ -154,7 +154,7 @@ Executes registered callbacks for the active application.
 
 print("""
 ----------------------------------------------------------------------------
-builder for (S)CSS #echo(cssBuilderVersion)#
+builderSuite for (S)CSS #echo(builderSuiteVersion)#
 (C) direct Netware Group - All rights reserved
 ----------------------------------------------------------------------------
 """)

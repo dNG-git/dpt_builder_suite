@@ -154,7 +154,7 @@ Executes registered callbacks for the active application.
 
 print("""
 ----------------------------------------------------------------------------
-builderSuite for JavaScript #echo(jsBuilderVersion)#
+builderSuite for JavaScript #echo(builderSuiteVersion)#
 (C) direct Netware Group - All rights reserved
 ----------------------------------------------------------------------------
 """)
