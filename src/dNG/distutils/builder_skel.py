@@ -117,7 +117,7 @@ Files to be ignored while scanning
 		"""
 Filetype extensions to be parsed
 		"""
-		self.filetype_ascii_list = [ "css", "js", "php", "py", "scss", "sql", "txt", "xml" ]
+		self.filetype_ascii_list = [ "css", "js", "json", "php", "py", "scss", "sql", "txt", "xml" ]
 		"""
 Filetype extensions to be parsed
 		"""
