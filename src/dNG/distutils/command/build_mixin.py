@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-##j## BOF
 
 """
 builderSuite
@@ -21,8 +20,7 @@ https://www.direct-netware.de/redirect?licenses;mpl2
 from os import path
 
 class BuildMixin(object):
-#
-	"""
+    """
 This mixin is used to map Distutils methods with a build directory.
 
 :author:    direct Netware Group
@@ -31,44 +29,40 @@ This mixin is used to map Distutils methods with a build directory.
 :since:     v0.1.01
 :license:   https://www.direct-netware.de/redirect?licenses;mpl2
             Mozilla Public License, v. 2.0
-	"""
+    """
 
-	_build_target_path = None
-	"""
+    _build_target_path = None
+    """
 Target directory for build
-	"""
-	_build_target_parameters = { }
-	"""
+    """
+    _build_target_parameters = { }
+    """
 Target parameters
-	"""
+    """
 
-	@staticmethod
-	def set_build_target_path(target_path):
-	#
-		"""
+    @staticmethod
+    def set_build_target_path(target_path):
+        """
 Sets the target directory used during build.
 
 :param target_path: Target directory for build
 
 :since: v0.1.01
-		"""
+        """
 
-		BuildMixin._build_target_path = path.normpath(target_path)
-	#
+        BuildMixin._build_target_path = path.normpath(target_path)
+    #
 
-	@staticmethod
-	def set_build_target_parameters(parameters):
-	#
-		"""
+    @staticmethod
+    def set_build_target_parameters(parameters):
+        """
 Sets the target parameters.
 
 :param parameters: Target parameters
 
 :since: v0.1.01
-		"""
+        """
 
-		BuildMixin._build_target_parameters = parameters
-	#
+        BuildMixin._build_target_parameters = parameters
+    #
 #
-
-##j## EOF

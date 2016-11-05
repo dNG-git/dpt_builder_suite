@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-##j## BOF
 
 """
 builderSuite
@@ -24,8 +23,7 @@ from slimit.minifier import minify
 from .builder_skel import BuilderSkel
 
 class JsBuilder(BuilderSkel):
-#
-	"""
+    """
 Provides a Javascript "make" environment object.
 
 :author:    direct Netware Group
@@ -34,11 +32,10 @@ Provides a Javascript "make" environment object.
 :since:     v0.1.01
 :license:   https://www.direct-netware.de/redirect?licenses;mpl2
             Mozilla Public License, v. 2.0
-	"""
+    """
 
-	def _parse_data(self, data, file_pathname, file_name):
-	#
-		"""
+    def _parse_data(self, data, file_pathname, file_name):
+        """
 Parse the given content.
 
 :param data: Data to be parsed
@@ -47,22 +44,21 @@ Parse the given content.
 
 :return: (str) Filtered data
 :since:  v0.1.01
-		"""
+        """
 
-		if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -JsBuilder._parse_data()- (#echo(__LINE__)#)")
+        if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -JsBuilder._parse_data()- (#echo(__LINE__)#)")
 
-		if (self._get_variable("js_min_filenames") is not None
-		    and file_pathname[-7:].lower() != ".min.js"
-		    and self._get_variable("debug") is None
-		   ): data = minify(data, True)
+        if (self._get_variable("js_min_filenames") is not None
+            and file_pathname[-7:].lower() != ".min.js"
+            and self._get_variable("debug") is None
+           ): data = minify(data, True)
 
-		if (self._get_variable("js_header") is not None): data = "// {0}\n{1}".format(self._get_variable("js_header"), data)
-		return BuilderSkel._parse_data(self, data, file_pathname, file_name)
-	#
+        if (self._get_variable("js_header") is not None): data = "// {0}\n{1}".format(self._get_variable("js_header"), data)
+        return BuilderSkel._parse_data(self, data, file_pathname, file_name)
+    #
 
-	def _write_file(self, file_content, file_pathname, file_mode = "w+b"):
-	#
-		"""
+    def _write_file(self, file_content, file_pathname, file_mode = "w+b"):
+        """
 Write the given file to the defined location. Create subdirectories if
 needed.
 
@@ -72,19 +68,16 @@ needed.
 
 :return: (bool) True on success
 :since:  v0.1.01
-		"""
+        """
 
-		if (self._get_variable("js_min_filenames") is not None
-		    and file_pathname[-7:].lower() != ".min.js"
-		    and self._get_variable("debug") is None
-		   ):
-		#
-			( file_pathname, file_ext ) = path.splitext(file_pathname)
-			if (len(file_ext) > 0): file_pathname = "{0}.min{1}".format(file_pathname, file_ext)
-		#
+        if (self._get_variable("js_min_filenames") is not None
+            and file_pathname[-7:].lower() != ".min.js"
+            and self._get_variable("debug") is None
+           ):
+            ( file_pathname, file_ext ) = path.splitext(file_pathname)
+            if (len(file_ext) > 0): file_pathname = "{0}.min{1}".format(file_pathname, file_ext)
+        #
 
-		return BuilderSkel._write_file(self, file_content, file_pathname, file_mode)
-	#
+        return BuilderSkel._write_file(self, file_content, file_pathname, file_mode)
+    #
 #
-
-##j## EOF

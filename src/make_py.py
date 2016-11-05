@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-##j## BOF
 
 """
 builderSuite
@@ -33,8 +32,7 @@ try: import makefile
 except ImportError: pass
 
 class MakePy(object):
-#
-	"""
+    """
 "MakePy" is the main application object for handling Python files.
 
 :author:    direct Netware Group
@@ -43,113 +41,98 @@ class MakePy(object):
 :since:     v0.1.01
 :license:   https://www.direct-netware.de/redirect?licenses;mpl2
             Mozilla Public License, v. 2.0
-	"""
+    """
 
-	def __init__(self):
-	#
-		"""
+    def __init__(self):
+        """
 Constructor __init__(MakePy)
 
 :since: v0.1.01
-		"""
+        """
 
-		self.arg_parser = ArgumentParser()
-		"""
+        self.arg_parser = ArgumentParser()
+        """
 ArgumentParser instance
-		"""
+        """
 
-		self.arg_parser.add_argument("--define", action = "store", type = str, dest = "define")
-		self.arg_parser.add_argument("--filetype", action = "store", type = str, dest = "filetype")
-		self.arg_parser.add_argument("--include", action = "store", type = str, dest = "include")
-		self.arg_parser.add_argument("--output_dirs_chmod", action = "store", type = str, dest = "output_dirs_chmod")
-		self.arg_parser.add_argument("--output_files_chmod", action = "store", type = str, dest = "output_files_chmod")
-		self.arg_parser.add_argument("--output_path", action = "store", type = str, dest = "output_path")
-		self.arg_parser.add_argument("--exclude", action = "store", type = str, dest = "exclude")
-		self.arg_parser.add_argument("--exclude_dirs", action = "store", type = str, dest = "exclude_dirs")
-		self.arg_parser.add_argument("--exclude_files", action = "store", type = str, dest = "exclude_files")
-		self.arg_parser.add_argument("--strip_prefix", action = "store", type = str, dest = "strip_prefix")
+        self.arg_parser.add_argument("--define", action = "store", type = str, dest = "define")
+        self.arg_parser.add_argument("--filetype", action = "store", type = str, dest = "filetype")
+        self.arg_parser.add_argument("--include", action = "store", type = str, dest = "include")
+        self.arg_parser.add_argument("--output_dirs_chmod", action = "store", type = str, dest = "output_dirs_chmod")
+        self.arg_parser.add_argument("--output_files_chmod", action = "store", type = str, dest = "output_files_chmod")
+        self.arg_parser.add_argument("--output_path", action = "store", type = str, dest = "output_path")
+        self.arg_parser.add_argument("--exclude", action = "store", type = str, dest = "exclude")
+        self.arg_parser.add_argument("--exclude_dirs", action = "store", type = str, dest = "exclude_dirs")
+        self.arg_parser.add_argument("--exclude_files", action = "store", type = str, dest = "exclude_files")
+        self.arg_parser.add_argument("--strip_prefix", action = "store", type = str, dest = "strip_prefix")
 
-		self.arg_parser.add_argument("-v", "--version", action = "version", version = "https://www.direct-netware.de/redirect?py;builder")
-	#
+        self.arg_parser.add_argument("-v", "--version", action = "version", version = "https://www.direct-netware.de/redirect?py;builder")
+    #
 
-	def run(self):
-	#
-		"""
+    def run(self):
+        """
 Executes registered callbacks for the active application.
 
 :since: v0.1.01
-		"""
+        """
 
-		# global: _parameters
+        # global: _parameters
 
-		args = self.arg_parser.parse_args()
-		targets = [ ]
+        args = self.arg_parser.parse_args()
+        targets = [ ]
 
-		if (len(_parameters) > 0 and type(_parameters) is list):
-		#
-			for target in _parameters:
-			#
-				if ("make_output_path" in target): targets.append(target)
-			#
-		#
-		elif (args.output_path is not None):
-		#
-			_parameters.update({ "make_output_path": args.output_path })
-			targets.append(_parameters)
-		#
+        if (len(_parameters) > 0 and type(_parameters) is list):
+            for target in _parameters:
+                if ("make_output_path" in target): targets.append(target)
+            #
+        elif (args.output_path is not None):
+            _parameters.update({ "make_output_path": args.output_path })
+            targets.append(_parameters)
+        #
 
-		if (args.filetype is None or args.include is None or len(targets) == 0): self.arg_parser.print_help()
-		else:
-		#
-			py_builder = None
-			self.arg_parser = None
+        if (args.filetype is None or args.include is None or len(targets) == 0): self.arg_parser.print_help()
+        else:
+            py_builder = None
+            self.arg_parser = None
 
-			for target in targets:
-			#
-				if (args.define is not None):
-				#
-					define_array = args.define.split(",")
-					re_define = re.compile("^(\\w+)\\=(.+)$")
+            for target in targets:
+                if (args.define is not None):
+                    define_array = args.define.split(",")
+                    re_define = re.compile("^(\\w+)\\=(.+)$")
 
-					for define in define_array:
-					#
-						re_result = re_define.match(define)
+                    for define in define_array:
+                        re_result = re_define.match(define)
 
-						if (re_result is None):
-						#
-							define_key = define
-							define_value = True
-						#
-						else:
-						#
-							define_key = re_result.group(1)
-							define_value = re_result.group(2)
-						#
+                        if (re_result is None):
+                            define_key = define
+                            define_value = True
+                        else:
+                            define_key = re_result.group(1)
+                            define_value = re_result.group(2)
+                        #
 
-						target[define_key] = define_value
-					#
-				#
+                        target[define_key] = define_value
+                    #
+                #
 
-				if (py_builder is None):
-				#
-					py_builder = PyBuilder(target,
-					                       args.include,
-					                       target['make_output_path'],
-					                       args.filetype,
-					                       default_chmod_files = args.output_files_chmod,
-					                       default_chmod_dirs = args.output_dirs_chmod
-					                      )
-				#
-				else: py_builder.set_new_target(target, args.include, target['make_output_path'], args.filetype)
+                if (py_builder is None):
+                    py_builder = PyBuilder(target,
+                                           args.include,
+                                           target['make_output_path'],
+                                           args.filetype,
+                                           default_chmod_files = args.output_files_chmod,
+                                           default_chmod_dirs = args.output_dirs_chmod
+                                          )
+                else: py_builder.set_new_target(target, args.include, target['make_output_path'], args.filetype)
 
-				if (args.exclude is not None): py_builder.set_exclude(args.exclude)
-				if (args.exclude_dirs is not None): py_builder.set_exclude_dirs(args.exclude_dirs)
-				if (args.exclude_files is not None): py_builder.set_exclude_files(args.exclude_files)
-				if (args.strip_prefix is not None): py_builder.set_strip_prefix(args.strip_prefix)
-				py_builder.make_all()
-			#
-		#
-	#
+                if (args.exclude is not None): py_builder.set_exclude(args.exclude)
+                if (args.exclude_dirs is not None): py_builder.set_exclude_dirs(args.exclude_dirs)
+                if (args.exclude_files is not None): py_builder.set_exclude_files(args.exclude_files)
+                if (args.strip_prefix is not None): py_builder.set_strip_prefix(args.strip_prefix)
+                py_builder.make_all()
+            #
+        #
+    #
 #
 
 print("""
@@ -160,22 +143,15 @@ builderSuite for Python #echo(builderSuiteVersion)#
 """)
 
 try:
-#
-	if (hasattr(makefile, "direct_makefile_py_set")): _parameters = makefile.direct_makefile_py_set()
-	else: _parameters = makefile.direct_makefile_set()
-#
+    if (hasattr(makefile, "direct_makefile_py_set")): _parameters = makefile.direct_makefile_py_set()
+    else: _parameters = makefile.direct_makefile_set()
 except NameError: _parameters = { }
 
 try:
-#
-	make_py = MakePy()
-	make_py.run()
-#
+    make_py = MakePy()
+    make_py.run()
 except KeyboardInterrupt: pass
 except Exception:
+    sys.stderr.write("{0!r}".format(sys.exc_info()))
+    sys.exit(1)
 #
-	sys.stderr.write("{0!r}".format(sys.exc_info()))
-	sys.exit(1)
-#
-
-##j## EOF

@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-##j## BOF
 
 """
 builderSuite
@@ -23,8 +22,7 @@ import re
 from .builder_skel import BuilderSkel
 
 class PyBuilder(BuilderSkel):
-#
-	"""
+    """
 Provides a Python "make" environment object.
 
 :author:    direct Netware Group
@@ -33,11 +31,10 @@ Provides a Python "make" environment object.
 :since:     v0.1.01
 :license:   https://www.direct-netware.de/redirect?licenses;mpl2
             Mozilla Public License, v. 2.0
-	"""
+    """
 
-	def __init__(self, parameters, include, output_path, filetype, default_umask = None, default_chmod_files = None, default_chmod_dirs = None, timeout_retries = 5, event_handler = None):
-	#
-		"""
+    def __init__(self, parameters, include, output_path, filetype, default_umask = None, default_chmod_files = None, default_chmod_dirs = None, timeout_retries = 5, event_handler = None):
+        """
 Constructor __init__(PyBuilder)
 
 :param parameters: DEFINE statements
@@ -53,26 +50,25 @@ Constructor __init__(PyBuilder)
 :param event_handler: EventHandler to use
 
 :since: v0.1.01
-		"""
+        """
 
-		BuilderSkel.__init__(self,
-		                     parameters,
-		                     include,
-		                     output_path,
-		                     filetype,
-		                     default_umask,
-		                     default_chmod_files,
-		                     default_chmod_dirs,
-		                     timeout_retries,
-		                     event_handler
-		                    )
+        BuilderSkel.__init__(self,
+                             parameters,
+                             include,
+                             output_path,
+                             filetype,
+                             default_umask,
+                             default_chmod_files,
+                             default_chmod_dirs,
+                             timeout_retries,
+                             event_handler
+                            )
 
-		self.dir_exclude_list = [ "__pycache__" ]
-	#
+        self.dir_exclude_list = [ "__pycache__" ]
+    #
 
-	def _change_match(self, tag_definition, data, tag_position, data_position, tag_end_position):
-	#
-		"""
+    def _change_match(self, tag_definition, data, tag_position, data_position, tag_end_position):
+        """
 Change data according to the matched tag.
 
 :param tag_definition: Matched tag definition
@@ -83,98 +79,80 @@ Change data according to the matched tag.
 
 :return: (str) Converted data
 :since:  v0.1.01
-		"""
+        """
 
-		if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -PyBuilder._change_match({0:d}, {1:d}, {2:d})- (#echo(__LINE__)#)".format(tag_position, data_position, tag_end_position))
-		_return = data[:tag_position]
+        if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -PyBuilder._change_match({0:d}, {1:d}, {2:d})- (#echo(__LINE__)#)".format(tag_position, data_position, tag_end_position))
+        _return = data[:tag_position]
 
-		data_closed = data[self._find_tag_end_position(data, tag_end_position, '"""'):]
+        data_closed = data[self._find_tag_end_position(data, tag_end_position, '"""'):]
 
-		if (tag_definition[0] == '"""#ifdef'):
-		#
-			variable = re.match('^"""#ifdef\\((\\w+)\\)', data[tag_position:data_position]).group(1)
-			tag_end = data[tag_end_position:self._find_tag_end_position(data, tag_end_position, '"""')]
+        if (tag_definition[0] == '"""#ifdef'):
+            variable = re.match('^"""#ifdef\\((\\w+)\\)', data[tag_position:data_position]).group(1)
+            tag_end = data[tag_end_position:self._find_tag_end_position(data, tag_end_position, '"""')]
 
-			if (self._get_variable(variable) is not None):
-			#
-				if (data[data_position:data_position + 1] == "\n"):
-				#
-					_return += data[data_position + 1:tag_end_position].replace('"\\"', '"""')
-				#
-				else: _return += data[data_position:tag_end_position].replace('"\\"', '"""')
-			#
+            if (self._get_variable(variable) is not None):
+                if (data[data_position:data_position + 1] == "\n"):
+                    _return += data[data_position + 1:tag_end_position].replace('"\\"', '"""')
+                else: _return += data[data_position:tag_end_position].replace('"\\"', '"""')
+            #
 
-			if (tag_end == '#\\n"""' or tag_end == ':#\\n"""'): data_closed = re.sub("^\n", "", data_closed)
-		#
-		elif (tag_definition[0] == '"""#ifndef'):
-		#
-			variable = re.match('^"""#ifndef\\((\\w+)\\)', data[tag_position:data_position]).group(1)
-			tag_end = data[tag_end_position:self._find_tag_end_position(data, tag_end_position, '"""')]
+            if (tag_end == '#\\n"""' or tag_end == ':#\\n"""'): data_closed = re.sub("^\n", "", data_closed)
+        elif (tag_definition[0] == '"""#ifndef'):
+            variable = re.match('^"""#ifndef\\((\\w+)\\)', data[tag_position:data_position]).group(1)
+            tag_end = data[tag_end_position:self._find_tag_end_position(data, tag_end_position, '"""')]
 
-			if (self._get_variable(variable) is None):
-			#
-				if (data[data_position:data_position + 1] == "\n"):
-				#
-					_return += data[data_position + 1:tag_end_position].replace('"\\"', '"""')
-				#
-				else: _return += data[data_position:tag_end_position].replace('"\\"', '"""')
-			#
+            if (self._get_variable(variable) is None):
+                if (data[data_position:data_position + 1] == "\n"):
+                    _return += data[data_position + 1:tag_end_position].replace('"\\"', '"""')
+                else: _return += data[data_position:tag_end_position].replace('"\\"', '"""')
+            #
 
-			if (tag_end == '#\\n"""' or tag_end == ':#\\n"""'): data_closed = re.sub("^\n", "", data_closed)
-		#
+            if (tag_end == '#\\n"""' or tag_end == ':#\\n"""'): data_closed = re.sub("^\n", "", data_closed)
+        #
 
-		_return += data_closed
+        _return += data_closed
 
-		return _return
-	#
+        return _return
+    #
 
-	def _check_match(self, data):
-	#
-		"""
+    def _check_match(self, data):
+        """
 Check if a possible tag match is a false positive.
 
 :param data: Data starting with the possible tag
 
 :return: (tuple) Matched tag definition; None if false positive
 :since:  v0.1.01
-		"""
+        """
 
-		if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -PyBuilder._check_match()- (#echo(__LINE__)#)")
-		_return = None
+        if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -PyBuilder._check_match()- (#echo(__LINE__)#)")
+        _return = None
 
-		if (data[:9] == '"""#ifdef'):
-		#
-			re_result = re.match('^"""#ifdef\\((\\w+)\\) """\n', data)
+        if (data[:9] == '"""#ifdef'):
+            re_result = re.match('^"""#ifdef\\((\\w+)\\) """\n', data)
 
-			if (re_result is None):
-			#
-				re_result = re.match('^"""#ifdef\\((\\w+)\\):\n', data)
+            if (re_result is None):
+                re_result = re.match('^"""#ifdef\\((\\w+)\\):\n', data)
 
-				if (re_result is None): _return = None
-				else: _return = ( '"""#ifdef', ":", ( ':#\\n"""', ':#"""' ) )
-			#
-			else: _return = ( '"""#ifdef', '"""', ( '#\\n"""', '#"""' ) )
-		#
-		elif (data[:10] == '"""#ifndef'):
-		#
-			re_result = re.match('^"""#ifndef\\((\\w+)\\) """\n', data)
+                if (re_result is None): _return = None
+                else: _return = ( '"""#ifdef', ":", ( ':#\\n"""', ':#"""' ) )
+            else: _return = ( '"""#ifdef', '"""', ( '#\\n"""', '#"""' ) )
+        elif (data[:10] == '"""#ifndef'):
+            re_result = re.match('^"""#ifndef\\((\\w+)\\) """\n', data)
 
-			if (re_result is None):
-			#
-				re_result = re.match('^"""#ifndef\\((\\w+)\\):\n', data)
+            if (re_result is None):
+                re_result = re.match('^"""#ifndef\\((\\w+)\\):\n', data)
 
-				if (re_result is None): _return = None
-				else: _return = ( '"""#ifndef', ":", ( ':#\\n"""', ':#"""' ) )
-			#
-			else: _return = ( '"""#ifndef', '"""', ( '#\\n"""', '#"""' ) )
-		#
+                if (re_result is None): _return = None
+                else: _return = ( '"""#ifndef', ":", ( ':#\\n"""', ':#"""' ) )
+            else: _return = ( '"""#ifndef', '"""', ( '#\\n"""', '#"""' ) )
+        #
 
-		return _return
-	#
+        return _return
+    #
 
-	def _parse_data(self, data, file_pathname, file_name):
-	#
-		"""
+    def _parse_data(self, data, file_pathname, file_name):
+        """
 Parse the given content.
 
 :param data: Data to be parsed
@@ -183,29 +161,26 @@ Parse the given content.
 
 :return: (str) Filtered data
 :since:  v0.1.01
-		"""
+        """
 
-		if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -PyBuilder._parse_data()- (#echo(__LINE__)#)")
-		data = self._parse('"""#', BuilderSkel._parse_data(self, data, file_pathname, file_name))
+        if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -PyBuilder._parse_data()- (#echo(__LINE__)#)")
+        data = self._parse('"""#', BuilderSkel._parse_data(self, data, file_pathname, file_name))
 
-		if (self._get_variable("dev_comments") is None): return self._remove_data_dev_comments(data)
-		else: return data
-	#
+        if (self._get_variable("dev_comments") is None): return self._remove_data_dev_comments(data)
+        else: return data
+    #
 
-	def _remove_data_dev_comments(self, data):
-	#
-		"""
+    def _remove_data_dev_comments(self, data):
+        """
 Remove all development comments from the content.
 
 :param data: Data to be parsed
 
 :return: (str) Filtered data
 :since:  v0.1.01
-		"""
+        """
 
-		if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -PyBuilder._remove_data_dev_comments()- (#echo(__LINE__)#)")
-		return re.sub('(\n[ \t]*"""\n---.+?---\n[ \t]*"""\n)|("""\\w//.+?//\\w"""\n)', "", data, flags = re.S)
-	#
+        if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -PyBuilder._remove_data_dev_comments()- (#echo(__LINE__)#)")
+        return re.sub('(\n[ \t]*"""\n---.+?---\n[ \t]*"""\n)|("""\\w//.+?//\\w"""\n)', "", data, flags = re.S)
+    #
 #
-
-##j## EOF

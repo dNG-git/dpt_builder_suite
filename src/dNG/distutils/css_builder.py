@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-##j## BOF
 
 """
 builderSuite
@@ -25,8 +24,7 @@ from scss import config, Scss
 from .builder_skel import BuilderSkel
 
 class CssBuilder(BuilderSkel):
-#
-	"""
+    """
 Provides a (S)CSS "make" environment object.
 
 :author:    direct Netware Group
@@ -35,25 +33,23 @@ Provides a (S)CSS "make" environment object.
 :since:     v0.1.01
 :license:   https://www.direct-netware.de/redirect?licenses;mpl2
             Mozilla Public License, v. 2.0
-	"""
+    """
 
-	def _is_excluded_file(self, file_name):
-	#
-		"""
+    def _is_excluded_file(self, file_name):
+        """
 Returns true if the file should be excluded.
 
 :param file_name: File name
 
 :return: (bool) True if excluded
 :since:  v0.1.00
-		"""
+        """
 
-		return (file_name[0] == "_" or BuilderSkel._is_excluded_file(self, file_name))
-	#
+        return (file_name[0] == "_" or BuilderSkel._is_excluded_file(self, file_name))
+    #
 
-	def _parse_data(self, data, file_pathname, file_name):
-	#
-		"""
+    def _parse_data(self, data, file_pathname, file_name):
+        """
 Parse the given content.
 
 :param data: Data to be parsed
@@ -62,28 +58,26 @@ Parse the given content.
 
 :return: (str) Filtered data
 :since:  v0.1.00
-		"""
+        """
 
-		if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -CssBuilder._parse_data()- (#echo(__LINE__)#)")
+        if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -CssBuilder._parse_data()- (#echo(__LINE__)#)")
 
-		if (path.splitext(file_name)[-1].lower() == ".scss"):
-		#
-			config.STATIC_URL = ""
-			data = Scss().compile(data)
-		#
+        if (path.splitext(file_name)[-1].lower() == ".scss"):
+            config.STATIC_URL = ""
+            data = Scss().compile(data)
+        #
 
-		if (self._get_variable("css_min_filenames") is not None
-		    and file_name[-8:].lower() != ".min.css"
-		    and self._get_variable("debug") is None
-		   ): data = cssmin(data)
+        if (self._get_variable("css_min_filenames") is not None
+            and file_name[-8:].lower() != ".min.css"
+            and self._get_variable("debug") is None
+           ): data = cssmin(data)
 
-		if (self._get_variable("css_header") is not None): data = "/* {0} */\n{1}".format(self._get_variable("css_header"), data)
-		return BuilderSkel._parse_data(self, data, file_pathname, file_name)
-	#
+        if (self._get_variable("css_header") is not None): data = "/* {0} */\n{1}".format(self._get_variable("css_header"), data)
+        return BuilderSkel._parse_data(self, data, file_pathname, file_name)
+    #
 
-	def _write_file(self, file_content, file_pathname, file_mode = "w+b"):
-	#
-		"""
+    def _write_file(self, file_content, file_pathname, file_mode = "w+b"):
+        """
 Write the given file to the defined location. Create subdirectories if
 needed.
 
@@ -93,26 +87,22 @@ needed.
 
 :return: (bool) True on success
 :since:  v0.1.00
-		"""
+        """
 
-		if (file_pathname[-8:].lower() != ".min.css"):
-		#
-			( file_pathname_no_ext, file_ext ) = path.splitext(file_pathname)
+        if (file_pathname[-8:].lower() != ".min.css"):
+            ( file_pathname_no_ext, file_ext ) = path.splitext(file_pathname)
 
-			if (file_ext.lower() == ".scss"):
-			#
-				file_ext = ".css"
-				file_pathname = file_pathname_no_ext + file_ext
-			#
+            if (file_ext.lower() == ".scss"):
+                file_ext = ".css"
+                file_pathname = file_pathname_no_ext + file_ext
+            #
 
-			if (self._get_variable("css_min_filenames") is not None
-			    and self._get_variable("debug") is None
-			    and len(file_ext) > 0
-			   ): file_pathname = "{0}.min{1}".format(file_pathname_no_ext, file_ext)
-		#
+            if (self._get_variable("css_min_filenames") is not None
+                and self._get_variable("debug") is None
+                and len(file_ext) > 0
+               ): file_pathname = "{0}.min{1}".format(file_pathname_no_ext, file_ext)
+        #
 
-		return BuilderSkel._write_file(self, file_content, file_pathname, file_mode)
-	#
+        return BuilderSkel._write_file(self, file_content, file_pathname, file_mode)
+    #
 #
-
-##j## EOF

@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-##j## BOF
 
 """
 builderSuite
@@ -18,16 +17,13 @@ https://www.direct-netware.de/redirect?licenses;mpl2
 #echo(__FILEPATH__)#
 """
 
-from shutil import rmtree
-
 try: from tempfile import TemporaryDirectory
 except ImportError:
-#
-	from tempfile import mkdtemp
+    from shutil import rmtree
+    from tempfile import mkdtemp
 
-	class TemporaryDirectory(object):
-	#
-		"""
+    class TemporaryDirectory(object):
+        """
 python.org: Create and return a temporary directory.
 
 :author:    direct Netware Group
@@ -36,56 +32,50 @@ python.org: Create and return a temporary directory.
 :since:     v0.1.01
 :license:   https://www.direct-netware.de/redirect?licenses;mpl2
             Mozilla Public License, v. 2.0
-		"""
+        """
 
-		def __init__(self, suffix = "", prefix = "tmp", dir = None):
-		#
-			"""
+        def __init__(self, suffix = "", prefix = "tmp", dir = None):
+            """
 Constructor __init__(TemporaryDirectory)
 
 :since: v0.1.01
-			"""
+            """
 
-			self.dir = dir
-			self.name = None
-			self.prefix = prefix
-			self.suffix = suffix
-		#
+            self.dir = dir
+            self.name = None
+            self.prefix = prefix
+            self.suffix = suffix
+        #
 
-		def __enter__(self):
-		#
-			"""
+        def __enter__(self):
+            """
 python.org: Enter the runtime context related to this object.
 
 :since: v0.1.01
-			"""
+            """
 
-			self.name = mkdtemp(self.suffix, self.prefix, self.dir)
-			return self.name
-		#
+            self.name = mkdtemp(self.suffix, self.prefix, self.dir)
+            return self.name
+        #
 
-		def __exit__(self, exc, value, tb):
-		#
-			"""
+        def __exit__(self, exc, value, tb):
+            """
 python.org: Exit the runtime context related to this object.
 
 :since: v0.1.01
-			"""
+            """
 
-			self.cleanup()
-		#
+            self.cleanup()
+        #
 
-		def cleanup(self, _warn = False):
-		#
-			"""
+        def cleanup(self, _warn = False):
+            """
 python.org: The directory can be explicitly cleaned up by calling the cleanup() method.
 
 :since: v0.1.01
-			"""
+            """
 
-			rmtree(self.name)
-		#
-	#
+            rmtree(self.name)
+        #
+    #
 #
-
-##j## EOF

@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-##j## BOF
 
 """
 builderSuite
@@ -23,8 +22,7 @@ from os import path
 from dNG.distutils.js_builder import JsBuilder
 
 class InstallJsData(object):
-#
-	"""
+    """
 This class provides the callback for JavaScript files.
 
 :author:    direct Netware Group
@@ -33,12 +31,11 @@ This class provides the callback for JavaScript files.
 :since:     v0.1.01
 :license:   https://www.direct-netware.de/redirect?licenses;mpl2
             Mozilla Public License, v. 2.0
-	"""
+    """
 
-	@staticmethod
-	def callback(source_directory, target_path, target_parameters):
-	#
-		"""
+    @staticmethod
+    def callback(source_directory, target_path, target_parameters):
+        """
 Callback to be used in "dNG.distutils.InstallData".
 
 :param source_directory: Source directory to work in
@@ -46,20 +43,18 @@ Callback to be used in "dNG.distutils.InstallData".
 :param target_parameters: Target parameters
 
 :since: v0.1.01
-		"""
+        """
 
-		js_builder = JsBuilder(target_parameters,
-		                       source_directory,
-		                       target_path,
-		                       "js",
-		                       default_chmod_files = "0644",
-		                       default_chmod_dirs = "0755"
-		                      )
+        js_builder = JsBuilder(target_parameters,
+                               source_directory,
+                               target_path,
+                               "js",
+                               default_chmod_files = "0644",
+                               default_chmod_dirs = "0755"
+                              )
 
-		if (target_parameters.get("js_strip_source_directory", False)): js_builder.set_strip_prefix(source_directory + path.sep)
+        if (target_parameters.get("js_strip_source_directory", False)): js_builder.set_strip_prefix(source_directory + path.sep)
 
-		js_builder.make_all()
-	#
+        js_builder.make_all()
+    #
 #
-
-##j## EOF
