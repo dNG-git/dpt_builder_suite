@@ -38,7 +38,7 @@ class MakePy(object):
 :author:    direct Netware Group
 :copyright: direct Netware Group - All rights reserved
 :package:   builderSuite
-:since:     v0.1.01
+:since:     v0.1.1
 :license:   https://www.direct-netware.de/redirect?licenses;mpl2
             Mozilla Public License, v. 2.0
     """
@@ -47,7 +47,7 @@ class MakePy(object):
         """
 Constructor __init__(MakePy)
 
-:since: v0.1.01
+:since: v0.1.1
         """
 
         self.arg_parser = ArgumentParser()
@@ -73,7 +73,7 @@ ArgumentParser instance
         """
 Executes registered callbacks for the active application.
 
-:since: v0.1.01
+:since: v0.1.1
         """
 
         # global: _parameters

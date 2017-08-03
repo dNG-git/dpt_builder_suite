@@ -28,7 +28,7 @@ Provides a Python "make" environment object.
 :author:    direct Netware Group
 :copyright: direct Netware Group - All rights reserved
 :package:   builderSuite
-:since:     v0.1.01
+:since:     v0.1.1
 :license:   https://www.direct-netware.de/redirect?licenses;mpl2
             Mozilla Public License, v. 2.0
     """
@@ -49,7 +49,7 @@ Constructor __init__(PyBuilder)
 :param timeout_retries: Retries before timing out
 :param event_handler: EventHandler to use
 
-:since: v0.1.01
+:since: v0.1.1
         """
 
         BuilderSkel.__init__(self,
@@ -78,7 +78,7 @@ Change data according to the matched tag.
 :param tag_end_position: Starting position of the closing tag
 
 :return: (str) Converted data
-:since:  v0.1.01
+:since:  v0.1.1
         """
 
         if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -PyBuilder._change_match({0:d}, {1:d}, {2:d})- (#echo(__LINE__)#)".format(tag_position, data_position, tag_end_position))
@@ -122,7 +122,7 @@ Check if a possible tag match is a false positive.
 :param data: Data starting with the possible tag
 
 :return: (tuple) Matched tag definition; None if false positive
-:since:  v0.1.01
+:since:  v0.1.1
         """
 
         if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -PyBuilder._check_match()- (#echo(__LINE__)#)")
@@ -160,7 +160,7 @@ Parse the given content.
 :param file_name: File name
 
 :return: (str) Filtered data
-:since:  v0.1.01
+:since:  v0.1.1
         """
 
         if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -PyBuilder._parse_data()- (#echo(__LINE__)#)")
@@ -177,7 +177,7 @@ Remove all development comments from the content.
 :param data: Data to be parsed
 
 :return: (str) Filtered data
-:since:  v0.1.01
+:since:  v0.1.1
         """
 
         if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -PyBuilder._remove_data_dev_comments()- (#echo(__LINE__)#)")

@@ -28,7 +28,7 @@ This class provides the callback for JavaScript files.
 :author:    direct Netware Group
 :copyright: direct Netware Group - All rights reserved
 :package:   builderSuite
-:since:     v0.1.01
+:since:     v0.1.1
 :license:   https://www.direct-netware.de/redirect?licenses;mpl2
             Mozilla Public License, v. 2.0
     """
@@ -42,7 +42,7 @@ Callback to be used in "dNG.distutils.InstallData".
 :param target_path: Target directory for build
 :param target_parameters: Target parameters
 
-:since: v0.1.01
+:since: v0.1.1
         """
 
         js_builder = JsBuilder(target_parameters,

@@ -29,7 +29,7 @@ Provides a Javascript "make" environment object.
 :author:    direct Netware Group
 :copyright: direct Netware Group - All rights reserved
 :package:   builderSuite
-:since:     v0.1.01
+:since:     v0.1.1
 :license:   https://www.direct-netware.de/redirect?licenses;mpl2
             Mozilla Public License, v. 2.0
     """
@@ -43,7 +43,7 @@ Parse the given content.
 :param file_name: File name
 
 :return: (str) Filtered data
-:since:  v0.1.01
+:since:  v0.1.1
         """
 
         if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -JsBuilder._parse_data()- (#echo(__LINE__)#)")
@@ -67,7 +67,7 @@ needed.
 :param file_mode: Filemode to use
 
 :return: (bool) True on success
-:since:  v0.1.01
+:since:  v0.1.1
         """
 
         if (self._get_variable("js_min_filenames") is not None

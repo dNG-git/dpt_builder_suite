@@ -52,7 +52,7 @@ Provides a Python "make" environment skeleton.
 :author:    direct Netware Group
 :copyright: direct Netware Group - All rights reserved
 :package:   builderSuite
-:since:     v0.1.01
+:since:     v0.1.1
 :license:   https://www.direct-netware.de/redirect?licenses;mpl2
             Mozilla Public License, v. 2.0
     """
@@ -75,7 +75,7 @@ Constructor __init__(BuilderSkel)
 :param timeout_retries: Retries before timing out
 :param event_handler: EventHandler to use
 
-:since: v0.1.00
+:since: v0.1.0
         """
 
         self.chmod_dirs = (0o750 if (default_chmod_dirs is None) else int(default_chmod_dirs, 8))
@@ -161,7 +161,7 @@ Adds an extension to the list of ASCII file types.
 
 :param extension: File type extension to add
 
-:since: v0.1.00
+:since: v0.1.0
         """
 
         # global: _PY_STR, _PY_UNICODE_TYPE
@@ -183,7 +183,7 @@ Change data according to the matched tag.
 :param tag_end_position: Starting position of the closing tag
 
 :return: (str) Converted data
-:since:  v0.1.00
+:since:  v0.1.0
         """
 
         raise RuntimeError("Not implemented")
@@ -196,7 +196,7 @@ Check if a possible tag match is a false positive.
 :param data: Data starting with the possible tag
 
 :return: (tuple) Matched tag definition; None if false positive
-:since:  v0.1.00
+:since:  v0.1.0
         """
 
         return None
@@ -211,7 +211,7 @@ Use slashes - even on Microsoft(R) Windows(R) machines.
 :param timeout: Timeout to use
 
 :return: (bool) True on success
-:since:  v0.1.00
+:since:  v0.1.0
         """
 
         # global: _PY_STR, _PY_UNICODE_TYPE
@@ -263,7 +263,7 @@ Find the starting position of the closing tag.
 :param tag_end_list: List of possible closing tags to be searched for
 
 :return: (int) Position; -1 if not found
-:since:  v0.1.00
+:since:  v0.1.0
         """
 
         if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._find_end_tag_position()- (#echo(__LINE__)#)")
@@ -296,7 +296,7 @@ Find the starting position of the enclosing content.
 :param tag_end: Tag end definition
 
 :return: (int) Position; -1 if not found
-:since:  v0.1.00
+:since:  v0.1.0
         """
 
         if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._find_tag_end_position()- (#echo(__LINE__)#)")
@@ -322,7 +322,7 @@ Gets the variable content with the given name.
 :param name: Variable name
 
 :return: (mixed) Variable content; None if undefined
-:since:  v0.1.00
+:since:  v0.1.0
         """
 
         # global: _PY_STR, _PY_UNICODE_TYPE
@@ -340,7 +340,7 @@ Returns true if the directory should be excluded.
 :param dir_name: Directory name
 
 :return: (bool) True if excluded
-:since:  v0.1.00
+:since:  v0.1.0
         """
 
         return (dir_name in self.dir_exclude_list)
@@ -353,7 +353,7 @@ Returns true if the file should be excluded.
 :param file_name: File name
 
 :return: (bool) True if excluded
-:since:  v0.1.00
+:since:  v0.1.0
         """
 
         return (file_name in self.file_exclude_list)
@@ -364,7 +364,7 @@ Returns true if the file should be excluded.
 Parse and rewrite all directories and files given as include definitions.
 
 :return: (bool) True on success
-:since:  v0.1.00
+:since:  v0.1.0
         """
 
         # global: _PY_STR, _PY_UNICODE_TYPE
@@ -419,7 +419,7 @@ Parser for "make" tags.
 :param nested_tag_end_position: End position for nested tags
 
 :return: (str) Converted data; None for nested parsing results without a match
-:since:  v0.1.00
+:since:  v0.1.0
         """
 
         # global: _PY_STR, _PY_UNICODE_TYPE
@@ -496,7 +496,7 @@ Parse the given content.
 :param file_name: File name
 
 :return: (str) Filtered data
-:since:  v0.1.00
+:since:  v0.1.0
         """
 
         # global: _PY_STR, _PY_UNICODE_TYPE
@@ -546,7 +546,7 @@ Handle the given file and call the content parse method.
 :param file_pathname: Path to the requested file
 
 :return: (bool) True on success
-:since:  v0.1.00
+:since:  v0.1.0
         """
 
         # global: _PY_BYTES, _PY_BYTES_TYPE, _PY_STR, _PY_UNICODE_TYPE
@@ -614,7 +614,7 @@ Remove all development comments from the content.
 :param data: Data to be parsed
 
 :return: (str) Filtered data
-:since:  v0.1.00
+:since:  v0.1.0
         """
 
         return data
@@ -624,7 +624,7 @@ Remove all development comments from the content.
         """
 Scan given directories for files to be parsed.
 
-:since: v0.1.00
+:since: v0.1.0
         """
 
         # global: _PY_BYTES, _PY_BYTES_TYPE, _PY_STR, _PY_UNICODE_TYPE
@@ -688,7 +688,7 @@ Sets the EventHandler.
 
 :param event_handler: EventHandler to use
 
-:since: v0.1.00
+:since: v0.1.0
         """
 
         self.event_handler = event_handler
@@ -700,7 +700,7 @@ Add "exclude" definitions for directories and files.
 
 :param exclude: String (delimiter is ",") with exclude names or paths
 
-:since: v0.1.00
+:since: v0.1.0
         """
 
         # global: _PY_STR, _PY_UNICODE_TYPE
@@ -725,7 +725,7 @@ Add "exclude" definitions for directories.
 
 :param exclude: String (delimiter is ",") with exclude names or paths
 
-:since: v0.1.00
+:since: v0.1.0
         """
 
         # global: _PY_STR, _PY_UNICODE_TYPE
@@ -746,7 +746,7 @@ Add "exclude" definitions for files.
 
 :param exclude: String (delimiter is ",") with exclude names or paths
 
-:since: v0.1.00
+:since: v0.1.0
         """
 
         # global: _PY_STR, _PY_UNICODE_TYPE
@@ -772,7 +772,7 @@ Sets a new target for processing.
 :param filetype: String (delimiter is ",") with extensions of files to be
                  parsed.
 
-:since: v0.1.00
+:since: v0.1.0
         """
 
         # global: _PY_BYTES, _PY_BYTES_TYPE
@@ -840,7 +840,7 @@ Define a prefix to be stripped from output paths.
 
 :param strip_prefix: Prefix definition
 
-:since: v0.1.00
+:since: v0.1.0
         """
 
         # global: _PY_STR, _PY_UNICODE_TYPE
@@ -863,7 +863,7 @@ needed.
 :param file_mode: Filemode to use
 
 :return: (bool) True on success
-:since:  v0.1.00
+:since:  v0.1.0
         """
 
         # global: _PY_STR, _PY_UNICODE_TYPE

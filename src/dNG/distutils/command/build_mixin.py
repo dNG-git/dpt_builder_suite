@@ -26,7 +26,7 @@ This mixin is used to map Distutils methods with a build directory.
 :author:    direct Netware Group
 :copyright: direct Netware Group - All rights reserved
 :package:   builderSuite
-:since:     v0.1.01
+:since:     v0.1.1
 :license:   https://www.direct-netware.de/redirect?licenses;mpl2
             Mozilla Public License, v. 2.0
     """
@@ -47,7 +47,7 @@ Sets the target directory used during build.
 
 :param target_path: Target directory for build
 
-:since: v0.1.01
+:since: v0.1.1
         """
 
         BuildMixin._build_target_path = path.normpath(target_path)
@@ -60,7 +60,7 @@ Sets the target parameters.
 
 :param parameters: Target parameters
 
-:since: v0.1.01
+:since: v0.1.1
         """
 
         BuildMixin._build_target_parameters = parameters

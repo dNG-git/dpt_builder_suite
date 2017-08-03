@@ -29,7 +29,7 @@ python.org: Create and return a temporary directory.
 :author:    direct Netware Group
 :copyright: direct Netware Group - All rights reserved
 :package:   builderSuite
-:since:     v0.1.01
+:since:     v0.1.1
 :license:   https://www.direct-netware.de/redirect?licenses;mpl2
             Mozilla Public License, v. 2.0
         """
@@ -38,7 +38,7 @@ python.org: Create and return a temporary directory.
             """
 Constructor __init__(TemporaryDirectory)
 
-:since: v0.1.01
+:since: v0.1.1
             """
 
             self.dir = dir
@@ -51,7 +51,7 @@ Constructor __init__(TemporaryDirectory)
             """
 python.org: Enter the runtime context related to this object.
 
-:since: v0.1.01
+:since: v0.1.1
             """
 
             self.name = mkdtemp(self.suffix, self.prefix, self.dir)
@@ -62,7 +62,7 @@ python.org: Enter the runtime context related to this object.
             """
 python.org: Exit the runtime context related to this object.
 
-:since: v0.1.01
+:since: v0.1.1
             """
 
             self.cleanup()
@@ -72,7 +72,7 @@ python.org: Exit the runtime context related to this object.
             """
 python.org: The directory can be explicitly cleaned up by calling the cleanup() method.
 
-:since: v0.1.01
+:since: v0.1.1
             """
 
             rmtree(self.name)

@@ -33,7 +33,7 @@ platform-independent data files
 :author:    direct Netware Group
 :copyright: direct Netware Group - All rights reserved
 :package:   builderSuite
-:since:     v0.1.01
+:since:     v0.1.1
 :license:   https://www.direct-netware.de/redirect?licenses;mpl2
             Mozilla Public License, v. 2.0
     """
@@ -50,7 +50,7 @@ target directory.
 
 :param target_path: Target directory for build
 
-:since: v0.1.01
+:since: v0.1.1
         """
 
         for dir_path, _, file_names in os.walk(target_path):
@@ -64,7 +64,7 @@ target directory.
         """
 Build modules, packages, and copy data files to build directory
 
-:since: v0.1.01
+:since: v0.1.1
         """
 
         with TemporaryDirectory(dir = ".") as target_path:
@@ -93,7 +93,7 @@ Adds a callback to be called while executing "install_data".
 :param callback: Python callback
 :param source_directories: Target directory for build
 
-:since: v0.1.01
+:since: v0.1.1
         """
 
         InstallData._install_data_callback_definitions.append({ "callback": callback,
@@ -110,7 +110,7 @@ Callback to be used in "dNG.distutils.InstallData".
 :param target_path: Target directory for build
 :param target_parameters: Target parameters
 
-:since: v0.1.01
+:since: v0.1.1
         """
 
         extensions = target_parameters.get("install_data_plain_copy_extensions", "").split(",")

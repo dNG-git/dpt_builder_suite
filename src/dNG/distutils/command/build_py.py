@@ -31,7 +31,7 @@ python.org: Build the .py/.pyc files of a package
 :author:    direct Netware Group
 :copyright: direct Netware Group - All rights reserved
 :package:   builderSuite
-:since:     v0.1.01
+:since:     v0.1.1
 :license:   https://www.direct-netware.de/redirect?licenses;mpl2
             Mozilla Public License, v. 2.0
     """
@@ -43,7 +43,7 @@ directory.
 
 :param target_path: Target directory for build
 
-:since: v0.1.01
+:since: v0.1.1
         """
 
         for dir_path, _, _ in os.walk(target_path):
@@ -56,7 +56,7 @@ directory.
         """
 Build modules, packages, and copy data files to build directory
 
-:since: v0.1.01
+:since: v0.1.1
         """
 
         if (os.access("src", (os.R_OK | os.X_OK))):

@@ -30,7 +30,7 @@ Provides a (S)CSS "make" environment object.
 :author:    direct Netware Group
 :copyright: direct Netware Group - All rights reserved
 :package:   builderSuite
-:since:     v0.1.01
+:since:     v0.1.1
 :license:   https://www.direct-netware.de/redirect?licenses;mpl2
             Mozilla Public License, v. 2.0
     """
@@ -42,7 +42,7 @@ Returns true if the file should be excluded.
 :param file_name: File name
 
 :return: (bool) True if excluded
-:since:  v0.1.00
+:since:  v0.1.0
         """
 
         return (file_name[0] == "_" or BuilderSkel._is_excluded_file(self, file_name))
@@ -57,7 +57,7 @@ Parse the given content.
 :param file_name: File name
 
 :return: (str) Filtered data
-:since:  v0.1.00
+:since:  v0.1.0
         """
 
         if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -CssBuilder._parse_data()- (#echo(__LINE__)#)")
@@ -86,7 +86,7 @@ needed.
 :param file_mode: Filemode to use
 
 :return: (bool) True on success
-:since:  v0.1.00
+:since:  v0.1.0
         """
 
         if (file_pathname[-8:].lower() != ".min.css"):
