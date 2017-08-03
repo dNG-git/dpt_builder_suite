@@ -882,8 +882,7 @@ needed.
             file_object = File(self.umask, self.chmod_files, self.timeout_retries, self.event_handler)
 
             if (file_object.open(file_pathname, False, file_mode)):
-                file_object.write(file_content)
-                file_object.close()
+                with file_object: file_object.write(file_content)
             #
         else: _return = False
 
