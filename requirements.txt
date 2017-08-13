@@ -2,4 +2,4 @@ pyScss
 slimit
 rcssmin
 
--e git+http://git.direct-netware.de/py/file/#egg=dng-file-py
+-e git+http://git.direct-netware.de/py/file/#egg=dng-file
