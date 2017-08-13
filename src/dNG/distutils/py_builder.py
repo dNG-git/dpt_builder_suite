@@ -33,7 +33,7 @@ Provides a Python "make" environment object.
             Mozilla Public License, v. 2.0
     """
 
-    def __init__(self, parameters, include, output_path, filetype, default_umask = None, default_chmod_files = None, default_chmod_dirs = None, timeout_retries = 5, event_handler = None):
+    def __init__(self, parameters, include, output_path, filetype, default_umask = None, default_chmod_files = None, default_chmod_dirs = None, timeout_retries = 5, log_handler = None):
         """
 Constructor __init__(PyBuilder)
 
@@ -47,7 +47,7 @@ Constructor __init__(PyBuilder)
 :param default_chmod_files: chmod to set when creating a new file
 :param default_chmod_dirs: chmod to set when creating a new directory
 :param timeout_retries: Retries before timing out
-:param event_handler: EventHandler to use
+:param log_handler: Log handler to use
 
 :since: v0.1.1
         """
@@ -61,7 +61,7 @@ Constructor __init__(PyBuilder)
                              default_chmod_files,
                              default_chmod_dirs,
                              timeout_retries,
-                             event_handler
+                             log_handler
                             )
 
         self.dir_exclude_list = [ "__pycache__" ]
@@ -81,7 +81,7 @@ Change data according to the matched tag.
 :since:  v0.1.1
         """
 
-        if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -PyBuilder._change_match({0:d}, {1:d}, {2:d})- (#echo(__LINE__)#)".format(tag_position, data_position, tag_end_position))
+        if (self._log_handler is not None): self._log_handler.debug("#echo(__FILEPATH__)# -PyBuilder._change_match({0:d}, {1:d}, {2:d})- (#echo(__LINE__)#)".format(tag_position, data_position, tag_end_position))
         _return = data[:tag_position]
 
         data_closed = data[self._find_tag_end_position(data, tag_end_position, '"""'):]
@@ -125,7 +125,7 @@ Check if a possible tag match is a false positive.
 :since:  v0.1.1
         """
 
-        if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -PyBuilder._check_match()- (#echo(__LINE__)#)")
+        if (self._log_handler is not None): self._log_handler.debug("#echo(__FILEPATH__)# -PyBuilder._check_match()- (#echo(__LINE__)#)")
         _return = None
 
         if (data[:9] == '"""#ifdef'):
@@ -163,7 +163,7 @@ Parse the given content.
 :since:  v0.1.1
         """
 
-        if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -PyBuilder._parse_data()- (#echo(__LINE__)#)")
+        if (self._log_handler is not None): self._log_handler.debug("#echo(__FILEPATH__)# -PyBuilder._parse_data()- (#echo(__LINE__)#)")
         data = self._parse('"""#', BuilderSkel._parse_data(self, data, file_pathname, file_name))
 
         if (self._get_variable("dev_comments") is None): return self._remove_data_dev_comments(data)
@@ -180,7 +180,7 @@ Remove all development comments from the content.
 :since:  v0.1.1
         """
 
-        if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -PyBuilder._remove_data_dev_comments()- (#echo(__LINE__)#)")
+        if (self._log_handler is not None): self._log_handler.debug("#echo(__FILEPATH__)# -PyBuilder._remove_data_dev_comments()- (#echo(__LINE__)#)")
         return re.sub('(\n[ \t]*"""\n---.+?---\n[ \t]*"""\n)|("""\\w//.+?//\\w"""\n)', "", data, flags = re.S)
     #
 #

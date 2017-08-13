@@ -60,7 +60,7 @@ Parse the given content.
 :since:  v0.1.0
         """
 
-        if (self.event_handler is not None): self.event_handler.debug("#echo(__FILEPATH__)# -CssBuilder._parse_data()- (#echo(__LINE__)#)")
+        if (self._log_handler is not None): self._log_handler.debug("#echo(__FILEPATH__)# -CssBuilder._parse_data()- (#echo(__LINE__)#)")
 
         if (path.splitext(file_name)[-1].lower() == ".scss"):
             config.STATIC_URL = ""
