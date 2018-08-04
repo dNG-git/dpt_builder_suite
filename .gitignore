@@ -3,5 +3,8 @@ __py*
 *.pyc
 nbproject
 /_extras
+/build
 /builder_suite.*
+/dist
 /make*.py*
+/MANIFEST

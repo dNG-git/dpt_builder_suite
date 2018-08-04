@@ -36,47 +36,78 @@ python.org: Build the .py/.pyc files of a package
             Mozilla Public License, v. 2.0
     """
 
-    def _extend_packages(self, target_path):
-        """
-Extends the list of packages based on the content of the given target
-directory.
+    def __init__(self, *args, **kwargs):
+        _build_py.__init__(self, *args, **kwargs)
 
-:param target_path: Target directory for build
-
-:since: v0.1.1
-        """
-
-        for dir_path, _, _ in os.walk(target_path):
-            package = dir_path[len(target_path) + 1:].replace(path.sep, ".")
-            if (package not in self.packages): self.packages.append(package)
-        #
+        self.is_built = False
     #
 
-    def run(self):
+    def _build_source(self):
         """
-Build modules, packages, and copy data files to build directory
+Builds the preprocessed source and adds it's packages for processing.
 
-:since: v0.1.1
+:since: v1.0.0
         """
 
-        if (os.access("src", (os.R_OK | os.X_OK))):
+        if ((not self.is_built) and os.access("src", (os.R_OK | os.X_OK))):
             target_path = path.join(BuildPy._build_target_path, "src")
 
             py_builder = PyBuilder(BuildPy._build_target_parameters,
-                                   "src",
-                                   target_path,
-                                   "py",
-                                   default_chmod_files = "0644",
-                                   default_chmod_dirs = "0755"
-                                  )
+                                "src",
+                                target_path,
+                                "py",
+                                default_chmod_files = "0644",
+                                default_chmod_dirs = "0755"
+                                )
 
             py_builder.set_strip_prefix("src" + path.sep)
 
             py_builder.make_all()
 
-            self._extend_packages(target_path)
-        #
+            for dir_path, subdir_names, _ in os.walk(target_path):
+                dir_path = dir_path[len(target_path) + 1:]
 
-        _build_py.run(self)
+                if (dir_path == ""):
+                    if ('' not in self.package_dir):
+                        self.package_dir[''] = target_path
+                    #
+
+                    for dir_name in subdir_names:
+                        self.package_dir[dir_name] = path.join(target_path, dir_name)
+                    #
+                else:
+                    package = dir_path.replace(path.sep, ".")
+
+                    if (package not in self.packages): self.packages.append(package)
+                #
+            #
+
+            self.is_built = True
+        #
+    #
+
+    def build_packages(self):
+        """
+Builds the packages defined in the 'setup.py' packages list.
+
+:since: v1.0.0
+        """
+
+        self._build_source()
+        _build_py.build_packages(self)
+    #
+
+    def find_all_modules(self):
+        """
+python.org: Compute the list of all modules that will be built, whether
+they are specified one-module-at-a-time ('self.py_modules') or by whole
+packages ('self.packages').
+
+:return: List of tuples
+:since:  v1.0.0
+        """
+
+        self._build_source()
+        return _build_py.find_all_modules(self)
     #
 #

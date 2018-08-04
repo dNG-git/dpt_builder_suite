@@ -113,7 +113,7 @@ Callback to be used in "dNG.distutils.InstallData".
 :since: v0.1.1
         """
 
-        extensions = target_parameters.get("install_data_plain_copy_extensions", "").split(",")
+        extensions = target_parameters.get("plain_copy_extensions", "").split(",")
 
         for dir_path, _, file_names in os.walk(source_dir_path):
             target_dir_path = path.join(target_path, dir_path)
