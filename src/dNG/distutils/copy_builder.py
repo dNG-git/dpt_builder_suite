@@ -19,42 +19,44 @@ https://www.direct-netware.de/redirect?licenses;mpl2
 
 from os import path
 
-from dNG.distutils.js_builder import JsBuilder
+from .builder_skel import BuilderSkel
 
-class InstallJsData(object):
+class CopyBuilder(BuilderSkel):
     """
-This class provides the callback for JavaScript files.
+Provides a copying "make" environment object with support for custom headers
+by extension.
 
 :author:    direct Netware Group
 :copyright: direct Netware Group - All rights reserved
 :package:   builderSuite
-:since:     v0.1.1
+:since:     v1.0.0
 :license:   https://www.direct-netware.de/redirect?licenses;mpl2
             Mozilla Public License, v. 2.0
     """
 
-    @staticmethod
-    def callback(source_directory, target_path, target_parameters):
+    def _parse_data(self, data, file_pathname, file_name):
         """
-Callback to be used in "dNG.distutils.InstallData".
+Parse the given content.
 
-:param source_directory: Source directory to work in
-:param target_path: Target directory for build
-:param target_parameters: Target parameters
+:param data: Data to be parsed
+:param file_pathname: File path
+:param file_name: File name
 
-:since: v0.1.1
+:return: (str) Filtered data
+:since:  v1.0.0
         """
 
-        js_builder = JsBuilder(target_parameters,
-                               source_directory,
-                               target_path,
-                               "js",
-                               default_chmod_files = "0644",
-                               default_chmod_dirs = "0755"
-                              )
+        if (self._log_handler is not None): self._log_handler.debug("#echo(__FILEPATH__)# -CopyBuilder._parse_data()- (#echo(__LINE__)#)")
 
-        if (target_parameters.get("js_strip_source_directory", False)): js_builder.set_strip_prefix(source_directory + path.sep)
+        ( _, file_ext ) = path.splitext(file_pathname)
 
-        js_builder.make_all()
+        file_ext = file_ext[1:].lower()
+        header_by_extension_list = self._get_variable("copy_builder_header_by_extension")
+
+        if (type(header_by_extension_list) is dict
+            and file_ext in header_by_extension_list
+           ): data = "{0}\n{1}".format(header_by_extension_list[file_ext], data)
+
+        return BuilderSkel._parse_data(self, data, file_pathname, file_name)
     #
 #

@@ -19,42 +19,49 @@ https://www.direct-netware.de/redirect?licenses;mpl2
 
 from os import path
 
-from dNG.distutils.css_builder import CssBuilder
+from dNG.distutils.copy_builder import CopyBuilder
 
-class InstallCssData(object):
+class InstallCopiedAndExtendedData(object):
     """
-This class provides the callback for (S)CSS files.
+This class provides the callback to copy and extend source files with the
+requested extensions.
 
 :author:    direct Netware Group
 :copyright: direct Netware Group - All rights reserved
 :package:   builderSuite
-:since:     v0.1.1
+:since:     v1.0.0
 :license:   https://www.direct-netware.de/redirect?licenses;mpl2
             Mozilla Public License, v. 2.0
     """
 
     @staticmethod
-    def callback(source_directory, target_path, target_parameters):
+    def callback(source_dir_path, target_path, target_parameters):
         """
 Callback to be used in "dNG.distutils.InstallData".
 
-:param source_directory: Source directory to work in
+:param source_dir_path: Source directory to copy files in
 :param target_path: Target directory for build
 :param target_parameters: Target parameters
 
-:since: v0.1.1
+:since: v1.0.0
         """
 
-        css_builder = CssBuilder(target_parameters,
-                                 source_directory,
-                                 target_path,
-                                 "css,scss",
-                                 default_chmod_files = "0644",
-                                 default_chmod_dirs = "0755"
-                                )
+        target_extensions = target_parameters.get("copy_builder_extensions")
 
-        if (target_parameters.get("css_strip_source_directory", False)): css_builder.set_strip_prefix(source_directory + path.sep)
+        if (type(target_extensions) is list and len(target_extensions) > 0):
+            copy_builder = CopyBuilder(target_parameters,
+                                       source_dir_path,
+                                       target_path,
+                                       target_extensions,
+                                       default_chmod_files = "0644",
+                                       default_chmod_dirs = "0755"
+                                      )
 
-        css_builder.make_all()
+            if (target_parameters.get("copy_builder_strip_source_dir_path", False)):
+                copy_builder.set_strip_prefix(source_dir_path + path.sep)
+            #
+
+            copy_builder.make_all()
+        #
     #
 #

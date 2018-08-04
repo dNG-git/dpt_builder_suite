@@ -24,16 +24,17 @@ import os
 import re
 import sys
 
-from dNG.distutils.css_builder import CssBuilder
+from dNG.distutils.copy_builder import CopyBuilder
 
 sys.path.append(os.getcwd())
 
 try: import makefile
 except ImportError: pass
 
-class MakeCss(object):
+class Make(object):
     """
-"MakeCss" is the main application object for (S)CSS files.
+"Make" is the main application object for copying files with slightly
+enhanced capabilities.
 
 :author:    direct Netware Group
 :copyright: direct Netware Group - All rights reserved
@@ -45,7 +46,7 @@ class MakeCss(object):
 
     def __init__(self):
         """
-Constructor __init__(MakeCss)
+Constructor __init__(Make)
 
 :since: v0.1.0
         """
@@ -66,7 +67,7 @@ ArgumentParser instance
         self.arg_parser.add_argument("--exclude_files", action = "store", type = str, dest = "exclude_files")
         self.arg_parser.add_argument("--strip_prefix", action = "store", type = str, dest = "strip_prefix")
 
-        self.arg_parser.add_argument("-v", "--version", action = "version", version = "https://www.direct-netware.de/redirect?css;builder")
+        self.arg_parser.add_argument("-v", "--version", action = "version", version = "#echo(builderSuiteVersion)#")
     #
 
     def run(self):
@@ -92,7 +93,7 @@ Executes registered callbacks for the active application.
 
         if (args.filetype is None or args.include is None or len(targets) == 0): self.arg_parser.print_help()
         else:
-            css_builder = None
+            copy_builder = None
             self.arg_parser = None
 
             for target in targets:
@@ -115,21 +116,21 @@ Executes registered callbacks for the active application.
                     #
                 #
 
-                if (css_builder is None):
-                    css_builder = CssBuilder(target,
-                                             args.include,
-                                             target['make_output_path'],
-                                             args.filetype,
-                                             default_chmod_files = args.output_files_chmod,
-                                             default_chmod_dirs = args.output_dirs_chmod
-                                            )
-                else: css_builder.set_new_target(target, args.include, target['make_output_path'], args.filetype)
+                if (copy_builder is None):
+                    copy_builder = CopyBuilder(target,
+                                               args.include,
+                                               target['make_output_path'],
+                                               args.filetype,
+                                               default_chmod_files = args.output_files_chmod,
+                                               default_chmod_dirs = args.output_dirs_chmod
+                                              )
+                else: copy_builder.set_new_target(target, args.include, target['make_output_path'], args.filetype)
 
-                if (args.exclude is not None): css_builder.set_exclude(args.exclude)
-                if (args.exclude_dirs is not None): css_builder.set_exclude_dirs(args.exclude_dirs)
-                if (args.exclude_files is not None): css_builder.set_exclude_files(args.exclude_files)
-                if (args.strip_prefix is not None): css_builder.set_strip_prefix(args.strip_prefix)
-                css_builder.make_all()
+                if (args.exclude is not None): copy_builder.set_exclude(args.exclude)
+                if (args.exclude_dirs is not None): copy_builder.set_exclude_dirs(args.exclude_dirs)
+                if (args.exclude_files is not None): copy_builder.set_exclude_files(args.exclude_files)
+                if (args.strip_prefix is not None): copy_builder.set_strip_prefix(args.strip_prefix)
+                copy_builder.make_all()
             #
         #
     #
@@ -137,19 +138,19 @@ Executes registered callbacks for the active application.
 
 print("""
 ----------------------------------------------------------------------------
-builderSuite for (S)CSS #echo(builderSuiteVersion)#
+builderSuite for enhanced file copies #echo(builderSuiteVersion)#
 (C) direct Netware Group - All rights reserved
 ----------------------------------------------------------------------------
 """)
 
 try:
-    if (hasattr(makefile, "direct_makefile_css_set")): _parameters = makefile.direct_makefile_css_set()
+    if (hasattr(makefile, "direct_makefile_copy_set")): _parameters = makefile.direct_makefile_copy_set()
     else: _parameters = makefile.direct_makefile_set()
 except NameError: _parameters = { }
 
 try:
-    make_css = MakeCss()
-    make_css.run()
+    make = Make()
+    make.run()
 except KeyboardInterrupt: pass
 except Exception:
     sys.stderr.write("{0!r}".format(sys.exc_info()))

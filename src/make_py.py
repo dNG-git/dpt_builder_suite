@@ -66,7 +66,7 @@ ArgumentParser instance
         self.arg_parser.add_argument("--exclude_files", action = "store", type = str, dest = "exclude_files")
         self.arg_parser.add_argument("--strip_prefix", action = "store", type = str, dest = "strip_prefix")
 
-        self.arg_parser.add_argument("-v", "--version", action = "version", version = "https://www.direct-netware.de/redirect?py;builder")
+        self.arg_parser.add_argument("-v", "--version", action = "version", version = "#echo(builderSuiteVersion)#")
     #
 
     def run(self):
