@@ -40,8 +40,8 @@ Target directory for build
 Target parameters
     """
 
-    @staticmethod
-    def set_build_target_path(target_path):
+    @classmethod
+    def set_build_target_path(cls, target_path):
         """
 Sets the target directory used during build.
 
@@ -50,11 +50,11 @@ Sets the target directory used during build.
 :since: v0.1.1
         """
 
-        BuildMixin._build_target_path = path.normpath(target_path)
+        cls._build_target_path = path.normpath(target_path)
     #
 
-    @staticmethod
-    def set_build_target_parameters(parameters):
+    @classmethod
+    def set_build_target_parameters(cls, parameters):
         """
 Sets the target parameters.
 
@@ -63,6 +63,6 @@ Sets the target parameters.
 :since: v0.1.1
         """
 
-        BuildMixin._build_target_parameters = parameters
+        cls._build_target_parameters = parameters
     #
 #
