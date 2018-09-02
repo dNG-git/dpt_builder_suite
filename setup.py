@@ -18,14 +18,32 @@ setup.py
 
 from os import makedirs, path
 
-from distutils.core import setup
+try:
+    from setuptools.core import setup
+except ImportError:
+    from distutils.core import setup
+#
 
 try:
     from dNG.distutils.command.build_py import BuildPy
     from dNG.distutils.command.sdist import Sdist
     from dNG.distutils.temporary_directory import TemporaryDirectory
 except ImportError:
-    raise RuntimeError("'dng-builder-suite' prerequisite not matched")
+    TemporaryDirectory = None
+#
+
+if (TemporaryDirectory is None):
+    # Self host build with merged wheel file
+    import sys
+    sys.path.append("dng_builder_suite-1.0.0-merged-py3-none-any.whl")
+
+    try:
+        from dNG.distutils.command.build_py import BuildPy
+        from dNG.distutils.command.sdist import Sdist
+        from dNG.distutils.temporary_directory import TemporaryDirectory
+    except ImportError:
+        raise RuntimeError("'dng-builder-suite' prerequisite not matched")
+    #
 #
 
 def get_version():

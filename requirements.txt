@@ -1,2 +1,2 @@
--e git+http://git.direct-netware.de/py/builder_suite/#egg=dng-builder-suite
+-e git+http://git.direct-netware.de/py/builder_suite/#egg=dng-builder-suite[prebuild]
 -e git+http://git.direct-netware.de/py/file/#egg=dng-file
