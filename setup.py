@@ -69,7 +69,7 @@ with TemporaryDirectory(dir = ".") as build_directory:
     makedirs(path.join(build_directory, "src", "dNG"))
 
     _setup = { "name": "dng-builder-suite",
-               "version": get_version(),
+               "version": get_version()[1:],
                "description": "Build code for different release targets",
                "long_description": "The builder suite provides support to rewrite placeholders for debug log messages, removing development notes and adding source code conditionally.",
                "author": "direct Netware Group et al.",
