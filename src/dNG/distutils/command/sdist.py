@@ -46,9 +46,7 @@ python.org: Copy a file respecting verbose, dry-run and force flags.
 
         src_path = "src" + path.sep
 
-        if (infile[:4] == src_path):
-            infile = path.join(Sdist._build_target_path, infile)
-        #
+        if (infile[:4] == src_path): infile = path.join(Sdist._build_target_path, infile)
 
         return _sdist.copy_file(self, infile, outfile, **kwargs)
     #
@@ -59,14 +57,20 @@ python.org: Create the directory tree that will become the source
 distribution archive.
         """
 
-        build_target_path_length = len(Sdist._build_target_path)
-        build_target_src_path = path.join(Sdist._build_target_path, "src") + path.sep
+        target_path_length = len(Sdist._build_target_path)
+        target_src_path = path.join(Sdist._build_target_path, "src") + path.sep
+
+        target_relative_src_path = path.join(".", target_src_path)
+
+        target_src_path_length = len(target_src_path)
+        target_relative_src_path_length = len(target_relative_src_path)
 
         files_filtered = [ ]
 
         for _file in files:
-            if (_file.startswith(build_target_src_path)):
-                _file = _file[build_target_path_length + 1:]
+            if (_file[:target_src_path_length] == target_src_path): _file = _file[target_path_length + 1:]
+            elif (_file[:target_relative_src_path_length] == target_relative_src_path):
+                _file = _file[target_path_length + 3:]
             #
 
             files_filtered.append(_file)
