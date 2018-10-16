@@ -1,1 +1,1 @@
--e git+http://git.direct-netware.de/py/file/#egg=dng-file
+-e git+https://git.direct-netware.de/py/file/#egg=dng-file

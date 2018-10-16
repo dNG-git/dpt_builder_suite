@@ -57,7 +57,7 @@ _setup = { "name": "dng-builder-suite",
            "platforms": [ "any" ],
 
            "data_files": [ ( "docs", [ "LICENSE", "README" ]) ]
-          }
+         }
 
 if (_use_dist_mode):
     _setup['package_dir'] = { "": "src" }
