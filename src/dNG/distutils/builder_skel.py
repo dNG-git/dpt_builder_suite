@@ -357,7 +357,7 @@ Gets the variable content with the given name.
         if (str is not _PY_UNICODE_TYPE and type(name) is _PY_UNICODE_TYPE): name = _PY_STR(name, "utf-8")
 
         if (self._log_handler is not None): self._log_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._get_variable({0})- (#echo(__LINE__)#)".format(name))
-        return self.parameters.get(name, None)
+        return self.parameters.get(name)
     #
 
     def _is_excluded_dir(self, dir_name):
