@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
 """
-builderSuite
-Build code for different release targets
+direct Python Toolbox
+All-in-one toolbox to encapsulate Python runtime variants
 ----------------------------------------------------------------------------
 (C) direct Netware Group - All rights reserved
-https://www.direct-netware.de/redirect?py;builder_suite
+https://www.direct-netware.de/redirect?dpt;builder_suite
 
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can
@@ -13,7 +13,7 @@ obtain one at http://mozilla.org/MPL/2.0/.
 ----------------------------------------------------------------------------
 https://www.direct-netware.de/redirect?licenses;mpl2
 ----------------------------------------------------------------------------
-#echo(builderSuiteVersion)#
+#echo(dptBuilderSuiteVersion)#
 #echo(__FILEPATH__)#
 """
 
@@ -21,19 +21,20 @@ from distutils.command.build_py import build_py as _build_py
 from os import path
 import os
 
-from dNG.distutils.py_builder import PyBuilder
+from ..py_builder import PyBuilder
 from .build_mixin import BuildMixin
 
 class BuildPy(_build_py, BuildMixin):
     """
 python.org: Build the .py/.pyc files of a package
 
-:author:    direct Netware Group
-:copyright: direct Netware Group - All rights reserved
-:package:   builderSuite
-:since:     v0.1.1
-:license:   https://www.direct-netware.de/redirect?licenses;mpl2
-            Mozilla Public License, v. 2.0
+:author:     direct Netware Group
+:copyright:  direct Netware Group - All rights reserved
+:package:    dpt
+:subpackage: builder_suite
+:since:      v0.1.1
+:license:    https://www.direct-netware.de/redirect?licenses;mpl2
+             Mozilla Public License, v. 2.0
     """
 
     def __init__(self, *args, **kwargs):

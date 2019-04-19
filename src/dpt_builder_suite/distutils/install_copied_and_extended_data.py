@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
 """
-builderSuite
-Build code for different release targets
+direct Python Toolbox
+All-in-one toolbox to encapsulate Python runtime variants
 ----------------------------------------------------------------------------
 (C) direct Netware Group - All rights reserved
-https://www.direct-netware.de/redirect?py;builder_suite
+https://www.direct-netware.de/redirect?dpt;builder_suite
 
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can
@@ -13,25 +13,26 @@ obtain one at http://mozilla.org/MPL/2.0/.
 ----------------------------------------------------------------------------
 https://www.direct-netware.de/redirect?licenses;mpl2
 ----------------------------------------------------------------------------
-#echo(builderSuiteVersion)#
+#echo(dptBuilderSuiteVersion)#
 #echo(__FILEPATH__)#
 """
 
 from os import path
 
-from dNG.distutils.copy_builder import CopyBuilder
+from ..copy_builder import CopyBuilder
 
 class InstallCopiedAndExtendedData(object):
     """
 This class provides the callback to copy and extend source files with the
 requested extensions.
 
-:author:    direct Netware Group
-:copyright: direct Netware Group - All rights reserved
-:package:   builderSuite
-:since:     v1.0.0
-:license:   https://www.direct-netware.de/redirect?licenses;mpl2
-            Mozilla Public License, v. 2.0
+:author:     direct Netware Group
+:copyright:  direct Netware Group - All rights reserved
+:package:    dpt
+:subpackage: builder_suite
+:since:      v1.0.0
+:license:    https://www.direct-netware.de/redirect?licenses;mpl2
+             Mozilla Public License, v. 2.0
     """
 
     @staticmethod

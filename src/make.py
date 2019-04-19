@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
 """
-builderSuite
-Build code for different release targets
+direct Python Toolbox
+All-in-one toolbox to encapsulate Python runtime variants
 ----------------------------------------------------------------------------
 (C) direct Netware Group - All rights reserved
-https://www.direct-netware.de/redirect?py;builder_suite
+https://www.direct-netware.de/redirect?dpt;builder_suite
 
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can
@@ -13,7 +13,7 @@ obtain one at http://mozilla.org/MPL/2.0/.
 ----------------------------------------------------------------------------
 https://www.direct-netware.de/redirect?licenses;mpl2
 ----------------------------------------------------------------------------
-#echo(builderSuiteVersion)#
+#echo(dptBuilderSuiteVersion)#
 #echo(__FILEPATH__)#
 """
 
@@ -24,7 +24,7 @@ import os
 import re
 import sys
 
-from dNG.distutils.copy_builder import CopyBuilder
+from dpt_builder_suite.copy_builder import CopyBuilder
 
 sys.path.append(os.getcwd())
 
@@ -36,12 +36,13 @@ class Make(object):
 "Make" is the main application object for copying files with slightly
 enhanced capabilities.
 
-:author:    direct Netware Group
-:copyright: direct Netware Group - All rights reserved
-:package:   builderSuite
-:since:     v0.1.0
-:license:   https://www.direct-netware.de/redirect?licenses;mpl2
-            Mozilla Public License, v. 2.0
+:author:     direct Netware Group
+:copyright:  direct Netware Group - All rights reserved
+:package:    dpt
+:subpackage: builder_suite
+:since:      v0.1.0
+:license:    https://www.direct-netware.de/redirect?licenses;mpl2
+             Mozilla Public License, v. 2.0
     """
 
     def __init__(self):
@@ -67,7 +68,7 @@ ArgumentParser instance
         self.arg_parser.add_argument("--exclude_files", action = "store", type = str, dest = "exclude_files")
         self.arg_parser.add_argument("--strip_prefix", action = "store", type = str, dest = "strip_prefix")
 
-        self.arg_parser.add_argument("-v", "--version", action = "version", version = "#echo(builderSuiteVersion)#")
+        self.arg_parser.add_argument("-v", "--version", action = "version", version = "#echo(dptBuilderSuiteVersion)#")
     #
 
     def run(self):
@@ -138,7 +139,7 @@ Executes registered callbacks for the active application.
 
 print("""
 ----------------------------------------------------------------------------
-builderSuite for enhanced file copies #echo(builderSuiteVersion)#
+builderSuite for enhanced file copies #echo(dptBuilderSuiteVersion)#
 (C) direct Netware Group - All rights reserved
 ----------------------------------------------------------------------------
 """)

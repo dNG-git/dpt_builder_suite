@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
 """
-builderSuite
-Build code for different release targets
+direct Python Toolbox
+All-in-one toolbox to encapsulate Python runtime variants
 ----------------------------------------------------------------------------
 (C) direct Netware Group - All rights reserved
-https://www.direct-netware.de/redirect?py;builder_suite
+https://www.direct-netware.de/redirect?dpt;builder_suite
 
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can
@@ -27,9 +27,9 @@ except ImportError:
 _use_dist_mode = False
 
 try:
-    from dNG.distutils.command.build_py import BuildPy
-    from dNG.distutils.command.sdist import Sdist
-    from dNG.distutils.temporary_directory import TemporaryDirectory
+    from dpt_builder_suite.distutils.build_py import BuildPy
+    from dpt_builder_suite.distutils.sdist import Sdist
+    from dpt_builder_suite.distutils.temporary_directory import TemporaryDirectory
 except ImportError:
     _use_dist_mode = True
 #
@@ -45,18 +45,9 @@ Returns the version currently in development.
     return "v1.0.0"
 #
 
-_setup = { "name": "dng-builder-suite",
-           "version": get_version()[1:],
-           "description": "Build code for different release targets",
-           "long_description": "The builder suite provides support to rewrite placeholders for debug log messages, removing development notes and adding source code conditionally.",
-           "author": "direct Netware Group et al.",
-           "author_email": "web@direct-netware.de",
-           "license": "MPL2",
-           "url": "https://www.direct-netware.de/redirect?py;builder_suite",
-
-           "platforms": [ "any" ],
-
-           "data_files": [ ( "docs", [ "LICENSE", "README" ]) ]
+_setup = { "version": get_version()[1:],
+           "data_files": [ ( "docs", [ "LICENSE", "README" ]) ],
+           "test_suite" : "tests"
          }
 
 if (_use_dist_mode):
@@ -70,7 +61,7 @@ if (_use_dist_mode):
     setup(**_setup)
 else:
     with TemporaryDirectory(dir = ".") as build_directory:
-        parameters = { "builderSuiteVersion": get_version() }
+        parameters = { "dptBuilderSuiteVersion": get_version() }
 
         BuildPy.set_build_target_path(build_directory)
         BuildPy.set_build_target_parameters(parameters)
@@ -78,9 +69,9 @@ else:
         Sdist.set_build_target_path(build_directory)
         Sdist.set_build_target_parameters(parameters)
 
-        makedirs(path.join(build_directory, "src", "dNG"))
+        makedirs(path.join(build_directory, "src"))
 
-        _setup['packages'] = [ "dNG" ]
+        _setup['packages'] = [ "dpt_builder_suite" ]
 
         _setup['scripts'] = [ path.join(build_directory, "src", "make.py"),
                               path.join(build_directory, "src", "make_py.py")

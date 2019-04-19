@@ -4,8 +4,8 @@ __py*
 nbproject
 /_extras
 /build
-/builder_suite*
 /dist
-/dng_builder_suite*
+/dpt_builder_suite*
+/dpt-builder-suite*
 /make*.py*
 /MANIFEST
