@@ -69,12 +69,14 @@ else:
         Sdist.set_build_target_path(build_directory)
         Sdist.set_build_target_parameters(parameters)
 
-        makedirs(path.join(build_directory, "src"))
+        package_dir = path.join(build_directory, "src")
+        makedirs(package_dir)
 
+        _setup['package_dir'] = { "": package_dir }
         _setup['packages'] = [ "dpt_builder_suite" ]
 
-        _setup['scripts'] = [ path.join(build_directory, "src", "make.py"),
-                              path.join(build_directory, "src", "make_py.py")
+        _setup['scripts'] = [ path.join(package_dir, "make.py"),
+                              path.join(package_dir, "make_py.py")
                             ]
 
         # Customize "cmdclass" to first run builder.py
