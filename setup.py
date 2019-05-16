@@ -47,7 +47,7 @@ Returns the version currently in development.
 
 _setup = { "version": get_version()[1:],
            "data_files": [ ( "docs", [ "LICENSE", "README" ]) ],
-           "test_suite" : "tests"
+           "test_suite": "tests"
          }
 
 if (_use_dist_mode):
