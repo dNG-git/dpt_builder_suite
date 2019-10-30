@@ -34,6 +34,12 @@ Provides a Python "make" environment object.
              Mozilla Public License, v. 2.0
     """
 
+    __slots__ = [ ]
+    """
+python.org: __slots__ reserves space for the declared variables and prevents
+the automatic creation of __dict__ and __weakref__ for each instance.
+    """
+
     def __init__(self, parameters, include, output_path, filetype, default_umask = None, default_chmod_files = None, default_chmod_dirs = None, timeout_retries = 5, log_handler = None):
         """
 Constructor __init__(PyBuilder)
@@ -65,7 +71,7 @@ Constructor __init__(PyBuilder)
                              log_handler
                             )
 
-        self.dir_exclude_list = [ "__pycache__" ]
+        self.dir_exclude_list += [ "__pycache__" ]
     #
 
     def _change_match(self, tag_definition, data, tag_position, data_position, tag_end_position):

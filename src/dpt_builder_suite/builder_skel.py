@@ -61,6 +61,30 @@ Provides a Python "make" environment skeleton.
 
     # pylint: disable=unused-argument
 
+    __slots__ = [ "chmod_dirs",
+                  "chmod_files",
+                  "dir_list",
+                  "dir_exclude_list",
+                  "file_dict",
+                  "file_exclude_list",
+                  "filetype_list",
+                  "filetype_ascii_list",
+                  "_log_handler",
+                  "output_path",
+                  "output_strip_prefix",
+                  "parameters",
+                  "parser_list",
+                  "parser_pickle",
+                  "parser_tag",
+                  "timeout_retries",
+                  "umask",
+                  "workdir_rescan"
+                ]
+    """
+python.org: __slots__ reserves space for the declared variables and prevents
+the automatic creation of __dict__ and __weakref__ for each instance.
+    """
+
     def __init__(self, parameters, include, output_path, filetype, default_umask = None, default_chmod_files = None, default_chmod_dirs = None, timeout_retries = 5, log_handler = None):
         """
 Constructor __init__(BuilderSkel)

@@ -37,6 +37,12 @@ python.org: Create a source distribution (tarball, zip file, etc.)
              Mozilla Public License, v. 2.0
     """
 
+    __slots__ = [ ]
+    """
+python.org: __slots__ reserves space for the declared variables and prevents
+the automatic creation of __dict__ and __weakref__ for each instance.
+    """
+
     def copy_file(self, infile, outfile, **kwargs):
         """
 python.org: Copy a file respecting verbose, dry-run and force flags.

@@ -35,6 +35,12 @@ by extension.
              Mozilla Public License, v. 2.0
     """
 
+    __slots__ = [ ]
+    """
+python.org: __slots__ reserves space for the declared variables and prevents
+the automatic creation of __dict__ and __weakref__ for each instance.
+    """
+
     def _parse_data(self, data, file_pathname, file_name):
         """
 Parse the given content.
