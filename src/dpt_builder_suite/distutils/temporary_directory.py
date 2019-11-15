@@ -17,8 +17,12 @@ https://www.direct-netware.de/redirect?licenses;mpl2
 #echo(__FILEPATH__)#
 """
 
+# pylint: disable=unused-import
+
 try: from tempfile import TemporaryDirectory
 except ImportError:
+    # pylint: disable=redefined-builtin,ungrouped-imports
+
     from shutil import rmtree
     from tempfile import mkdtemp
 

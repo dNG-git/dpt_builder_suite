@@ -19,7 +19,6 @@ https://www.direct-netware.de/redirect?licenses;mpl2
 
 from distutils.command.sdist import sdist as _sdist
 from os import path
-import os
 
 from ..py_builder import PyBuilder
 from .build_mixin import BuildMixin

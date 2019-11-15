@@ -173,8 +173,10 @@ Parse the given content.
         if (self._log_handler is not None): self._log_handler.debug("#echo(__FILEPATH__)# -PyBuilder._parse_data()- (#echo(__LINE__)#)")
         data = self._parse('"""#', BuilderSkel._parse_data(self, data, file_pathname, file_name))
 
-        if (self._get_variable("dev_comments") is None): return self._remove_data_dev_comments(data)
-        else: return data
+        return (self._remove_data_dev_comments(data)
+                if (self._get_variable("dev_comments") is None) else
+                data
+               )
     #
 
     def _remove_data_dev_comments(self, data):

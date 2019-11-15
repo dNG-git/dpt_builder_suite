@@ -492,6 +492,7 @@ Parser for "make" tags.
         #
 
         while (data_position > -1):
+            # pylint: disable=assignment-from-none, unsubscriptable-object
             tag_definition = self._check_match(data[data_position:])
 
             if (tag_definition is None): data_position += len(parser_tag)
@@ -522,6 +523,7 @@ Parser for "make" tags.
                 #
 
                 if (tag_end_position > -1):
+                    # pylint: disable=assignment-from-no-return
                     data = self._change_match(tag_definition,
                                               data,
                                               data_position,
@@ -852,7 +854,7 @@ Sets a new target for processing.
 
         for data in data_list:
             if (path.isdir(data)):
-                if (self.workdir_rescan == False and data not in self.dir_list):
+                if ((not self.workdir_rescan) and data not in self.dir_list):
                     self.dir_list = [ ]
                     self.file_dict = { }
                     self.workdir_rescan = True
@@ -863,7 +865,7 @@ Sets a new target for processing.
                 if (type(data) is not _PY_BYTES_TYPE): data = _PY_BYTES(data, "utf-8")
                 file_id = hashlib.md5(data).hexdigest()
 
-                if (self.workdir_rescan == False and file_id not in self.file_dict):
+                if ((not self.workdir_rescan) and file_id not in self.file_dict):
                     self.dir_list = [ ]
                     self.file_dict = { }
                     self.workdir_rescan = True
