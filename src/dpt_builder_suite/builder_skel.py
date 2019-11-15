@@ -220,7 +220,7 @@ Adds an extension to the list of ASCII file types.
 
         if (str is not _PY_UNICODE_TYPE and type(extension) is _PY_UNICODE_TYPE): extension = _PY_STR(extension, "utf-8")
 
-        if (self._log_handler is not None): self._log_handler.debug("#echo(__FILEPATH__)# -BuilderSkel.add_filetype_ascii({0})- (#echo(__LINE__)#)".format(extension))
+        if (self._log_handler is not None): self._log_handler.debug("#echo(__FILEPATH__)# -BuilderSkel.add_filetype_ascii({0})- (#echo(__LINE__)#)", extension)
         self.filetype_ascii_list.append(extension)
     #
 
@@ -270,7 +270,7 @@ Use slashes - even on Microsoft(R) Windows(R) machines.
 
         if (str is not _PY_UNICODE_TYPE and type(dir_path) is _PY_UNICODE_TYPE): dir_path = _PY_STR(dir_path, "utf-8")
 
-        if (self._log_handler is not None): self._log_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._create_dir({0}, {1:d})- (#echo(__LINE__)#)".format(dir_path, timeout))
+        if (self._log_handler is not None): self._log_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._create_dir({0}, {1:d})- (#echo(__LINE__)#)", dir_path, timeout)
 
         dir_path = re.sub("/$", "", dir_path)
         dir_path_os = path.normpath(dir_path)
@@ -381,7 +381,7 @@ Gets the variable content with the given name.
 
         if (str is not _PY_UNICODE_TYPE and type(name) is _PY_UNICODE_TYPE): name = _PY_STR(name, "utf-8")
 
-        if (self._log_handler is not None): self._log_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._get_variable({0})- (#echo(__LINE__)#)".format(name))
+        if (self._log_handler is not None): self._log_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._get_variable({0})- (#echo(__LINE__)#)", name)
         return self.parameters.get(name)
     #
 
@@ -478,7 +478,7 @@ Parser for "make" tags.
 
         if (str is not _PY_UNICODE_TYPE and type(parser_tag) is _PY_UNICODE_TYPE): parser_tag = _PY_STR(parser_tag, "utf-8")
 
-        if (self._log_handler is not None): self._log_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._parse({0}, {1:d})- (#echo(__LINE__)#)".format(parser_tag, data_position))
+        if (self._log_handler is not None): self._log_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._parse({0}, {1:d})- (#echo(__LINE__)#)", parser_tag, data_position)
 
         if (nested_tag_end_position is None):
             data_position = data.find(parser_tag, data_position)
@@ -607,7 +607,7 @@ Handle the given file and call the content parse method.
 
         if (str is not _PY_UNICODE_TYPE and type(file_pathname) is _PY_UNICODE_TYPE): file_pathname = _PY_STR(file_pathname, "utf-8")
 
-        if (self._log_handler is not None): self._log_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._parse_file({0})- (#echo(__LINE__)#)".format(file_pathname))
+        if (self._log_handler is not None): self._log_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._parse_file({0})- (#echo(__LINE__)#)", file_pathname)
 
         _return = True
 
@@ -749,7 +749,7 @@ Add "exclude" definitions for directories and files.
 
         if (str is not _PY_UNICODE_TYPE and type(exclude) is _PY_UNICODE_TYPE): exclude = _PY_STR(exclude, "utf-8")
 
-        if (self._log_handler is not None): self._log_handler.debug("#echo(__FILEPATH__)# -BuilderSkel.set_exclude({0})- (#echo(__LINE__)#)".format(exclude))
+        if (self._log_handler is not None): self._log_handler.debug("#echo(__FILEPATH__)# -BuilderSkel.set_exclude({0})- (#echo(__LINE__)#)", exclude)
 
         if (type(exclude) is str):
             exclude_list = exclude.split(",")
@@ -774,7 +774,7 @@ Add "exclude" definitions for directories.
 
         if (str is not _PY_UNICODE_TYPE and type(exclude) is _PY_UNICODE_TYPE): exclude = _PY_STR(exclude, "utf-8")
 
-        if (self._log_handler is not None): self._log_handler.debug("#echo(__FILEPATH__)# -BuilderSkel.set_exclude_dirs({0})- (#echo(__LINE__)#)".format(exclude))
+        if (self._log_handler is not None): self._log_handler.debug("#echo(__FILEPATH__)# -BuilderSkel.set_exclude_dirs({0})- (#echo(__LINE__)#)", exclude)
 
         if (type(exclude) is str):
             exclude_list = exclude.split(",")
@@ -795,7 +795,7 @@ Add "exclude" definitions for files.
 
         if (str is not _PY_UNICODE_TYPE and type(exclude) is _PY_UNICODE_TYPE): exclude = _PY_STR(exclude, "utf-8")
 
-        if (self._log_handler is not None): self._log_handler.debug("#echo(__FILEPATH__)# -BuilderSkel.set_exclude_files({0})- (#echo(__LINE__)#)".format(exclude))
+        if (self._log_handler is not None): self._log_handler.debug("#echo(__FILEPATH__)# -BuilderSkel.set_exclude_files({0})- (#echo(__LINE__)#)", exclude)
 
         if (type(exclude) is str):
             exclude_list = exclude.split(",")
@@ -889,7 +889,7 @@ Define a prefix to be stripped from output paths.
 
         if (str is not _PY_UNICODE_TYPE and type(strip_prefix) is _PY_UNICODE_TYPE): strip_prefix = _PY_STR(strip_prefix, "utf-8")
 
-        if (self._log_handler is not None): self._log_handler.debug("#echo(__FILEPATH__)# -BuilderSkel.set_strip_prefix({0})- (#echo(__LINE__)#)".format(strip_prefix))
+        if (self._log_handler is not None): self._log_handler.debug("#echo(__FILEPATH__)# -BuilderSkel.set_strip_prefix({0})- (#echo(__LINE__)#)", strip_prefix)
 
         if (type(strip_prefix) is str): self.output_strip_prefix = strip_prefix
         elif (self._log_handler is not None): self._log_handler.warn("#echo(__FILEPATH__)# -BuilderSkel.set_strip_prefix()- (#echo(__LINE__)#) reports: Given parameter is not a string")
@@ -915,7 +915,7 @@ needed.
             if (type(file_mode) is _PY_UNICODE_TYPE): file_mode = _PY_STR(file_mode, "utf-8")
         #
 
-        if (self._log_handler is not None): self._log_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._write_file({0}, {1})- (#echo(__LINE__)#)".format(file_pathname, file_mode))
+        if (self._log_handler is not None): self._log_handler.debug("#echo(__FILEPATH__)# -BuilderSkel._write_file({0}, {1})- (#echo(__LINE__)#)", file_pathname, file_mode)
 
         dir_path = path.dirname(file_pathname)
         _return = True

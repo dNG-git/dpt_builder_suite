@@ -88,7 +88,7 @@ Change data according to the matched tag.
 :since:  v0.1.1
         """
 
-        if (self._log_handler is not None): self._log_handler.debug("#echo(__FILEPATH__)# -PyBuilder._change_match({0:d}, {1:d}, {2:d})- (#echo(__LINE__)#)".format(tag_position, data_position, tag_end_position))
+        if (self._log_handler is not None): self._log_handler.debug("#echo(__FILEPATH__)# -PyBuilder._change_match({0:d}, {1:d}, {2:d})- (#echo(__LINE__)#)", tag_position, data_position, tag_end_position)
         _return = data[:tag_position]
 
         data_closed = data[self._find_tag_end_position(data, tag_end_position, '"""'):]
