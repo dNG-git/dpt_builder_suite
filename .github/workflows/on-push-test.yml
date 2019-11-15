@@ -20,9 +20,12 @@ jobs:
       run: |-
         pip install -r ./requirements.txt
         pip install pylint --upgrade
+    - name: Execute linter for static code analysis
+      run: |-
+        pylint -E --rcfile _developer/pylint_strict.ini ./src/dpt_builder_suite/
     - name: Execute tests
       run: python setup.py test
-    - name: Execute linter
+    - name: Execute permissive linter
       continue-on-error: true
       run: |-
         pylint --rcfile _developer/pylint.ini ./src/dpt_builder_suite/
