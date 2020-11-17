@@ -1,1 +1,1 @@
-git+git://git.direct-netware.de/dpt/file/@v1.0.1#egg=dpt-file
+dpt-file>=1,<2
