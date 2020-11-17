@@ -42,10 +42,15 @@ Returns the version currently in development.
 :since:  v1.0.0
     """
 
-    return "v1.0.2"
+    return "v1.0.3"
+#
+
+with open("requirements.txt", "r") as fp:
+    requirements_list = [ line.strip() for line in fp.readlines() if line.strip() != "" ]
 #
 
 _setup = { "version": get_version()[1:],
+           "install_requires": requirements_list,
            "data_files": [ ( "docs", [ "LICENSE", "README" ]) ],
            "test_suite": "tests"
          }
