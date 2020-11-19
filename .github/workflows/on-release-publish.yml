@@ -15,8 +15,7 @@ jobs:
       uses: actions/setup-python@v2
     - name: Install dependencies
       run: |-
-        pip install -r ./optional_requirements.txt
-        pip install wheel --upgrade
+        pip install -r ./build_requirements.txt
     - name: Execute build
       run: |-
         python setup.py sdist bdist_wheel

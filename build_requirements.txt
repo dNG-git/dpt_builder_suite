@@ -1,1 +1,3 @@
 dpt-builder-suite>=1,<2
+
+wheel

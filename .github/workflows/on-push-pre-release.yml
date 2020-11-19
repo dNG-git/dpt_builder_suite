@@ -11,7 +11,7 @@ jobs:
     steps:
     - name: Checkout commit
       uses: actions/checkout@v2
-    - name: Get the tag name
+    - name: Get the Git tag name
       id: get-tag-name
       run: echo ::set-output name=tag-name::${GITHUB_REF/refs\/tags\/v/}
     - name: Create Release
