@@ -5,6 +5,33 @@ on:
     branches-ignore: '*/*'
 
 jobs:
+  codeql-analysis:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Set up Python
+      id: setup-python
+      uses: actions/setup-python@v2
+    - name: Get the Python path
+      id: get-python-path
+      run: echo ::set-output name=python-path::$(which python)
+    - name: Install dependencies
+      run: |-
+        pip install -r ./build_requirements.txt
+        pip install pylint --upgrade
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v1
+      with:
+        languages: python
+        queries: security-extended
+        setup-python-dependencies: false
+    - name: Perform CodeQL analysis
+      env:
+        CODEQL_PYTHON: ${{ steps.get-python-path.outputs.python-path }}
+      uses: github/codeql-action/analyze@v1
+
   test:
     runs-on: ubuntu-latest
     strategy:
