@@ -1,8 +1,10 @@
 name: py:test
 
 on:
+  pull_request:
+    paths-ignore: '_developer/**'
   push:
-    branches-ignore: '*/*'
+    paths-ignore: '_developer/**'
 
 jobs:
   codeql-analysis:

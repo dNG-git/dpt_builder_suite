@@ -61,7 +61,7 @@ Provides a Python "make" environment skeleton.
 
     # pylint: disable=unused-argument
 
-    __slots__ = [ "chmod_dirs",
+    __slots__ = ( "chmod_dirs",
                   "chmod_files",
                   "dir_list",
                   "dir_exclude_list",
@@ -79,7 +79,7 @@ Provides a Python "make" environment skeleton.
                   "timeout_retries",
                   "umask",
                   "workdir_rescan"
-                ]
+                )
     """
 python.org: __slots__ reserves space for the declared variables and prevents
 the automatic creation of __dict__ and __weakref__ for each instance.
